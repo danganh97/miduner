@@ -93,11 +93,11 @@ class Route
 
         if (is_callable($action)) {
             if (is_array($action)) {
-                return $this->compieRoute($action, $params);
+                return $this->compileRoute($action, $params);
             }
             return call_user_func_array($action, $params);
         } elseif (is_string($action)) {
-            return $this->compieRoute($action, $params);
+            return $this->compileRoute($action, $params);
         }
     }
 
@@ -140,7 +140,7 @@ class Route
         }
     }
 
-    private function compieRoute($action, $params)
+    private function compileRoute($action, $params)
     {
         if (!is_array($action)) {
             $action = explode('@', $action);
