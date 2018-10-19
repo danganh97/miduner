@@ -67,5 +67,44 @@ Route::get('/example/{variable}', function($variable){
 | controller before using this here
 |---------------------------------------------------------------------------
 */
+
 Route::get('/example', 'ExampleController@ExampleFunction');
 Route::get('/example', [App\Controllers\ExampleController::class, 'ExampleFunction']);
+
+/*
+|---------------------------------------------------------------------------
+| Or you can using only controller instead of using controller and action
+| Remember in your controller must be having magic method __invoke()
+|---------------------------------------------------------------------------
+*/
+
+Route::get('/example', 'ExampleController');
+
+/*
+|---------------------------------------------------------------------------
+| Here all method we're support
+|---------------------------------------------------------------------------
+*/
+
+Route::get('/example', 'ExampleController@get');
+Route::post('/example', 'ExampleController@post');
+Route::patch('/example', 'ExampleController@patch');
+Route::put('/example', 'ExampleController@put');
+Route::delete('/example', 'ExampleController@delete');
+Route::any('/example', 'ExampleController@any');
+
+/*
+|---------------------------------------------------------------------------
+| Route resource will be declare 7 Route like:
+|
+| Route::get('example', 'ExampleController@index);
+| Route::get('example/create', 'ExampleController@create);
+| Route::post('example', 'ExampleController@store);
+| Route::get('example/{example}/show', 'ExampleController@show);
+| Route::get('example/{example}/edit', 'ExampleController@edit);
+| Route::put('example/{example}/update', 'ExampleController@update);
+| Route::get('example/{example}/delete', 'ExampleController@destroy);
+|---------------------------------------------------------------------------
+*/
+
+Route::resource('/example', 'ExampleController');
