@@ -5,7 +5,7 @@ Miduner Framework is a web application framework with expressive, elegant syntax
 
 Miduner Framework is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
 
-## Learning Bone Framework
+## Learning Miduner Framework
 
 Miduner Framework has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Miduner Framework documentation](https://darkbone.com/docs) is building.
 
