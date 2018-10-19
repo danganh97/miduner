@@ -7,7 +7,7 @@ Miduner Framework is accessible, yet powerful, providing tools needed for large,
 
 ## Learning Miduner Framework
 
-Miduner Framework has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Miduner Framework documentation](https://darkbone.com/docs) is building.
+Miduner Framework has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Miduner Framework documentation](https://miduner.com/docs) is building.
 
 ## Contributing
 
