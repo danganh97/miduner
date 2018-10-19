@@ -15,8 +15,6 @@ Route::resource('/orders', 'OrderController');
 
 Route::get('/test-class-url', [App\Controllers\WrongController::class, 'index']);
 
-Route::get('/vao-invoke/{id}/{slug}', 'HomeController');
-
 Route::any('/abc/{id}/{slug}/{abc}', function ($id, $a, $b) {
 });
 
