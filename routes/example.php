@@ -15,8 +15,8 @@
 
 /*
 |---------------------------------------------------------------------------
-| This Route for the view extends master layout you declared 
-| in config/app.php
+| This Route for the view extends master layout you declared
+| in config/app.php [MAIN_LAYOUT]
 |---------------------------------------------------------------------------
 */
 Route::get('/example', function(){
@@ -63,7 +63,7 @@ Route::get('/example/{variable}', function($variable){
 
 /*
 |---------------------------------------------------------------------------
-| This Route the controller from app\controllers and you must declare 
+| This Route the controller from app\controllers and you must declare
 | controller before using this here
 |---------------------------------------------------------------------------
 */
@@ -97,13 +97,13 @@ Route::any('/example', 'ExampleController@any');
 |---------------------------------------------------------------------------
 | Route resource will be declare 7 Route like:
 |
-| Route::get('example', 'ExampleController@index);
-| Route::get('example/create', 'ExampleController@create);
-| Route::post('example', 'ExampleController@store);
-| Route::get('example/{example}/show', 'ExampleController@show);
-| Route::get('example/{example}/edit', 'ExampleController@edit);
-| Route::put('example/{example}/update', 'ExampleController@update);
-| Route::get('example/{example}/delete', 'ExampleController@destroy);
+| Route::get('/example', 'ExampleController@index);
+| Route::get('/example/create', 'ExampleController@create);
+| Route::post('/example', 'ExampleController@store);
+| Route::get('/example/{example}/show', 'ExampleController@show);
+| Route::get('/example/{example}/edit', 'ExampleController@edit);
+| Route::put('/example/{example}/update', 'ExampleController@update);
+| Route::get('/example/{example}/delete', 'ExampleController@destroy);
 |---------------------------------------------------------------------------
 */
 

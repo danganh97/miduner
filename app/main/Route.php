@@ -155,6 +155,7 @@ class Route
                 $className = $action[0];
                 $methodName = '__invoke()';
                 $cloud = false;
+                $params = ($params ? $params[0] : null);
                 break;
             default:
                 throw new App\Main\AppException("Controller wrong format !");
@@ -170,11 +171,11 @@ class Route
             $object = new $controller;
             if (method_exists($controller, $methodName) && $cloud === true) {
                 call_user_func_array([$object, $methodName], $params);return;
-            } elseif (method_exists($controller, $methodName) && $cloud === false) {
-                $object($params[0]);return;
-            } else {
-                throw new App\Main\AppException("Method {$className}@{$methodName} doesn't exists !");
             }
+            if ($cloud === false) {
+                $object($params);return;
+            }
+            throw new App\Main\AppException("Method {$className}@{$methodName} doesn't exists !");
         }
         throw new App\Main\AppException("Class {$className} doesn't exists !");
     }

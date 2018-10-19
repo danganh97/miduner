@@ -6,6 +6,12 @@ use App\Main\Controller;
 
 class HomeController extends Controller
 {
+    public function __invoke($id)
+    {
+        echo $id;
+        echo 'vao invoke';
+    }
+
     public function home()
     {
         return view('pages/home');
