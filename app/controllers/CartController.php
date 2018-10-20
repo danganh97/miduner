@@ -9,13 +9,6 @@ session_start();
 
 class CartController extends Controller
 {
-    private $cart = [];
-
-    public function __construct()
-    {
-
-    }
-
     public function addToCart($id)
     {
         $product = DB::table('products')->select(['id', 'name'])->find('id', $id);
@@ -39,7 +32,6 @@ class CartController extends Controller
                 'quantity' => 1,
             ];
         }
-        print_r($_SESSION['cart']);
         return true;
     }
 
@@ -59,11 +51,12 @@ class CartController extends Controller
         foreach ($_SESSION['cart'] as $key => $value) {
             if ($id == $value['id'] && $type === 'one' && $_SESSION['cart'][$key]['quantity'] > 1) {
                 $_SESSION['cart'][$key]['quantity'] -= 1;
-            } elseif (($id == $value['id'] && $type === 'one' && $_SESSION['cart'][$key]['quantity'] == 1) || ($id === $value['id'] && $type === 'all')) {
+            } elseif (($id == $value['id'] && $type === 'one' && $_SESSION['cart'][$key]['quantity'] === 1) || ($id === $value['id'] && $type === 'all')) {
                 unset($_SESSION['cart'][$key]);
+            }else{
+              return sendMessage('Please try again !');
             }
         }
-        print_r($_SESSION['cart']);
         return true;
     }
 }
