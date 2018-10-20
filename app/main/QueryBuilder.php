@@ -12,6 +12,7 @@ class QueryBuilder
     private $distinct = false;
     private $joins;
     private $wheres;
+    private $wherein;
     private $groups;
     private $having;
     private $orders;
@@ -66,6 +67,17 @@ class QueryBuilder
     public function orWhere($column, $operator = '=', $value, $boolean = 'and')
     {
         return $this->where($column, $operator, $value, 'or');
+    }
+
+    public function whereIn($column, $value = [], $is = true)
+    {
+        $this->wherein = [$column, !is_array($value) ? $value : implode(', ', $value), $is];
+        return $this;
+    }
+
+    public function whereNotIn($column, $value = [])
+    {
+      return $this->whereIn($column, $value, false);
     }
 
     public function groupBy($columns)
@@ -177,8 +189,12 @@ class QueryBuilder
         if (isset($this->offset)) {
             $sql .= " OFFSET $this->offset";
         }
-        // echo $sql;
-        // die();
+
+        if(isset($this->wherein)) {
+          $id = $this->wherein[0];
+          $value = $this->wherein[1];
+          $sql .= " WHERE $id IN ($value)";
+        }
         return $this->request($sql);
     }
 
@@ -263,11 +279,9 @@ class QueryBuilder
             case 'SELECT':
                 return ($this->find === true) ? $object->fetch() : $object->fetchAll(PDO::FETCH_ASSOC);
                 break;
-
             case 'INSERT':
                 return $this->find('id', $connection->lastInsertId());
                 break;
-
             case 'UPDATE':
                 return $this->find($this->wheres[0][0], $this->wheres[0][2]);
                 break;

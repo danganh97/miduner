@@ -9,7 +9,7 @@ return [
         'HOST' => 'localhost',
         'USERNAME' => 'root',
         'PASSWORD' => '',
-        'DATABASE_NAME' => 'fellow4u_web',
+        'DATABASE_NAME' => 'oop',
     ],
     'AUTO_LOAD' => [
         'app/main/Route.php',

@@ -31,3 +31,7 @@ Route::get('/test-join', function(){
     return view('users/index', compact('users'));
     return response($users);
 });
+
+Route::get('/add-to-cart/{id}', 'CartController@addToCart');
+Route::get('/get-cart', 'CartController@getCart');
+Route::get('/remove-cart/{id}', 'CartController@removeCart');
