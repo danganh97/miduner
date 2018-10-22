@@ -11,7 +11,7 @@ Miduner Framework has the most extensive and thorough documentation and video tu
 
 ## Contributing
 
-Thank you for considering contributing to the Miduner Framework!
+Thank you for considering contributing to the Miduner Framework !
 
 ## Security Vulnerabilities
 
