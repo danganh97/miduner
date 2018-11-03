@@ -15,7 +15,7 @@ Thank you for considering contributing to the Miduner Framework !
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to UnderMidside from danganh.dev@gmail.com. All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within Miduner, please send an e-mail to UnderMidside from danganh.dev@gmail.com. All security vulnerabilities will be promptly addressed.
 
 ## License
 
