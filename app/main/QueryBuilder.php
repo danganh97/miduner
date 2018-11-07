@@ -19,6 +19,7 @@ class QueryBuilder
     private $limit;
     private $offset;
     private $find = false;
+    private $toSql = false;
 
     public function __construct($table)
     {
@@ -269,8 +270,17 @@ class QueryBuilder
         return $this->request($sql);
     }
 
+    public function toSql()
+    {
+        $this->toSql = true;
+        return $this;
+    }
+
     public function request($sql)
     {
+        if($this->toSql == true){
+            return $sql;
+        }
         $connection = (new Database)->connection();
         $object = $connection->prepare($sql);
         $object->execute();

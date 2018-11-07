@@ -5,12 +5,13 @@ namespace App\Controllers;
 use App\Http\Request;
 use App\Main\Controller;
 use App\Main\QueryBuilder as DB;
+use App\Models\User;
 
 class UserController extends Controller
 {
     public function index(Request $request = null)
     {
-        $users = DB::table('users')->limit(10)->get();
+        $users = User::get();
         return view('users/index', compact('users'));
     }
 
@@ -22,23 +23,22 @@ class UserController extends Controller
     public function store()
     {
         $data = Request::all();
-        $user = DB::table('users')->insert($data);
+        $user = User::create($data);
         return response($user);
     }
 
     public function show($id)
     {
-        $user = DB::table('users')->find('id', $id);
+        $user = User::find($id);
         if (!$user) {
             echo 'user not found !';
-            return false;
         }
         return response($user);
     }
 
     public function edit($id)
     {
-        $user = DB::table('users')->find('id', $id);
+        $user = User::find($id);
         if (!$user) {
             echo 'user not found !';
             return false;
@@ -60,7 +60,7 @@ class UserController extends Controller
     public function login()
     {
         $data = Request::only(['email', 'password']);
-        $user = DB::table('users')->login($data);
+        $user = User::login($data);
         if ($user) {
             session('user', $user);
             return sendMessage('Login successfully', 200);
@@ -73,6 +73,5 @@ class UserController extends Controller
         if (unsetsession('user')) {
             return sendMessage('Logout successfully !', 200);
         }
-
     }
 }

@@ -9,7 +9,7 @@ return [
         'HOST' => 'localhost',
         'USERNAME' => 'root',
         'PASSWORD' => '',
-        'DATABASE_NAME' => 'oop',
+        'DATABASE_NAME' => 'miduner',
     ],
     'AUTO_LOAD' => [
         'app/main/Route.php',

@@ -7,9 +7,7 @@ use App\Main\Model;
 class User extends Model
 {
     protected $table = 'users';
-
-    public function __construct()
-    {
-        $this->setTable($this->table);
-    }
+    protected $primaryKey = 'id';
+    protected $username = 'email';
+    protected $password = 'password';
 }
