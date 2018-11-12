@@ -16,10 +16,7 @@ class Autoload
 
     public function load($class)
     {
-        $tmp = explode('\\', $class);
-        $className = end($tmp);
-        $pathName = str_replace($className, '', $class);
-        $file = $this->root . '\\' . $pathName . $className . '.php';
+        $file = $this->root . '\\' . $class . '.php';
         if (file_exists($file)) {
             require $file;
         } else {
