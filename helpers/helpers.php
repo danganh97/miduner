@@ -49,3 +49,8 @@ function unsetsession($key)
 {
     return App\Main\Session::unset_session($key);
 }
+
+function request()
+{
+    return new \App\Http\Request;
+}

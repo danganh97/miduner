@@ -92,13 +92,6 @@ class QueryBuilder
      */
     private $find = false;
 
-    /**
-     * Response to Sql
-     *
-     * @var bolean
-     */
-    private $toSql = false;
-
 
     /**
      * Create a new query builder instance.
@@ -409,6 +402,7 @@ class QueryBuilder
 
     public function find($column, $value)
     {
+        $this->find = true;
         $this->where($column, '=', $value);
         $this->limit(1);
         $sql = $this->paze();

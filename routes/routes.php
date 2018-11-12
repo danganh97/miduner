@@ -37,8 +37,5 @@ Route::get('/get-cart', 'CartController@getCart');
 Route::get('/remove-cart/{id}', 'CartController@removeCart');
 
 Route::get('/test-nhe', function () {
-    $a = \App\Models\User::get();
-    // echo $a;die();
-    return response($a);
-    // var_dump($a);
+    echo request()->name;
 });
