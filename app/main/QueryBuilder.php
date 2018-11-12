@@ -403,6 +403,26 @@ class QueryBuilder
      */
     public function get()
     {
+        $sql = $this->paze();
+        return $this->request($sql);
+    }
+
+    public function find($column, $value)
+    {
+        $this->where($column, '=', $value);
+        $this->limit(1);
+        $sql = $this->paze();
+        return $this->request($sql);
+    }
+
+    public function toSql()
+    {
+        $sql = $this->paze();
+        return $sql;
+    }
+
+    protected function paze()
+    {
         if (!isset($this->table) || empty($this->table)) {
             return false;
         }
@@ -414,6 +434,9 @@ class QueryBuilder
         }
         if (isset($this->wheres) && is_array($this->wheres)) {
             $sql .= $this->compile->compileWheres($this->wheres);
+        }
+        if(isset($this->wherein)) {
+            $sql .= $this->compile->compileWherein($this->wherein);
         }
         if (isset($this->groups) && is_array($this->groups)) {
             $sql .= $this->compile->compileGroups($this->groups);
@@ -430,10 +453,7 @@ class QueryBuilder
         if (isset($this->offset)) {
             $sql .= $this->compile->compileOffset($this->offset);
         }
-        if(isset($this->wherein)) {
-            $sql .= $this->compile->compileWherein($this->wherein);
-        }
-        return $this->request($sql);
+        return $sql;
     }
 
     public function insert($data = [])
@@ -445,19 +465,6 @@ class QueryBuilder
         $columns = implode(', ', $columns);
         $values = implode(', ', $values);
         $sql = "INSERT INTO $this->table($columns)VALUES($values)";
-        return $this->request($sql);
-    }
-
-    public function find($column, $value)
-    {
-        $this->find = true;
-        $sql = "SELECT ";
-        if (isset($this->columns) && is_array($this->columns)) {
-            $sql .= implode(', ', $this->columns);
-        } else {
-            $sql .= '*';
-        }
-        $sql .= " FROM $this->table where $column = '$value' LIMIT 1";
         return $this->request($sql);
     }
 
@@ -507,17 +514,8 @@ class QueryBuilder
         return $this->request($sql);
     }
 
-    public function toSql()
-    {
-        $this->toSql = true;
-        return $this;
-    }
-
     public function request($sql)
     {
-        if($this->toSql == true){
-            return $sql;
-        }
         $object = $this->connection->prepare($sql);
         $object->execute();
         $type = explode(" ", $sql);

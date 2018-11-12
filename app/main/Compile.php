@@ -27,16 +27,16 @@ class Compile
                     $sql = ' INNER JOIN';
                     break;
                 case 'left':
-                    $sql .= ' LEFT JOIN';
+                    $sql = ' LEFT JOIN';
                     break;
                 case 'right':
-                    $sql .= ' RIGHT JOIN';
+                    $sql = ' RIGHT JOIN';
                     break;
                 default:
-                    $sql .= ' INNER JOIN';
+                    $sql = ' INNER JOIN';
                     break;
             }
-            $sql = " {$join[0]} ON {$join[1]} {$join[2]} {$join[3]}";
+            $sql .= " {$join[0]} ON {$join[1]} {$join[2]} {$join[3]}";
         }
         return $sql;
     }
