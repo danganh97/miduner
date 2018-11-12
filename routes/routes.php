@@ -24,11 +24,11 @@ Route::post('/logout', [App\Controllers\UserController::class, 'logout']);
 
 Route::get('/test-join', function(){
     $users = App\Main\QueryBuilder::table('users')
-    ->select('users.user_id as id', 'users.is_verified' , 'name', 'email', 'provider_user_id')
+    // ->select('users.user_id as id', 'users.is_verified' , 'name', 'email', 'provider_user_id')
     ->join('social_accounts', 'users.user_id', '=' , 'social_accounts.user_id')
     ->where('is_verified', '=', 1)
     ->get();
-    return view('users/index', compact('users'));
+    // return view('users/index', compact('users'));
     return response($users);
 });
 
@@ -37,7 +37,7 @@ Route::get('/get-cart', 'CartController@getCart');
 Route::get('/remove-cart/{id}', 'CartController@removeCart');
 
 Route::get('/test-nhe', function () {
-    $a = \App\Main\QueryBuilder::raw('select * from users');
+    $a = \App\Models\User::get();
     // echo $a;die();
     return response($a);
     // var_dump($a);

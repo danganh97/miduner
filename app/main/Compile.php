@@ -7,7 +7,7 @@ class Compile
     public function compileColumns($columns)
     {
         if (is_array($columns)) {
-            $sql = implode(', ', $this->columns);
+            $sql = implode(', ', $columns);
         } else {
             $sql = '*';
         }
