@@ -4,14 +4,14 @@ namespace App\Main;
 
 class Compile
 {
+    public function compileSelect($distinct)
+    {
+        return $distinct ? "SELECT DISTINCT " : "SELECT ";
+    }
+
     public function compileColumns($columns)
     {
-        if (is_array($columns)) {
-            $sql = implode(', ', $this->columns);
-        } else {
-            $sql = '*';
-        }
-        return $sql;
+        return is_array($columns) ? implode(', ', $columns) : '*';
     }
 
     public function compileFrom($table)
@@ -19,7 +19,7 @@ class Compile
         return " FROM {$table}";
     }
 
-    public function compileJoins($joins)
+    public function compileJoins(array $joins)
     {
         foreach ($joins as $join) {
             switch (strtolower($join[4])) {
@@ -27,21 +27,21 @@ class Compile
                     $sql = ' INNER JOIN';
                     break;
                 case 'left':
-                    $sql .= ' LEFT JOIN';
+                    $sql = ' LEFT JOIN';
                     break;
                 case 'right':
-                    $sql .= ' RIGHT JOIN';
+                    $sql = ' RIGHT JOIN';
                     break;
                 default:
-                    $sql .= ' INNER JOIN';
+                    $sql = ' INNER JOIN';
                     break;
             }
-            $sql = " {$join[0]} ON {$join[1]} {$join[2]} {$join[3]}";
+            $sql .= " {$join[0]} ON {$join[1]} {$join[2]} {$join[3]}";
         }
         return $sql;
     }
 
-    public function compileWheres($wheres)
+    public function compileWheres(array $wheres)
     {
         $sql = " WHERE";
         foreach ($wheres as $key => $where) {
@@ -59,7 +59,7 @@ class Compile
         return $sql;
     }
 
-    public function compileHavings($havings)
+    public function compileHavings(array $havings)
     {
         $sql = " HAVING";
         foreach ($havings as $key => $having) {
@@ -71,7 +71,7 @@ class Compile
         return $sql;
     }
 
-    public function compileOrders($orders)
+    public function compileOrders(array $orders)
     {
         $sql = " ORDER BY ";
         foreach ($orders as $key => $order) {
@@ -85,18 +85,28 @@ class Compile
 
     public function compileLimit($limit)
     {
-        return " LIMIT $limit";
+        return ' LIMIT ' .(int) $limit;
     }
 
     public function compileOffset($offset)
     {
-        return " OFFSET $offset";
+        return " OFFSET {$offset}";
     }
 
     public function compileWhereIn($wherein)
     {
-        $id = $wherein[0];
-        $value = $wherein[1];
-        return " WHERE $id IN ($value)";
+        return " WHERE {$wherein[0]} IN ({$wherein[1]})";
+    }
+
+    public function compileInsert($table, array $data)
+    {
+        foreach ($data as $key => $value) {
+            $columns[] = $key;
+            $values[] = "'$value'";
+        }
+        $columns = implode(', ', $columns);
+        $values = implode(', ', $values);
+
+        return "INSERT INTO $table($columns) VALUES ($values)";
     }
 }

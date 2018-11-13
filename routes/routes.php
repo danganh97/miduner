@@ -37,15 +37,19 @@ Route::get('/get-cart', 'CartController@getCart');
 Route::get('/remove-cart/{id}', 'CartController@removeCart');
 
 Route::get('/test-nhe', function () {
-    $a = \App\Main\QueryBuilder::table('users')
-    ->distinct()
+    // $a = \App\Main\QueryBuilder::table('users')
+    // ->select(['name', 'id'])
+    // ->where('name', '=', 'anh')
+    // ->distinct()
     // ->having('name', '=', 1)
     // ->groupBy('name')
     // ->join('orders', 'users.id', '=', 'orders.user_id')
     // ->orderBy('name', 'desc')
     // ->limit(1)
-    // ->whereIn('name', ['anh'])
-    ->get();
+    // ->whereIn('name', ['anh', 'VO'])
+    // ->toSql();
+    $a = \App\Main\QueryBuilder::table('users')->find(1);
+    echo $a;
+    die();
     return response($a);
-    // var_dump($a);
 });

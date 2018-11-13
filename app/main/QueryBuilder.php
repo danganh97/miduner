@@ -103,7 +103,7 @@ class QueryBuilder
     /**
      * Create a new query builder instance.
      *
-     * @param  \Illuminate\Database\ConnectionInterface  $this->table
+     * @param  ConnectionInterface  $this->table
      * @return void
      */
     public function __construct($table)
@@ -186,7 +186,7 @@ class QueryBuilder
      * @param  string  $first
      * @param  string  $operator
      * @param  string  $second
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\QueryBuilder|static
      */
     public function leftJoin($tableJoin, $st, $operator = '=', $nd)
     {
@@ -200,7 +200,7 @@ class QueryBuilder
      * @param  string  $first
      * @param  string  $operator
      * @param  string  $second
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\QueryBuilder|static
      */
     public function rightJoin($tableJoin, $st, $operator = '=', $nd)
     {
@@ -228,7 +228,7 @@ class QueryBuilder
      * @param  string|array|\Closure  $column
      * @param  string  $operator
      * @param  mixed   $value
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\QueryBuilder|static
      */
     public function orWhere($column, $operator = '=', $value, $boolean = 'and')
     {
@@ -256,7 +256,7 @@ class QueryBuilder
      * @param  string  $column
      * @param  mixed   $values
      * @param  string  $boolean
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\QueryBuilder|static
      */
     public function whereNotIn($column, $value = [])
     {
@@ -296,7 +296,7 @@ class QueryBuilder
      * @param  string  $column
      * @param  string  $operator
      * @param  string  $value
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\QueryBuilder|static
      */
     public function orHaving($column, $operator = '=', $value, $boolean = 'and')
     {
@@ -331,7 +331,7 @@ class QueryBuilder
      * Add an "order by" clause for a timestamp to the query.
      *
      * @param  string  $column
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\QueryBuilder|static
      */
     public function latest($column = 'created_at')
     {
@@ -365,7 +365,7 @@ class QueryBuilder
      * Alias to set the "limit" value of the query.
      *
      * @param  int  $value
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\QueryBuilder|static
      */
     public function take($value)
     {
@@ -376,7 +376,7 @@ class QueryBuilder
      * Alias to set the "offset" value of the query.
      *
      * @param  int  $value
-     * @return \Illuminate\Database\Query\Builder|static
+     * @return \Database\QueryBuilder|static
      */
     public function skip($value)
     {
@@ -398,15 +398,26 @@ class QueryBuilder
     /**
      * Execute the query as a "select" statement.
      *
-     * @param  array  $columns
-     * @return \Illuminate\Support\Collection
+     * @param  array  $this
+     * @return \SupportCollection
      */
     public function get()
+    {
+        $sql = $this->paze();
+        return $this->request($sql);
+    }
+
+    public function toSql()
+    {
+        return $this->paze();
+    }
+
+    public function paze()
     {
         if (!isset($this->table) || empty($this->table)) {
             return false;
         }
-        $sql = $this->distinct ? "SELECT DISTINCT " : "SELECT ";
+        $sql = $this->compile->compileSelect($this->distinct);
         $sql .= $this->compile->compileColumns($this->columns);
         $sql .= $this->compile->compileFrom($this->table);
         if (isset($this->joins) && is_array($this->joins)) {
@@ -431,33 +442,27 @@ class QueryBuilder
             $sql .= $this->compile->compileOffset($this->offset);
         }
         if(isset($this->wherein)) {
-            $sql .= $this->compile->compileWherein($this->wherein);
+            $sql .= $this->compile->compileWhereIn($this->wherein);
         }
-        return $this->request($sql);
+        return $sql;
     }
 
-    public function insert($data = [])
+    public function insert(array $data)
     {
-        foreach ($data as $key => $dt) {
-            $columns[] = $key;
-            $values[] = "'$dt'";
-        }
-        $columns = implode(', ', $columns);
-        $values = implode(', ', $values);
-        $sql = "INSERT INTO $this->table($columns)VALUES($values)";
+        $sql = $this->compile->compileInsert($this->table, $data);
         return $this->request($sql);
     }
 
-    public function find($column, $value)
+    public function find($value, $column = 'id')
     {
         $this->find = true;
-        $sql = "SELECT ";
-        if (isset($this->columns) && is_array($this->columns)) {
-            $sql .= implode(', ', $this->columns);
-        } else {
-            $sql .= '*';
-        }
-        $sql .= " FROM $this->table where $column = '$value' LIMIT 1";
+        $this->limit = 1;
+        $this->where($column, '=', $value);
+        $sql = $this->compile->compileSelect($this->distinct);
+        $sql .= $this->compile->compileColumns($this->columns);
+        $sql .= $this->compile->compileFrom($this->table);
+        $sql .= $this->compile->compileWheres($this->wheres);
+        $sql .= $this->compile->compileLimit($this->limit);
         return $this->request($sql);
     }
 
@@ -507,17 +512,8 @@ class QueryBuilder
         return $this->request($sql);
     }
 
-    public function toSql()
-    {
-        $this->toSql = true;
-        return $this;
-    }
-
     public function request($sql)
     {
-        if($this->toSql == true){
-            return $sql;
-        }
         $object = $this->connection->prepare($sql);
         $object->execute();
         $type = explode(" ", $sql);
