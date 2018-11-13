@@ -92,13 +92,6 @@ class QueryBuilder
      */
     private $find = false;
 
-    /**
-     * Response to Sql
-     *
-     * @var bolean
-     */
-    private $toSql = false;
-
 
     /**
      * Create a new query builder instance.
@@ -425,6 +418,9 @@ class QueryBuilder
         }
         if (isset($this->wheres) && is_array($this->wheres)) {
             $sql .= $this->compile->compileWheres($this->wheres);
+        }
+        if(isset($this->wherein)) {
+            $sql .= $this->compile->compileWherein($this->wherein);
         }
         if (isset($this->groups) && is_array($this->groups)) {
             $sql .= $this->compile->compileGroups($this->groups);

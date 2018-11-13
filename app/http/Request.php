@@ -4,6 +4,13 @@ namespace App\Http;
 
 class Request
 {
+    public function __construct()
+    {
+        foreach(array_merge($_GET, $_POST) as $key => $value){
+            $this->$key = $value;
+        }
+    }
+
     /**
      * Make response array with the request data.
      *
