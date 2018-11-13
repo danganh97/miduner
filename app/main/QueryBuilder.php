@@ -402,7 +402,7 @@ class QueryBuilder
 
     public function toSql()
     {
-        return $this->paze();
+        echo $this->paze();return;
     }
 
     public function paze()
