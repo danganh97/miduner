@@ -38,15 +38,16 @@ Route::get('/remove-cart/{id}', 'CartController@removeCart');
 
 Route::get('/test-nhe', function () {
     $a = \App\Main\QueryBuilder::table('users')
-    // ->select(['name', 'id'])
-    // ->where('name', '=', 'anh')
+    ->select(['id', 'email'])
+    ->addSelect('password')
+    // ->where('user_id', '>', 1)
     // ->distinct()
     // ->having('name', '=', 1)
     // ->groupBy('name')
-    // ->join('orders', 'users.id', '=', 'orders.user_id')
-    // ->orderBy('name', 'desc')
-    // ->limit(1)
-    // ->whereIn('name', ['anh', 'VO'])
-    ->get();
+    // ->orderBy('user_id', 'desc')
+    // ->limit(10)
+    // ->whereIn('user_id', [2, 3,4,5,6])
+    ->toSql();
+    // echo $a;die();
     return response($a);
 });

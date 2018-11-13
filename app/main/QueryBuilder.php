@@ -400,11 +400,21 @@ class QueryBuilder
         return $this->request($sql);
     }
 
+    /**
+     * View querybuilder to sql statement.
+     *
+     * @return \SupportSqlCollection
+     */
     public function toSql()
     {
         echo $this->paze();return;
     }
 
+    /**
+     * Convert variables to sql
+     *
+     * @return \SupportSqlCollection
+     */
     public function paze()
     {
         if (!isset($this->table) || empty($this->table)) {
@@ -420,7 +430,7 @@ class QueryBuilder
             $sql .= $this->compile->compileWheres($this->wheres);
         }
         if(isset($this->wherein)) {
-            $sql .= $this->compile->compileWherein($this->wherein);
+            $sql .= $this->compile->compileWhereIn($this->wherein);
         }
         if (isset($this->groups) && is_array($this->groups)) {
             $sql .= $this->compile->compileGroups($this->groups);
@@ -437,18 +447,29 @@ class QueryBuilder
         if (isset($this->offset)) {
             $sql .= $this->compile->compileOffset($this->offset);
         }
-        if(isset($this->wherein)) {
-            $sql .= $this->compile->compileWhereIn($this->wherein);
-        }
         return $sql;
     }
 
+    /**
+     * Create new record
+     *
+     * @param array data
+     * 
+     * @return \SupportSqlCollection
+     */
     public function insert(array $data)
     {
         $sql = $this->compile->compileInsert($this->table, $data);
         return $this->request($sql);
     }
 
+    /**
+     * Find 1 record usually use column id
+     *
+     * @param string value
+     * @param string column
+     * @return \SupportSqlCollection
+     */
     public function find($value, $column = 'id')
     {
         $this->find = true;
@@ -462,63 +483,60 @@ class QueryBuilder
         return $this->request($sql);
     }
 
-    public function login($data = [])
+    /**
+     * Quick login with array params
+     *
+     * @param array data
+     * @return \SupportSqlCollection
+     */
+    public function login(array $data)
     {
         $this->find = true;
-        foreach ($data as $key => $dt) {
-            $columns[] = $key;
-            $values[] = "'$dt'";
-        }
-        $sql = "SELECT * FROM $this->table WHERE $columns[0] = $values[0] AND $columns[1] = $values[1] LIMIT 1";
+        $sql = $this->compile->compileLogin($this->table, $data);
         return $this->request($sql);
     }
 
+    /**
+     * Destroy a record from condition
+     *
+     * @return \SupportSqlCollection
+     */
     public function delete()
     {
-        $sql = "DELETE FROM $this->table";
-        if (isset($this->wheres) && is_array($this->wheres)) {
-            $sql .= " WHERE";
-            foreach ($this->wheres as $key => $where) {
-                $sql .= " $where[0] $where[1] $where[2]";
-                if ($key < count($this->wheres) - 1) {
-                    $sql .= (strtolower($where[3] === 'and') ? ' AND' : ' OR');
-                }
-            }
-        }
+        $sql = $this->compile->compileDelete($this->table);
+        $sql .= $this->compile->compileWheres($this->wheres);
         return $this->request($sql);
     }
 
-    public function update($data = [])
+    /**
+     * Update records from condition
+     *
+     * @param array data
+     * @return \SupportSqlCollection
+     */
+    public function update(array $data)
     {
-        $sql = "UPDATE $this->table SET ";
-        foreach ($data as $key => $dt) {
-            $sql .= "$key = '$dt', ";
-        }
-        $lenght = strlen($sql);
-        $sql = substr($sql, 0, $lenght - 2);
-        if (isset($this->wheres) && is_array($this->wheres)) {
-            $sql .= " WHERE";
-            foreach ($this->wheres as $key => $where) {
-                $sql .= " $where[0] $where[1] $where[2]";
-                if ($key < count($this->wheres) - 1) {
-                    $sql .= (strtolower($where[3] === 'and') ? ' AND' : ' OR');
-                }
-            }
-        }
+        $sql = $this->compile->compileUpdate($this->table, $data);
+        $sql .= $this->compile->compileWheres($this->wheres);
         return $this->request($sql);
     }
 
+    /**
+     * Execute sql
+     *
+     * @param string sql
+     * @return \SupportSqlCollection
+     */
     public function request($sql)
     {
-        $object = $this->connection->prepare($sql);
-        $object->execute();
+        $object = $this->connection->query($sql);
         $type = explode(" ", $sql);
         switch ($type[0]) {
             case 'SELECT':
                 return ($this->find === true) ? $object->fetch() : $object->fetchAll(PDO::FETCH_ASSOC);
                 break;
             case 'INSERT':
-                return $this->find('id', $this->connection->lastInsertId());
+                return $this->find($this->connection->lastInsertId());
                 break;
             case 'UPDATE':
                 return $this->find($this->wheres[0][0], $this->wheres[0][2]);

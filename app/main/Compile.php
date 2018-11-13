@@ -85,7 +85,7 @@ class Compile
 
     public function compileLimit($limit)
     {
-        return ' LIMIT ' .(int) $limit;
+        return ' LIMIT ' . (int) $limit;
     }
 
     public function compileOffset($offset)
@@ -95,7 +95,17 @@ class Compile
 
     public function compileWhereIn($wherein)
     {
-        return " WHERE {$wherein[0]} IN ({$wherein[1]})";
+        $sql = " WHERE {$wherein[0]} IN ";
+        $array = explode(", ", $wherein[1]);
+        foreach($array as $key => $arr){
+            if($key + 1 == count($array)){
+                $array[$key] = "'{$arr}'";
+            }else{
+                $array[$key] = "'{$arr}',";
+            }
+        }
+        $string = implode("",$array);
+        return " WHERE {$wherein[0]} IN ({$string})";
     }
 
     public function compileInsert($table, array $data)
@@ -108,5 +118,30 @@ class Compile
         $values = implode(', ', $values);
 
         return "INSERT INTO $table($columns) VALUES ($values)";
+    }
+
+    public function compileLogin($table, array $cre)
+    {
+        foreach ($cre as $key => $dt) {
+            $columns[] = $key;
+            $values[] = "'$dt'";
+        }
+        return "SELECT * FROM {$table} WHERE {$columns[0]} = {$values[0]} AND {$columns[1]} = {$values[1]} LIMIT 1";
+    }
+
+    public function compileDelete($table)
+    {
+        return "DELETE FROM {$table}";
+    }
+
+    public function compileUpdate($table, array $arg)
+    {
+        $sql = "UPDATE {$table} SET ";
+        foreach ($arg as $key => $dt) {
+            $sql .= "$key = '$dt', ";
+        }
+        $lenght = strlen($sql);
+        $sql = substr($sql, 0, $lenght - 2);
+        return $sql;
     }
 }
