@@ -37,17 +37,6 @@ Route::get('/get-cart', 'CartController@getCart');
 Route::get('/remove-cart/{id}', 'CartController@removeCart');
 
 Route::get('/test-nhe', function () {
-    $a = \App\Main\QueryBuilder::table('users')
-    ->select(['id', 'email'])
-    ->addSelect('password')
-    // ->where('user_id', '>', 1)
-    // ->distinct()
-    // ->having('name', '=', 1)
-    // ->groupBy('name')
-    // ->orderBy('user_id', 'desc')
-    // ->limit(10)
-    // ->whereIn('user_id', [2, 3,4,5,6])
-    ->toSql();
-    // echo $a;die();
+    $a = \App\Main\QueryBuilder::table('users')->get();
     return response($a);
 });

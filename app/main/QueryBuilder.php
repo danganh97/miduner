@@ -407,7 +407,7 @@ class QueryBuilder
      */
     public function toSql()
     {
-        echo $this->paze();return;
+        echo $this->paze();die();
     }
 
     /**

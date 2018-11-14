@@ -10,18 +10,18 @@ class Database
 {
     public function connection()
     {
-        $config = Registry::getInstance()->config;
-        $server = $config['DATABASE']['SERVER'];
-        $host = $config['DATABASE']['HOST'];
-        $database = $config['DATABASE']['DATABASE_NAME'];
-        $username = $config['DATABASE']['USERNAME'];
-        $password = $config['DATABASE']['PASSWORD'];
+        $database = config('DATABASE');
+        $connection = $database['DB_CONNECTION'];
+        $host = $database['DB_HOST'];
+        $database_name = $database['DB_DATABASE'];
+        $username = $database['DB_USERNAME'];
+        $password = $database['DB_PASSWORD'];
         try {
-            $connection = new PDO("$server:host=$host;dbname=$database", $username, $password);
-            $connection->exec("set names utf8");
-            $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-            $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            return $connection;
+            $conn = new PDO("$connection:host=$host;dbname=$database_name", $username, $password);
+            $conn->exec("set names utf8");
+            $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            return $conn;
         } catch (PDOException $e) {
             echo "Connection failed: " . $e->getMessage();
         }

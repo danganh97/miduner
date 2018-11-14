@@ -27,7 +27,7 @@ class Autoload
     private function autoloadFile()
     {
         foreach ($this->defaultFile() as $file) {
-            require $this->root . '/' . $file;
+            require $this->root.'/'.$file;
         }
     }
 
