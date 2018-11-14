@@ -28,7 +28,7 @@ class AppException extends Exception
             $function = isset($trace['function']) ? $trace['function'] : '';
 
             if ($file !== '') {
-                echo "<h5>File <strong>{$file}</strong> got error from class {$class} in function {$function}() (line {$line})</h5>";
+                echo "<h5>File <strong>{$file}</strong> got error from class {$class} in function {$function}() <strong>line {$line}</strong></h5>";
                 echo "<hr>";
             }
         }

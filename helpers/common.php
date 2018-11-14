@@ -76,9 +76,10 @@ function env($variable, $ndvalue = null)
     foreach($env as $key => $value){
         if($variable == $key){
             $result = preg_replace('/\s+/', '', $value);
-            if(is_null($result)){
-                return $value;
+            if(!empty($result)){
+                return $result;
             }
+            break;
         }
     }
     return $ndvalue;

@@ -2,8 +2,8 @@
 
 namespace App\Main;
 
-use App\Main\Database;
 use App\Main\Compile;
+use App\Main\Database;
 use \PDO;
 
 class QueryBuilder
@@ -92,7 +92,6 @@ class QueryBuilder
      */
     private $find = false;
 
-
     /**
      * Create a new query builder instance.
      *
@@ -101,7 +100,6 @@ class QueryBuilder
      */
     public function __construct($table)
     {
-        $this->connection = (new Database)->connection();
         $this->table = $table;
         $this->compile = new Compile;
     }
@@ -253,7 +251,7 @@ class QueryBuilder
      */
     public function whereNotIn($column, $value = [])
     {
-      return $this->whereIn($column, $value, false);
+        return $this->whereIn($column, $value, false);
     }
 
     /**
@@ -429,7 +427,7 @@ class QueryBuilder
         if (isset($this->wheres) && is_array($this->wheres)) {
             $sql .= $this->compile->compileWheres($this->wheres);
         }
-        if(isset($this->wherein)) {
+        if (isset($this->wherein)) {
             $sql .= $this->compile->compileWhereIn($this->wherein);
         }
         if (isset($this->groups) && is_array($this->groups)) {
@@ -454,7 +452,7 @@ class QueryBuilder
      * Create new record
      *
      * @param array data
-     * 
+     *
      * @return \SupportSqlCollection
      */
     public function insert(array $data)
@@ -529,19 +527,25 @@ class QueryBuilder
      */
     public function request($sql)
     {
-        $object = $this->connection->query($sql);
-        $type = explode(" ", $sql);
-        switch ($type[0]) {
-            case 'SELECT':
-                return ($this->find === true) ? $object->fetch() : $object->fetchAll(PDO::FETCH_ASSOC);
-                break;
-            case 'INSERT':
-                return $this->find($this->connection->lastInsertId());
-                break;
-            case 'UPDATE':
-                return $this->find($this->wheres[0][0], $this->wheres[0][2]);
-                break;
+        try {
+            $connection = (new Database)->connection();
+            $object = $connection->prepare($sql);
+            $object->execute();
+            $type = explode(" ", $sql);
+            switch ($type[0]) {
+                case 'SELECT':
+                    return ($this->find === true) ? $object->fetch() : $object->fetchAll(PDO::FETCH_ASSOC);
+                    break;
+                case 'INSERT':
+                    return $this->find($connection->lastInsertId());
+                    break;
+                case 'UPDATE':
+                    return $this->find($this->wheres[0][0], $this->wheres[0][2]);
+                    break;
+            }
+            return $object;
+        } catch (\Exception $e) {
+            throw new \App\Main\AppException($e->getMessage());
         }
-        return $object;
     }
 }
