@@ -8,10 +8,8 @@ Route::get('/post', [App\Controllers\HomeController::class, 'post']);
 
 Route::get('/contact', [App\Controllers\HomeController::class, 'contact']);
 
-Route::get('/test-invoke/{id}', 'TestController');
 Route::resource('/users', 'UserController');
 Route::resource('/posts', 'PostController');
-Route::resource('/orders', 'OrderController');
 
 Route::get('/test-class-url', [App\Controllers\WrongController::class, 'index']);
 
@@ -37,6 +35,6 @@ Route::get('/get-cart', 'CartController@getCart');
 Route::get('/remove-cart/{id}', 'CartController@removeCart');
 
 Route::get('/test-nhe', function () {
-    $a = \App\Main\QueryBuilder::table('users')->get();
+    $a = \App\Main\QueryBuilder::table('users')->limit(10)->get();
     return response($a);
 });

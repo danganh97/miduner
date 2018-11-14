@@ -35,9 +35,9 @@
     <tbody>
         <?php foreach($users as $user){ ?>
         <tr>
-            <td scope="row"><?php echo $user['id'] ?></td>
-            <td><?php echo $user['name'] ?></td>
-            <td><a href="/users/<?php echo $user['id'] ?>/edit">edit</a></td>
+            <td scope="row"><?php echo $user->user_id ?></td>
+            <td><?php echo $user->email ?></td>
+            <td><a href="/users/<?php echo $user->user_id ?>/edit">edit</a></td>
         </tr>
         <?php } ?>
     </tbody>

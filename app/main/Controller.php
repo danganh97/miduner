@@ -89,4 +89,9 @@ class Controller
             require $path;
         }
     }
+
+    public function toCollection($arg)
+    {
+        return json_decode(json_encode($arg));
+    }
 }
