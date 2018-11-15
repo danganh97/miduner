@@ -7,13 +7,12 @@ use App\Main\Registry;
 class Controller
 {
     private $layout = null;
-    private $config;
     private $vars = [];
 
     public function __construct()
     {
-        $this->config = Registry::getInstance()->config;
-        $this->layout = $this->config['MAIN_LAYOUT'];
+        $this->app_url = config('APP_URL');
+        $this->layout = config('MAIN_LAYOUT');
     }
 
     public function setLayout($layout)
@@ -28,7 +27,7 @@ class Controller
 
     public function render($view, $data = null)
     {
-        $root = $this->config['APP_URL'];
+        $root =  $this->app_url;
         $layoutPath = $root . '/resources/views/layouts/' . $this->layout . '.php';
         $viewPath = $root . '/resources/views/' . $view . '.php';
         if (!file_exists($viewPath)) {
@@ -52,7 +51,7 @@ class Controller
 
     public function singleRender($view, $data = null)
     {
-        $root = $this->config['APP_URL'];
+        $root =  $this->app_url;
         $path = $root . '/resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
@@ -66,7 +65,7 @@ class Controller
 
     public function getViewContent($view, $data = null)
     {
-        $root = $this->config['APP_URL'];
+        $root =  $this->app_url;
         $path = $root . '/resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
@@ -80,7 +79,7 @@ class Controller
 
     public function partialRender($view, $data = null)
     {
-        $root = $this->config['APP_URL'];
+        $root =  $this->app_url;
         $path = $root . '/resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");

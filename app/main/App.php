@@ -9,11 +9,10 @@ class App
     private static $controller;
     private static $action;
 
-    public function __construct($config)
+    public function __construct()
     {
-        new Autoload($config['APP_URL'], $config['AUTO_LOAD']);
-        $this->route = new Route($config['BASE_URL']);
-        Registry::getInstance()->config = $config;
+        new Autoload();
+        $this->route = new Route();
     }
 
     public function run()

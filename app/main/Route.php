@@ -8,16 +8,14 @@ class Route
     private $base;
     private $flag = false;
 
-    public function __construct($base)
+    public function __construct()
     {
-        $this->base = $base;
+        $this->base = config('BASE_URL');
     }
 
     public function __destruct()
     {
-        if ($this->flag == false) {
-            return (new Controller)->singleRender('404');
-        }
+        return $this->flag == false ? (new Controller)->singleRender('404') : true;
     }
 
     private function getRequestURL()
@@ -30,8 +28,7 @@ class Route
 
     private function getRequestMethod()
     {
-        $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : "GET";
-        return $method;
+        return isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : "GET";
     }
 
     private static function addRoute($method, $url, $action)

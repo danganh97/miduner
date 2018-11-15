@@ -14,7 +14,7 @@ class AppException extends Exception
 
     public function catch_handle($exception)
     {
-        $layoutsException = file_get_contents(Registry::getInstance()->config['APP_URL'] . '/resources/views/Exception.php');
+        $layoutsException = file_get_contents(config('APP_URL') . '/resources/views/Exception.php');
         $title = $exception->getMessage();
         ob_start();
         echo '<hr>';
