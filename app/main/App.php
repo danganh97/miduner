@@ -6,12 +6,11 @@ use App\Main\Registry;
 class App
 {
     private $route;
-    private static $controller;
-    private static $action;
 
-    public function __construct()
+    public function __construct($config)
     {
-        new Autoload();
+        new Autoload($config);
+        Registry::getInstance()->config = $config;
         $this->route = new Route();
     }
 

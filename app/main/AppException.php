@@ -3,18 +3,20 @@
 namespace App\Main;
 
 use \Exception;
+use App\Main\Registry;
 
 class AppException extends Exception
 {
     public function __construct($message, $code = null)
     {
         set_exception_handler([$this, 'catch_handle']);
+        $this->root = Registry::getInstance()->config['appurl'];
         parent::__construct($message, $code);
     }
 
     public function catch_handle($exception)
     {
-        $layoutsException = file_get_contents(config('APP_URL') . '/resources/views/Exception.php');
+        $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');
         $title = $exception->getMessage();
         ob_start();
         echo '<hr>';

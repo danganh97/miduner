@@ -6,10 +6,10 @@ class Autoload
 {
     private $root;
 
-    public function __construct()
+    public function __construct($config)
     {
-        $this->root = config('APP_URL');
-        $this->autoload = config('AUTO_LOAD');
+        $this->root = $config['appurl'];
+        $this->autoload = $config['autoload'];
         $this->autoloadFile();
         spl_autoload_register([$this, 'load']);
     }

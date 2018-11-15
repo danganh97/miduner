@@ -11,8 +11,8 @@ class Controller
 
     public function __construct()
     {
-        $this->app_url = config('APP_URL');
-        $this->layout = config('MAIN_LAYOUT');
+        $this->app_url = config('app.appurl');
+        $this->layout = config('app.layout');
     }
 
     public function setLayout($layout)

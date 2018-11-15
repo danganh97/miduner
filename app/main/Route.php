@@ -10,7 +10,7 @@ class Route
 
     public function __construct()
     {
-        $this->base = config('BASE_URL');
+        $this->base = config('app.baseurl');
     }
 
     public function __destruct()

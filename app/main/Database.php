@@ -8,14 +8,17 @@ use \PDOException;
 
 class Database
 {
+    public function __construct()
+    {
+        $this->config = config('database.connection');
+    }
     public function connection()
     {
-        $database = config('DATABASE');
-        $connection = $database['DB_CONNECTION'];
-        $host = $database['DB_HOST'];
-        $database_name = $database['DB_DATABASE'];
-        $username = $database['DB_USERNAME'];
-        $password = $database['DB_PASSWORD'];
+        $connection = $this->config['driver'];
+        $host = $this->config['host'];
+        $database_name = $this->config['database'];
+        $username = $this->config['username'];
+        $password = $this->config['password'];
         try {
             $conn = new PDO("$connection:host=$host;dbname=$database_name", $username, $password);
             $conn->exec("set names utf8");

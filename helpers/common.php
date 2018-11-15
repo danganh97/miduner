@@ -107,12 +107,15 @@ if (!function_exists('env')) {
 if (!function_exists('config')) {
     function config($variable)
     {
-        $app = require __DIR__ . '/../config/app.php';
-        foreach ($app as $key => $value) {
-            if ($variable == $key) {
-                return $value;
-            }
+        $paze = explode('.', $variable);
+        if (count($paze) != 2) {
+            throw new \App\Main\AppException("The {$variable} doesn't exists !");
         }
-        return null;
+        if (!$url = \App\Main\Registry::getInstance()->config['appurl'] . "/config/{$paze[0]}.php") {
+            throw new \App\Main\AppException("The $url doesn't exists !");
+        } else {
+            $config = require $url;
+        }
+        return $config[$paze[1]];
     }
 }
