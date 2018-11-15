@@ -22,10 +22,9 @@ if (!function_exists('simpleView')) {
 }
 
 if (!function_exists('response')) {
-    function response($data, $code = 200)
+    function response()
     {
-        (new App\Http\HttpResponseCode($code));
-        return ApiResponse($data);
+        return new \App\Main\DataResponse;
     }
 }
 

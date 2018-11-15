@@ -1,4 +1,5 @@
 <?php
+use App\Main\QueryBuilder as DB;
 
 Route::get('/', [App\Controllers\HomeController::class, 'home']);
 
@@ -22,12 +23,11 @@ Route::post('/logout', [App\Controllers\UserController::class, 'logout']);
 
 Route::get('/test-join', function(){
     $users = App\Main\QueryBuilder::table('users')
-    // ->select('users.user_id as id', 'users.is_verified' , 'name', 'email', 'provider_user_id')
+    ->select('users.user_id as id', 'users.is_verified' , 'name', 'email', 'provider_user_id')
     ->join('social_accounts', 'users.user_id', '=' , 'social_accounts.user_id')
     ->where('is_verified', '=', 1)
     ->get();
-    // return view('users/index', compact('users'));
-    return response($users);
+    return response()->json($users);
 });
 
 Route::get('/add-to-cart/{id}', 'CartController@addToCart');
@@ -35,6 +35,11 @@ Route::get('/get-cart', 'CartController@getCart');
 Route::get('/remove-cart/{id}', 'CartController@removeCart');
 
 Route::get('/test-nhe', function () {
-    $a = \App\Main\QueryBuilder::table('users')->limit(10)->get();
+    $a = DB::table('users')->limit(10)->get();
     return response($a);
+});
+
+Route::get('/json', function () {
+    $users = DB::table('users')->limit(10)->orderByDesc('user_id')->get();
+    return response()->json($users);
 });
