@@ -39,7 +39,7 @@ Route::get('/example', function(){
 */
 Route::get('/example', function(){
     $users = App\Main\QueryBuilder::table('users')->get();
-    return response($users);
+    return response()->json($users);
 });
 
 /*
