@@ -136,7 +136,7 @@ class Route
         }
     }
 
-    private function compileRoute($action, $params)
+    private function compileRoute($action, array $params)
     {
         if (!is_array($action)) {
             $action = explode('@', $action);
@@ -175,9 +175,9 @@ class Route
         throw new App\Main\AppException("Class {$className} doesn't exists !");
     }
 
-    public function callableAction($action, array $params)
+    public function callableAction($action, array $params = null)
     {
-        return $this->compileRoute($action, $params);
+        return $this->compileRoute($action, (array)$params);
     }
 
     public function run()

@@ -43,3 +43,7 @@ Route::get('/json', function () {
     $users = DB::table('users')->limit(10)->orderByDesc('user_id')->get();
     return response()->json($users);
 });
+
+Route::get('/test', function () {
+    return action('HomeController@home');
+});

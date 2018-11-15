@@ -1,6 +1,6 @@
 <?php
 
-
+use App\Main\QueryBuilder as DB;
 /*
 |--------------------------------------------------------------------------
 | Routing of the Application
@@ -11,15 +11,15 @@
 | Remember ! Declare your route file from this folder when you make a new
 | file to config\app.php [AUTO_LOAD]
 |---------------------------------------------------------------------------
-*/
+ */
 
 /*
 |---------------------------------------------------------------------------
 | This Route for the view extends master layout you declared
 | in config/app.php [MAIN_LAYOUT]
 |---------------------------------------------------------------------------
-*/
-Route::get('/example', function(){
+ */
+Route::get('/example', function () {
     return view('example');
 });
 
@@ -27,8 +27,8 @@ Route::get('/example', function(){
 |---------------------------------------------------------------------------
 | This Route for only the simple view non extends master layout
 |---------------------------------------------------------------------------
-*/
-Route::get('/example', function(){
+ */
+Route::get('/example', function () {
     return simpleView('example');
 });
 
@@ -36,9 +36,9 @@ Route::get('/example', function(){
 |---------------------------------------------------------------------------
 | This Route return data format json for the API Application
 |---------------------------------------------------------------------------
-*/
-Route::get('/example', function(){
-    $users = App\Main\QueryBuilder::table('users')->get();
+ */
+Route::get('/example', function () {
+    $users = DB::table('users')->get();
     return response()->json($users);
 });
 
@@ -46,18 +46,33 @@ Route::get('/example', function(){
 |---------------------------------------------------------------------------
 | This Route passing data to the view choosing using compact function()
 |---------------------------------------------------------------------------
-*/
-Route::get('/example', function(){
-    $users = App\Main\QueryBuilder::table('users')->get();
+ */
+Route::get('/example', function () {
+    $users = DB::table('users')->get();
     return view('users/index', compact('users'));
+});
+
+/*
+|---------------------------------------------------------------------------
+| Now, we're supported callable action with array parameters or compact()
+|---------------------------------------------------------------------------
+ */
+Route::get('/example', function () {
+    $users = DB::table('users')->get();
+    return action([UserController::class, 'index'], ['users' => $users]);
+});
+
+Route::get('/example', function () {
+    $users = DB::table('users')->get();
+    return action('UserController@index', compact('users'));
 });
 
 /*
 |---------------------------------------------------------------------------
 | This Route for url having one or many variables
 |---------------------------------------------------------------------------
-*/
-Route::get('/example/{variable}', function($variable){
+ */
+Route::get('/example/{variable}', function ($variable) {
     echo $variable;
 });
 
@@ -66,7 +81,7 @@ Route::get('/example/{variable}', function($variable){
 | This Route the controller from app\controllers and you must declare
 | controller before using this here
 |---------------------------------------------------------------------------
-*/
+ */
 
 Route::get('/example', 'ExampleController@ExampleFunction');
 Route::get('/example', [App\Controllers\ExampleController::class, 'ExampleFunction']);
@@ -76,7 +91,7 @@ Route::get('/example', [App\Controllers\ExampleController::class, 'ExampleFuncti
 | Or you can using only controller instead of using controller and action
 | Remember in your controller must be having magic method __invoke()
 |---------------------------------------------------------------------------
-*/
+ */
 
 Route::get('/example', 'ExampleController');
 
@@ -84,7 +99,7 @@ Route::get('/example', 'ExampleController');
 |---------------------------------------------------------------------------
 | Here all method we're support
 |---------------------------------------------------------------------------
-*/
+ */
 
 Route::get('/example', 'ExampleController@get');
 Route::post('/example', 'ExampleController@post');
@@ -105,6 +120,6 @@ Route::any('/example', 'ExampleController@any');
 | Route::put('/example/{example}/update', 'ExampleController@update);
 | Route::get('/example/{example}/delete', 'ExampleController@destroy);
 |---------------------------------------------------------------------------
-*/
+ */
 
 Route::resource('/example', 'ExampleController');
