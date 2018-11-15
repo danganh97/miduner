@@ -12,6 +12,7 @@ class App
         new Autoload($config);
         Registry::getInstance()->config = $config;
         $this->route = new Route();
+        Registry::getInstance()->route = $this->route;
     }
 
     public function run()

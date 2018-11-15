@@ -88,13 +88,12 @@ class Route
             }
         }
 
-        if (is_callable($action)) {
-            if (is_array($action)) {
-                return $this->compileRoute($action, $params);
-            }
-            return call_user_func_array($action, $params);
-        } elseif (is_string($action)) {
+        if (is_callable($action) && is_array($action) || is_string($action)) {
             return $this->compileRoute($action, $params);
+        }elseif(is_callable($action)){
+            return call_user_func_array($action, $params);
+        }else{
+            throw new \App\Main\AppException("The $action doesn't exists !");
         }
     }
 
@@ -150,9 +149,8 @@ class Route
                 break;
             case 1:
                 $className = $action[0];
-                $methodName = '__invoke()';
+                $methodName = null;
                 $cloud = false;
-                $params = ($params ? $params[0] : null);
                 break;
             default:
                 throw new App\Main\AppException("Controller wrong format !");
@@ -175,6 +173,11 @@ class Route
             throw new App\Main\AppException("Method {$className}@{$methodName} doesn't exists !");
         }
         throw new App\Main\AppException("Class {$className} doesn't exists !");
+    }
+
+    public function callableAction($action, array $params)
+    {
+        return $this->compileRoute($action, $params);
     }
 
     public function run()

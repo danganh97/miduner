@@ -119,3 +119,10 @@ if (!function_exists('config')) {
         return $config[$paze[1]];
     }
 }
+
+if(!function_exists('action')){
+    function action($action, array $params = null)
+    {
+        return \App\Main\Registry::getInstance()->route->callableAction($action, $params);
+    }
+}
