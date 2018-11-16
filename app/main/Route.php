@@ -1,6 +1,7 @@
 <?php
 
 use App\Main\Controller;
+use App\Main\AppException;
 
 class Route
 {
@@ -79,7 +80,7 @@ class Route
 
     public static function resources(array $resources)
     {
-        foreach($resources as $key => $resource){
+        foreach ($resources as $key => $resource) {
             self::resource($key, $resource);
         }
     }
@@ -96,11 +97,12 @@ class Route
         }
         if (is_callable($action) && is_array($action) || is_string($action)) {
             return $this->compileRoute($action, $params);
-        }elseif(is_callable($action)){
+        } elseif (is_callable($action)) {
             return call_user_func_array($action, $params);
-        }else{
+        } else {
             $action = isset($action[1]) ? $action[1] : $action;
-            throw new \App\Main\AppException("The $action doesn't exists !");
+            $action = is_array($action) && count($action) == 1 ? $action[0] : $action;
+            throw new AppException("The $action doesn't exists !");
         }
     }
 
@@ -129,16 +131,9 @@ class Route
         $requestParams = explode('/', $requestUrl);
 
         foreach ($routes as $route) {
-            $listMethod[] = $route[0];
-            $listUri[] = $route[1];
-            $listAction[] = $route[2];
-        }
-
-        foreach ($listUri as $keyURI => $route) {
-            $routeParams = explode('/', $route);
-
-            if (count($requestParams) === count($routeParams) && strpos(strtolower($listMethod[$keyURI]), strtolower($requestMethod)) !== false) {
-                $this->compare($route, $requestUrl, $listAction[$keyURI]);
+            $routeParams = explode('/', $route[1]);
+            if (count($requestParams) === count($routeParams) && strpos(strtolower($route[0]), strtolower($requestMethod)) !== false) {
+                $this->compare($route[1], $requestUrl, $route[2]);
             }
         }
     }
@@ -160,7 +155,7 @@ class Route
                 $cloud = false;
                 break;
             default:
-                throw new App\Main\AppException("Controller wrong format !");
+                throw new AppException("Controller wrong format !");
                 break;
         }
 
@@ -172,19 +167,19 @@ class Route
         if (class_exists($controller)) {
             $object = new $controller;
             if (method_exists($controller, $methodName) && $cloud === true) {
-                call_user_func_array([$object, $methodName], $params);return;
+                return call_user_func_array([$object, $methodName], $params);
             }
             if ($cloud === false) {
-                $object($params);return;
+                return $object($params);
             }
-            throw new App\Main\AppException("Method {$className}@{$methodName} doesn't exists !");
+            throw new AppException("Method {$className}@{$methodName} doesn't exists !");
         }
-        throw new App\Main\AppException("Class {$className} doesn't exists !");
+        throw new AppException("Class {$className} doesn't exists !");
     }
 
     public function callableAction($action, array $params = null)
     {
-        return $this->compileRoute($action, (array)$params);
+        return $this->compileRoute($action, (array) $params);
     }
 
     public function run()

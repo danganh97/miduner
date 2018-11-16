@@ -26,7 +26,7 @@ class UserController extends Controller
     {
         $data = Request::all();
         $user = User::create($data);
-        return response($user);
+        return response()->json($user);
     }
 
     public function show($id)
@@ -35,7 +35,7 @@ class UserController extends Controller
         if (!$user) {
             echo 'user not found !';
         }
-        return response($user);
+        return response()->json($user);
     }
 
     public function edit($id)
