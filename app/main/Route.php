@@ -68,13 +68,20 @@ class Route
 
     public static function resource($url, $action)
     {
-        self::get($url, $action . '@' . 'index');
-        self::get($url . '/create', $action . '@' . 'create');
-        self::post($url, $action . '@' . 'store');
-        self::get($url . '/{id}/show', $action . '@' . 'show');
-        self::get($url . '/{id}/edit', $action . '@' . 'edit');
-        self::put($url . '/{id}/update', $action . '@' . 'update');
-        self::delete($url . '/{id}/delete', $action . '@' . 'destroy');
+        self::get("/$url", "$action@index");
+        self::get("/$url/create", "$action@create");
+        self::post("/$url", "$action@store");
+        self::get("/$url/{id}/show", "$action@show");
+        self::get("/$url/{id}/edit", "$action@edit");
+        self::put("/$url/{id}/update", "$action@update");
+        self::delete("/$url/{id}/delete", "$action@destroy");
+    }
+
+    public static function resources(array $resources)
+    {
+        foreach($resources as $key => $resource){
+            self::resource($key, $resource);
+        }
     }
 
     public function handle($routeParams, $requestParams, $action)
@@ -87,12 +94,12 @@ class Route
                 $params[] = $pazeREQUEST[$key];
             }
         }
-
         if (is_callable($action) && is_array($action) || is_string($action)) {
             return $this->compileRoute($action, $params);
         }elseif(is_callable($action)){
             return call_user_func_array($action, $params);
         }else{
+            $action = isset($action[1]) ? $action[1] : $action;
             throw new \App\Main\AppException("The $action doesn't exists !");
         }
     }
