@@ -16,9 +16,12 @@ class Autoload
 
     public function load($class)
     {
-        $file = $this->root . '\\' . $class . '.php';
+        $tmp = explode('\\', $class);
+        $className = end($tmp);
+        $pathName = str_replace($className, '', $class);
+        $file = $this->root . '\\' . $pathName . $className . '.php';
         if (file_exists($file)) {
-            require $file;
+            require_once $file;
         } else {
             throw new AppException("Class $class doesn't exists");
         }

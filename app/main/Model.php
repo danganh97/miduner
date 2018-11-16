@@ -28,7 +28,7 @@ abstract class Model
 
     public function findStatic($param)
     {
-        return DB::table($this->table)->find($this->primaryKey, $param);
+        return DB::table($this->table)->find($param, $this->primaryKey);
     }
 
     public function createStatic($data)

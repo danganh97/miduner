@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . '../Autoload.php';
+require __DIR__ . '/Autoload.php';
 use App\Main\Registry;
 
 class App
