@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'server' => env('APP_SERVER', 'windows'),
     'baseurl' => env('BASE_URL', '/public'),
     'appurl' => env('APP_URL', dirname(dirname(__FILE__))),
     'layout' => env('MAIN_LAYOUT', 'master'),

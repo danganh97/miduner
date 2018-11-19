@@ -11,6 +11,7 @@ class Autoload
         $this->root = $config['appurl'];
         $this->autoload = $config['autoload'];
         $this->autoloadFile();
+        $this->server = $config['server'];
         spl_autoload_register([$this, 'load']);
     }
 
@@ -19,7 +20,9 @@ class Autoload
         $tmp = explode('\\', $class);
         $className = end($tmp);
         $pathName = str_replace($className, '', $class);
-        $file = $this->root . '\\' . $pathName . $className . '.php';
+        $file = strtolower($this->server) == 'linux'
+                ? $this->root . '/' . str_replace('\\', '/', strtolower($pathName)) . $className . '.php'
+                : $this->root . '\\' . $pathName . $className . '.php';
         if (file_exists($file)) {
             require_once $file;
         } else {
