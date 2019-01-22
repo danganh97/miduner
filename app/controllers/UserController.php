@@ -11,8 +11,7 @@ class UserController extends Controller
 {
     public function index(Request $request = null)
     {
-        // $users = json_encode(User::get());
-        $users = \App\Main\QueryBuilder::table('users')->limit(10)->get();
+        $users = DB::table('users')->limit(10)->get();
         $users = $this->toCollection($users);
         return view('users/index', compact('users'));
     }
