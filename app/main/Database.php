@@ -20,7 +20,7 @@ class Database
         $username = $this->config['username'];
         $password = $this->config['password'];
         try {
-            $conn = new PDO("$connection:host=$host;dbname=$database_name", $username, $password);
+            $conn = new PDO("$connection:host=$host;dbname=$database_name", $username, $password, null);
             $conn->exec("set names utf8");
             $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
             $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
