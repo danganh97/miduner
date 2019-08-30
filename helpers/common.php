@@ -128,10 +128,10 @@ if(!function_exists('action')){
 }
 
 if(!function_exists('toPre')) {
-    function toPre(array $array)
+    function toPre($collection) : void
     {
       echo '<pre>';
-      print_r($array);
+      print_r($collection);
       echo '</pre>';
       exit;
     }

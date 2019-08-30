@@ -88,9 +88,16 @@ class QueryBuilder
     /**
      * Take 1 record
      *
-     * @var bolean
+     * @var b0olean
      */
     private $find = false;
+
+    /**
+     * Take 1 record
+     * 
+     * @var boolean
+     */
+    private $first = false;
 
     /**
      * Create a new query builder instance.
@@ -481,6 +488,21 @@ class QueryBuilder
         $sql .= $this->compile->compileLimit($this->limit);
         return $this->request($sql);
     }
+    
+     /**
+     * First 1 record usually use column id
+     *
+     * @param string value
+     * @param string column
+     * @return \SupportSqlCollection
+     */
+    public function first()
+    {
+        $this->first = true;
+        $this->limit = 1;
+        $sql = $this->paze();
+        return $this->request($sql);
+    }
 
     /**
      * Quick login with array params
@@ -536,6 +558,23 @@ class QueryBuilder
             switch ($type[0]) {
                 case 'SELECT':
                     if($this->find === true) {
+                        if(!empty($this->calledFromModel)) {
+                            $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+                            if(is_array($resource) && count($resource) > 0) {
+                                return $resource[0];
+                            }
+                            throw new AppException("Resource not found");
+                        }
+                        return $object->fetch();
+                    }
+                    if($this->first === true) {
+                        if(!empty($this->calledFromModel)) {
+                            $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+                            if(is_array($resource) && count($resource) > 0) {
+                                return $resource[0];
+                            }
+                            return null;
+                        }
                         return $object->fetch();
                     }
                     if(!empty($this->calledFromModel)) {
