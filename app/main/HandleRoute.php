@@ -6,8 +6,6 @@ use App\Main\Routing\Route;
 
 class HandleRoute
 {
-    private $routes;
-    private $base;
     public $flag = false;
 
     public function __construct($routes = null)
