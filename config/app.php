@@ -7,8 +7,8 @@ return [
     'layout' => env('MAIN_LAYOUT', 'master'),
     'autoload' => [
         'app/main/Route.php',
-        'routes/routes.php',
         'helpers/common.php',
         'helpers/helpers.php',
+        'routes/routes.php',
     ],
 ];

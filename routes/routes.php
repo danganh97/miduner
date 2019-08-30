@@ -1,5 +1,6 @@
 <?php
 use App\Main\QueryBuilder as DB;
+use App\Main\Route;
 
 Route::get('/', [App\Controllers\HomeController::class, 'home']);
 

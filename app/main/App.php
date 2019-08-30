@@ -2,6 +2,7 @@
 
 require __DIR__ . '/Autoload.php';
 use App\Main\Registry;
+use App\Main\Route;
 
 class App
 {
@@ -17,6 +18,6 @@ class App
 
     public function run()
     {
-        $this->route->run();
+        return $this->route->run();
     }
 }

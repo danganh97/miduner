@@ -32,9 +32,13 @@ class Autoload
 
     private function autoloadFile()
     {
-        foreach ($this->defaultFile() as $file) {
-            require $this->root.'/'.$file;
+        try {
+            foreach ($this->defaultFile() as $file) {
+                require $this->root.'/'.$file;
+            }
+        } catch (\Throwable $th) {
         }
+        
     }
 
     private function defaultFile()
