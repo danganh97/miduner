@@ -10,4 +10,23 @@ class User extends Model
     protected $primaryKey = 'user_id';
     protected $username = 'email';
     protected $password = 'password';
+
+    protected $fillable = [
+      'user_id', 'email', 'noti_push', 'role_id', 'is_verified', 'logged_at', 'email_token', 'remember_token'
+    ];
+
+    protected $hidden = [
+      'password'
+    ];
+
+    protected $appends = [
+      'full_name'
+    ];
+
+    protected $casts = [
+      'user_id' => 'int'
+    ];
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
 }

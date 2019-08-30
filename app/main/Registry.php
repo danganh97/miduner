@@ -22,7 +22,7 @@ class Registry
 
     public function __set($name, $value)
     {
-        !isset($this->storage[$name]) ? $this->storage[$name] = $value : die('This key already exists !');
+        $this->storage[$name] = !isset($this->storage[$name]) ? $value : $this->storage[$name];
     }
 
     public function __get($name)

@@ -126,3 +126,20 @@ if(!function_exists('action')){
         return \App\Main\Registry::getInstance()->route->callableAction($action, $params);
     }
 }
+
+if(!function_exists('toPre')) {
+    function toPre(array $array)
+    {
+      echo '<pre>';
+      print_r($array);
+      echo '</pre>';
+      exit;
+    }
+}
+
+if(!function_exists('app')) {
+    function app()
+    {
+      return \App\Main\Registry::getInstance();
+    }
+}

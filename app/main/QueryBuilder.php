@@ -100,6 +100,7 @@ class QueryBuilder
      */
     public function __construct($table)
     {
+        $this->calledFromModel = app()->callModel;
         $this->table = $table;
         $this->compile = new Compile;
     }
@@ -534,7 +535,13 @@ class QueryBuilder
             $type = explode(" ", $sql);
             switch ($type[0]) {
                 case 'SELECT':
-                    return ($this->find === true) ? $object->fetch() : $object->fetchAll(PDO::FETCH_ASSOC);
+                    if($this->find === true) {
+                        return $object->fetch();
+                    }
+                    if(!empty($this->calledFromModel)) {
+                        return $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+                    }
+                    return $object->fetchAll(PDO::FETCH_OBJ);
                     break;
                 case 'INSERT':
                     return $this->find($connection->lastInsertId());

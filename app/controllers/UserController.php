@@ -6,14 +6,22 @@ use App\Http\Request;
 use App\Main\Controller;
 use App\Main\QueryBuilder as DB;
 use App\Models\User;
+use App\Main\Database;
+use Exception;
+use PDO;
 
 class UserController extends Controller
 {
     public function index(Request $request = null)
     {
-        $users = DB::table('users')->limit(10)->get();
-        $users = $this->toCollection($users);
+      try {
+        $users = User::get();
+        // $users = DB::table('users')->limit(10)->get();
+        toPre($users);
         return view('users/index', compact('users'));
+      } catch (\Exception $e) {
+        throw new \App\Main\AppException($e->getMessage());
+      }
     }
 
     public function create()
@@ -34,6 +42,7 @@ class UserController extends Controller
         if (!$user) {
             echo 'user not found !';
         }
+        toPre($user);die();
         return response()->json($user);
     }
 
@@ -47,9 +56,9 @@ class UserController extends Controller
         return simpleView('users/edit', ['user' => $user]);
     }
 
-    public function update($id)
-    {
+    public function update($id){
         $data = Request::all();
+          $a = 1;
         $user = DB::table('users')->where('id', '=', $id)->update($data);
     }
 

@@ -5,6 +5,11 @@ use App\Main\QueryBuilder as DB;
 
 abstract class Model
 {
+    public function __construct()
+    {
+      app()->callModel = get_called_class();
+    }
+
     protected $table;
     protected $primaryKey;
     protected $username;
