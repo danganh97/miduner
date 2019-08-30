@@ -3,13 +3,22 @@
 namespace App\Main\Routing;
 
 use App\Main\AppException;
+use App\Http\Kernel;
 
 class Compile
 {
     public function __construct($action, array $params, $middleware = null)
     {
         if($middleware != null) {
-            new $middleware($action);
+            if(count(explode('\\', $middleware)) > 1) {
+                new $middleware($action);
+            } else {
+                foreach((new Kernel)->routeMiddleware as $key => $value) {
+                    if($middleware == $key) {
+                        new $value($action);
+                    }
+                }
+            }
         }
         if (!is_array($action)) {
             $action = explode('@', $action);

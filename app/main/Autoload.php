@@ -21,8 +21,8 @@ class Autoload
         $className = end($tmp);
         $pathName = str_replace($className, '', $class);
         $file = strtolower($this->server) == 'linux'
-                ? $this->root . '/' . str_replace('\\', '/', strtolower($pathName)) . $className . '.php'
-                : $this->root . '\\' . $pathName . $className . '.php';
+        ? $this->root . '/' . str_replace('\\', '/', strtolower($pathName)) . $className . '.php'
+        : $this->root . '\\' . $pathName . $className . '.php';
         if (file_exists($file)) {
             require_once $file;
         } else {
@@ -34,11 +34,11 @@ class Autoload
     {
         try {
             foreach ($this->defaultFile() as $file) {
-                require $this->root.'/'.$file;
+                require_once $this->root . '/' . $file;
             }
         } catch (\Throwable $th) {
         }
-        
+
     }
 
     private function defaultFile()

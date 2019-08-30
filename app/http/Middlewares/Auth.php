@@ -8,10 +8,10 @@ class Auth extends Middleware
 {
     public function handle()
     {
-        return true;
-        // return response()->json([
-        //     'success' => false,
-        //     'message' => 'Access denied !'
-        // ], 401);
+        // return true;
+        return response()->json([
+            'success' => false,
+            'message' => 'Access denied !'
+        ], 401);
     }
 }

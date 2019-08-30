@@ -1,7 +1,7 @@
 <?php
 use App\Main\Route;
 
-Route::get('/', [App\Controllers\HomeController::class, 'home'])->middleware(App\Http\Middlewares\Auth::class)->name('home');
+Route::get('/', [App\Controllers\HomeController::class, 'home'])->middleware('auth')->name('home');
 
 Route::get('/about', [App\Controllers\HomeController::class, 'about'])->name('about');
 

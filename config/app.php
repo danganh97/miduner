@@ -11,4 +11,12 @@ return [
         'helpers/helpers.php',
         'routes/routes.php',
     ],
+
+    'aliases' => [
+        'Route' => App\Main\Route::class,
+        'DB' => App\Main\QueryBuilder::class,
+        'AppException' => App\Main\AppException::class,
+        'Session' => App\Main\Session::class,
+        'Request' => App\Http\Request::class
+    ]
 ];
