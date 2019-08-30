@@ -583,7 +583,7 @@ class QueryBuilder
                     return $object->fetchAll(PDO::FETCH_OBJ);
                     break;
                 case 'INSERT':
-                    return $this->find($connection->lastInsertId());
+                    return $connection->lastInsertId() === "0";
                     break;
                 case 'UPDATE':
                     return $this->find($this->wheres[0][0], $this->wheres[0][2]);

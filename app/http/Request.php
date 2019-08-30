@@ -28,6 +28,7 @@ class Request
      */
     public static function all()
     {
+        $request = [];
         foreach (self::getRequest() as $name => $value) {
             $request[$name] = $value;
         }

@@ -9,6 +9,7 @@ class ApiResponseResource
     public function handle($data)
     {
         echo json_encode($data);
+        exit;
     }
 
     public function message($message, $code = 200)

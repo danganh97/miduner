@@ -2,6 +2,7 @@
 namespace App\Main;
 
 use App\Main\HandleRoute;
+use App\Main\Routing\Compile;
 
 class Route
 {
@@ -77,6 +78,11 @@ class Route
     {
         $this->middleware = $middleware;
         return $this;
+    }
+
+    public function callableAction($action, array $params = null)
+    {
+        return (new Compile($action, (array) $params));
     }
 
     public function __destruct()

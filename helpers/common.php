@@ -120,26 +120,40 @@ if (!function_exists('config')) {
     }
 }
 
-if(!function_exists('action')){
+if (!function_exists('action')) {
     function action($action, array $params = null)
     {
         return \App\Main\Registry::getInstance()->route->callableAction($action, $params);
     }
 }
 
-if(!function_exists('toPre')) {
-    function toPre($collection) : void
+if(!function_exists('route')) {
+    function route(string $name = null, $params = null)
     {
-      echo '<pre>';
-      print_r($collection);
-      echo '</pre>';
-      exit;
+        return app()->routes;
     }
 }
 
-if(!function_exists('app')) {
+if (!function_exists('toPre')) {
+    function toPre($collection): void
+    {
+        echo '<pre>';
+        print_r($collection);
+        echo '</pre>';
+        exit;
+    }
+}
+
+if (!function_exists('app')) {
     function app()
     {
-      return \App\Main\Registry::getInstance();
+        return \App\Main\Registry::getInstance();
+    }
+}
+
+if (!function_exists('is_json')) {
+    function is_json($argument)
+    {
+        return (json_decode(json_encode($argument)) != NULL) ? true : false;
     }
 }
