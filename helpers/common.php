@@ -34,14 +34,14 @@ if (!function_exists('response')) {
 if (!function_exists('ApiResponse')) {
     function ApiResponse($data)
     {
-        return (new App\Http\ApiResponseResource)->handle($data);
+        return (new App\Main\Http\ApiResponseResource)->handle($data);
     }
 }
 
 if (!function_exists('sendMessage')) {
     function sendMessage($message, $code = null)
     {
-        return (new App\Http\ApiResponseResource)->message($message, $code);
+        return (new App\Main\Http\ApiResponseResource)->message($message, $code);
     }
 }
 

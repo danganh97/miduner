@@ -4,18 +4,31 @@ namespace App\Main\Http\Exceptions;
 
 use \Exception;
 use App\Main\Registry;
+use App\Main\Http\Request;
+use App\Main\Http\HttpResponseCode;
 
 class AppException extends Exception
 {
+    private $exception;
+
     public function __construct($message, $code = null)
     {
-        set_exception_handler([$this, 'catch_handle']);
+        set_exception_handler([$this, 'render']);
         $this->root = Registry::getInstance()->config['appurl'];
         parent::__construct($message, $code);
+        $this->report();
     }
 
-    public function catch_handle($exception)
+    public function render($exception, Request $request = null)
     {
+        $this->exception = $exception;
+        $header = getallheaders();
+        if ($header['Accept'] == 'application/json') {
+            return response()->json([
+                'status' => false,
+                'message' => $exception->getMessage()
+            ], 500);
+        }
         $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');
         $title = $exception->getMessage();
         ob_start();
@@ -38,5 +51,10 @@ class AppException extends Exception
         $layoutsException = preg_replace('/\[exception\]/', $content, $layoutsException);
         $layoutsException = preg_replace('/\[title\]/', $title, $layoutsException);
         eval(' ?>' . $layoutsException);
+    }
+
+    public function report()
+    {
+        echo 'Reported !';
     }
 }
