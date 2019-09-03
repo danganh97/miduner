@@ -17,21 +17,15 @@ class Autoload
 
     public function load($class)
     {
-        // echo $class;exit;
-        // $tmp = explode('\\', $class);
-        // $className = end($tmp);
-        // $pathName = str_replace($className, '', $class);
         switch($this->server) {
             case 'linux':
-            // $file = $this->root . '/' . str_replace('\\', '/', strtolower($pathName)) . $className . '.php';
             $file = $this->root . '/' . str_replace('\\', '/', lcfirst($class) . '.php');
             case 'windows':
-            // $file = $this->root . '\\' . $pathName . $className . '.php';
+            $file = $this->root . '\\' . $class . '.php';
         }
         if (file_exists($file)) {
             require_once $file;
         } else {
-            echo $file;
             throw new AppException("Class $class doesn't exists");
         }
     }

@@ -11,7 +11,7 @@ class Route
     private $method;
     private $name;
     private $middleware;
-    private $except;
+    private $except = [];
     private static $resources = [];
     private static $routes = [];
 
