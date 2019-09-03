@@ -24,8 +24,19 @@ class User extends Model
     ];
 
     protected $casts = [
-      'user_id' => 'int'
+      'user_id' => 'int',
+      'email' => 'string',
     ];
+
+    public function getFullNameAttribute()
+    {
+        return 'anh deptrai ' . $this->user_id;
+    }
+
+    public function getEmailAttribute()
+    {
+        return $this->email;
+    }
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';

@@ -1,4 +1,4 @@
-<?php $this->setVars('title', '<title>Clean Blog - Home</title>') ?>
+<?php $this->setVars('title', 'Clean Blog - Home') ?>
 <?php $this->setVars('script', '') ?>
 <?php $this->setVars('meta', '
 <meta property="og:type" content= "website" />
@@ -36,7 +36,7 @@
         <?php foreach($users as $user){ ?>
         <tr>
             <td scope="row"><?php echo $user->user_id ?></td>
-            <td><?php echo $user->email ?></td>
+            <td><?php echo $user->full_name ?></td>
             <td><a href="/users/<?php echo $user->user_id ?>/edit">edit</a></td>
         </tr>
         <?php } ?>

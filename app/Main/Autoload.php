@@ -17,15 +17,21 @@ class Autoload
 
     public function load($class)
     {
-        $tmp = explode('\\', $class);
-        $className = end($tmp);
-        $pathName = str_replace($className, '', $class);
-        $file = strtolower($this->server) == 'linux'
-        ? $this->root . '/' . str_replace('\\', '/', strtolower($pathName)) . $className . '.php'
-        : $this->root . '\\' . $pathName . $className . '.php';
+        // echo $class;exit;
+        // $tmp = explode('\\', $class);
+        // $className = end($tmp);
+        // $pathName = str_replace($className, '', $class);
+        switch($this->server) {
+            case 'linux':
+            // $file = $this->root . '/' . str_replace('\\', '/', strtolower($pathName)) . $className . '.php';
+            $file = $this->root . '/' . str_replace('\\', '/', lcfirst($class) . '.php');
+            case 'windows':
+            // $file = $this->root . '\\' . $pathName . $className . '.php';
+        }
         if (file_exists($file)) {
             require_once $file;
         } else {
+            echo $file;
             throw new AppException("Class $class doesn't exists");
         }
     }
@@ -37,6 +43,7 @@ class Autoload
                 require_once $this->root . '/' . $file;
             }
         } catch (\Throwable $th) {
+            toPre($this->root.'/'.$file);
         }
 
     }

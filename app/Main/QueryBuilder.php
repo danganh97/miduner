@@ -558,7 +558,7 @@ class QueryBuilder
             switch ($type[0]) {
                 case 'SELECT':
                     if($this->find === true) {
-                        if(!empty($this->calledFromModel)) {
+                        if(empty($this->calledFromModel)) {
                             $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
                             if(is_array($resource) && count($resource) > 0) {
                                 return $resource[0];
@@ -568,7 +568,7 @@ class QueryBuilder
                         return $object->fetch();
                     }
                     if($this->first === true) {
-                        if(!empty($this->calledFromModel)) {
+                        if(empty($this->calledFromModel)) {
                             $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
                             if(is_array($resource) && count($resource) > 0) {
                                 return $resource[0];

@@ -6,7 +6,7 @@ return [
     'appurl' => env('APP_URL', dirname(dirname(__FILE__))),
     'layout' => env('MAIN_LAYOUT', 'master'),
     'autoload' => [
-        'app/main/Route.php',
+        'app/Main/Route.php',
         'helpers/common.php',
         'helpers/helpers.php',
         'routes/routes.php',

@@ -2,22 +2,22 @@
 
 namespace App\Controllers;
 
-use App\Models\User;
 use App\Http\Request;
+use App\Main\AppException;
 use App\Main\Controller;
 use App\Main\QueryBuilder as DB;
+use App\Models\User;
 
 class UserController extends Controller
 {
     public function index(Request $request = null)
     {
-      try {
-        $users = User::find(1);
-        // $users = DB::table('users')->limit(10)->get();
-        return view('users/index', compact('users'));
-      } catch (\Exception $e) {
-        throw new \App\Main\AppException($e->getMessage());
-      }
+        try {
+            $users = User::get();
+            return view('users/index', compact('users'));
+        } catch (\Exception $e) {
+            throw new AppException($e->getMessage());
+        }
     }
 
     public function create()
@@ -52,9 +52,9 @@ class UserController extends Controller
         return simpleView('users/edit', ['user' => $user]);
     }
 
-    public function update($id){
+    public function update($id)
+    {
         $data = Request::all();
-          $a = 1;
         $user = DB::table('users')->where('id', '=', $id)->update($data);
     }
 

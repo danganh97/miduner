@@ -111,25 +111,25 @@ abstract class Model
             }
             switch($value) {
                 case 'int':
-                $this->$key = (int) $key;
+                $this->{$key} = (int) $this->{$key};
                 break;
                 case 'array':
-                $this->$key = (array) $key;
+                $this->{$key} = (array) $this->{$key};
                 break;
                 case 'object':
-                $this->$key = (array) $key;
+                $this->{$key} = (object) $this->{$key};
                 break;
                 case 'float':
-                $this->$key = (float) $key;
+                $this->{$key} = (float) $this->{$key};
                 break;
                 case 'double':
-                $this->$key = (double) $key;
+                $this->{$key} = (double) $this->{$key};
                 break;
                 case 'string':
-                $this->$key = (string) $key;
+                $this->{$key} = (string) $this->{$key};
                 break;
                 case 'boolean':
-                $this->$key = (boolean) $key;
+                $this->{$key} = (boolean) $this->{$key};
                 break;
             }
         }
