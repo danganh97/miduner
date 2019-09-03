@@ -4,14 +4,11 @@ namespace App\Main\Routing;
 
 class Route
 {
-    private $base;
-
     public function __construct(array $routes = [])
     {
         if (count($routes) > 0) {
             $requestUrl = $this->getRequestURL();
             $requestMethod = $this->getRequestMethod();
-            $this->base = '/public';
             $requestParams = explode('/', $requestUrl);
             foreach ($routes as $route) {
                 $routeParams = explode('/', $route['uri']);
@@ -26,10 +23,10 @@ class Route
 
     private function getRequestURL()
     {
-        $uri = explode('?', $_SERVER['REQUEST_URI'], 2);
-        $url = isset($_SERVER['REQUEST_URI']) ? $uri[0] : '/';
-        $url = str_replace($this->base, '', $url);
-        return $url === '' || empty($url) ? '/' : $url;
+        $uri = urldecode(
+            parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
+        );
+        return $uri === '' || empty($uri) ? '/' : $uri;
     }
 
     private function getRequestMethod()

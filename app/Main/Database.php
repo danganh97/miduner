@@ -20,11 +20,6 @@ class Database
     }
     public function connection()
     {
-        $connection = $this->config['driver'];
-        $host = $this->config['host'];
-        $database_name = $this->config['database'];
-        $username = $this->config['username'];
-        $password = $this->config['password'];
         try {
             $this->pdo->beginTransaction();
             $this->pdo->exec("set names utf8");

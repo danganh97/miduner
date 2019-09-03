@@ -58,7 +58,7 @@ class Controller
         }
         if ($path !== null) {
             if (file_exists($path)) {
-                require $path;
+                require $path;exit;
             }
         }
     }
