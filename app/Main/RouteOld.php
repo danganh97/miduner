@@ -1,7 +1,7 @@
 <?php
 
+use App\Http\Exceptions\Exception;
 use App\Main\Controller;
-use App\Main\AppException;
 
 class RouteOld
 {
@@ -102,7 +102,7 @@ class RouteOld
         } else {
             $action = isset($action[1]) ? $action[1] : $action;
             $action = is_array($action) && count($action) == 1 ? $action[0] : $action;
-            throw new AppException("The $action doesn't exists !");
+            throw new Exception("The $action doesn't exists !");
         }
     }
 
@@ -155,7 +155,7 @@ class RouteOld
                 $cloud = false;
                 break;
             default:
-                throw new AppException("Controller wrong format !");
+                throw new Exception("Controller wrong format !");
                 break;
         }
 
@@ -172,9 +172,9 @@ class RouteOld
             if ($cloud === false) {
                 return $object($params);
             }
-            throw new AppException("Method {$className}@{$methodName} doesn't exists !");
+            throw new Exception("Method {$className}@{$methodName} doesn't exists !");
         }
-        throw new AppException("Class {$className} doesn't exists !");
+        throw new Exception("Class {$className} doesn't exists !");
     }
 
     public function callableAction($action, array $params = null)

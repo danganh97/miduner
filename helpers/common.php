@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Exceptions\Exception;
+use App\Main\Registry;
+
 if (!function_exists('redirect')) {
     function redirect($url)
     {
@@ -109,10 +112,10 @@ if (!function_exists('config')) {
     {
         $paze = explode('.', $variable);
         if (count($paze) != 2) {
-            throw new \App\Main\AppException("The {$variable} doesn't exists !");
+            throw new Exception("The {$variable} doesn't exists !");
         }
-        if (!$url = \App\Main\Registry::getInstance()->config['appurl'] . "/config/{$paze[0]}.php") {
-            throw new \App\Main\AppException("The $url doesn't exists !");
+        if (!$url = Registry::getInstance()->config['appurl'] . "/config/{$paze[0]}.php") {
+            throw new Exception("The $url doesn't exists !");
         } else {
             $config = require $url;
         }
@@ -123,7 +126,7 @@ if (!function_exists('config')) {
 if (!function_exists('action')) {
     function action($action, array $params = null)
     {
-        return \App\Main\Registry::getInstance()->route->callableAction($action, $params);
+        return Registry::getInstance()->route->callableAction($action, $params);
     }
 }
 
@@ -147,7 +150,7 @@ if (!function_exists('toPre')) {
 if (!function_exists('app')) {
     function app()
     {
-        return \App\Main\Registry::getInstance();
+        return Registry::getInstance();
     }
 }
 

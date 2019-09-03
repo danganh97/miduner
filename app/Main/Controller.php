@@ -2,6 +2,7 @@
 
 namespace App\Main;
 
+use App\Http\Exceptions\Exception;
 use App\Main\Registry;
 
 class Controller
@@ -31,7 +32,7 @@ class Controller
         $layoutPath = $root . '/resources/views/layouts/' . $this->layout . '.php';
         $viewPath = $root . '/resources/views/' . $view . '.php';
         if (!file_exists($viewPath)) {
-            throw new \App\Main\AppException('Not found view ' . $viewPath);
+            throw new Exception('Not found view ' . $viewPath);
         }
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");

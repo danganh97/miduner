@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http;
+namespace App\Main\Http\Middlewares;
 
 class Kernel
 {

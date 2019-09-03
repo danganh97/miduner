@@ -2,7 +2,7 @@
 
 namespace App\Main;
 
-use App\Main\Registry;
+use App\Http\Exceptions\Exception;
 use \PDO;
 use \PDOException;
 
@@ -29,7 +29,7 @@ class Database
             return $this->pdo;
         } catch (PDOException $e) {
             $this->pdo->rollBack();
-            throw new \App\Main\AppException($e->getMessage());
+            throw new Exception($e->getMessage());
         }
     }
 }

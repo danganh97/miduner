@@ -2,6 +2,7 @@
 
 namespace App\Main;
 
+use App\Http\Exceptions\Exception;
 use App\Main\Compile;
 use App\Main\Database;
 use \PDO;
@@ -563,7 +564,7 @@ class QueryBuilder
                             if(is_array($resource) && count($resource) > 0) {
                                 return $resource[0];
                             }
-                            throw new AppException("Resource not found");
+                            throw new Exception("Resource not found");
                         }
                         return $object->fetch();
                     }
@@ -590,8 +591,8 @@ class QueryBuilder
                     break;
             }
             return $object;
-        } catch (\Exception $e) {
-            throw new \App\Main\AppException($e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 }

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Http\Controllers;
 
 use App\Http\Request;
+use App\Http\Exceptions\Exception;
 use App\Models\Partner;
 use App\Main\Controller;
 
@@ -12,10 +13,9 @@ class PartnerController extends Controller
     {
       try {
         $users = Partner::get();
-        toPre($users);
         return view('users/index', compact('users'));
-      } catch (\Exception $e) {
-        throw new \App\Main\AppException($e->getMessage());
+      } catch (Exception $e) {
+        throw new Exception($e->getMessage());
       }
     }
     public function store()

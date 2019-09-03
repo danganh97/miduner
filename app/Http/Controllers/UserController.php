@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Http\Controllers;
 
 use App\Http\Request;
-use App\Main\AppException;
+use App\Http\Exceptions\Exception;
 use App\Main\Controller;
 use App\Main\QueryBuilder as DB;
 use App\Models\User;
@@ -15,8 +15,8 @@ class UserController extends Controller
         try {
             $users = User::get();
             return view('users/index', compact('users'));
-        } catch (\Exception $e) {
-            throw new AppException($e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 

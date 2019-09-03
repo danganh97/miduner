@@ -24,7 +24,8 @@ class Partner extends Model
     ];
 
     protected $casts = [
-      'pid' => 'string'
+      'pid' => 'string',
+      'pc_state' => 'boolean',
     ];
 
     public function getFullNameAttribute()

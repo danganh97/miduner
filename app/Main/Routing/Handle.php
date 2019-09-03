@@ -2,7 +2,7 @@
 
 namespace App\Main\Routing;
 
-use App\Main\AppException;
+use App\Http\Exceptions\Exception;
 
 class Handle
 {
@@ -23,7 +23,7 @@ class Handle
         } else {
             $action = isset($action[1]) ? $action[1] : $action;
             $action = is_array($action) && count($action) == 1 ? $action[0] : $action;
-            throw new AppException("The $action doesn't exists !");
+            throw new Exception("The $action doesn't exists !");
         }
     }
 }

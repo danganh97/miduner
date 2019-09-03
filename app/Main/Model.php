@@ -2,6 +2,7 @@
 
 namespace App\Main;
 
+use App\Http\Exceptions\Exception;
 use App\Main\QueryBuilder as DB;
 use App\Main\Traits\Eloquent\With;
 
@@ -107,29 +108,29 @@ abstract class Model
     {
         foreach($this->casts as $key => $value) {
             if(!in_array($key, $this->fillable)) {
-                throw new AppException("The attribute $key not exists in fillable.");
+                throw new Exception("The attribute $key not exists in fillable.");
             }
             switch($value) {
                 case 'int':
-                $this->{$key} = (int) $this->{$key};
+                $this->{$key} = isset($this->{$key}) ? (int) $this->{$key} : null;
                 break;
                 case 'array':
-                $this->{$key} = (array) $this->{$key};
+                $this->{$key} = isset($this->{$key}) ? (array) $this->{$key} : null;
                 break;
                 case 'object':
-                $this->{$key} = (object) $this->{$key};
+                $this->{$key} = isset($this->{$key}) ? (object) $this->{$key} : null;
                 break;
                 case 'float':
-                $this->{$key} = (float) $this->{$key};
+                $this->{$key} = isset($this->{$key}) ? (float) $this->{$key} : null;
                 break;
                 case 'double':
-                $this->{$key} = (double) $this->{$key};
+                $this->{$key} = isset($this->{$key}) ? (double) $this->{$key} : null;
                 break;
                 case 'string':
-                $this->{$key} = (string) $this->{$key};
+                $this->{$key} = isset($this->{$key}) ? (string) $this->{$key} : null;
                 break;
                 case 'boolean':
-                $this->{$key} = (boolean) $this->{$key};
+                $this->{$key} = isset($this->{$key}) ? (boolean) $this->{$key} : null;
                 break;
             }
         }

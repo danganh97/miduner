@@ -2,8 +2,8 @@
 
 namespace App\Main\Routing;
 
-use App\Main\AppException;
-use App\Http\Kernel;
+use App\Http\Exceptions\Exception;
+use App\Main\Http\Middlewares\Kernel;
 
 class Compile
 {
@@ -35,14 +35,14 @@ class Compile
                 $cloud = false;
                 break;
             default:
-                throw new AppException("Controller wrong format !");
+                throw new Exception("Controller wrong format !");
                 break;
         }
 
         if (explode('\\', $className)[0] === 'App') {
             $controller = $className;
         } else {
-            $controller = 'App\\Controllers\\' . $className;
+            $controller = 'App\\Http\\Controllers\\' . $className;
         }
         if (class_exists($controller)) {
             $object = new $controller;
@@ -52,9 +52,9 @@ class Compile
             if ($cloud === false) {
                 return $object($params);
             }
-            throw new AppException("Method {$className}@{$methodName} doesn't exists !");
+            throw new Exception("Method {$className}@{$methodName} doesn't exists !");
         }
-        throw new AppException("Class {$className} doesn't exists !");
+        throw new Exception("Class {$className} doesn't exists !");
     }
 
 }
