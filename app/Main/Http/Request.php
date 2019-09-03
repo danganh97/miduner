@@ -18,7 +18,7 @@ class Request
      */
     public static function getRequest()
     {
-        return array_merge($_GET, $_POST);
+        return $_REQUEST;
     }
 
     /**
