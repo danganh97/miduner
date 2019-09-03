@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Exceptions\Exception;
 class Autoload
 {
     private $root;
@@ -25,7 +24,7 @@ class Autoload
         if (file_exists($file)) {
             require_once $file;
         } else {
-            throw new Exception("Class $class doesn't exists");
+            throw new \Exception("Class $class doesn't exists");
         }
     }
 
@@ -35,7 +34,7 @@ class Autoload
             foreach ($this->defaultFile() as $file) {
                 require_once $this->root . '/' . $file;
             }
-        } catch (Exception $th) {
+        } catch (\Throwable $th) {
             toPre($this->root.'/'.$file);
         }
 

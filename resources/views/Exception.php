@@ -9,7 +9,7 @@
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">
   </head>
-  <body style="overflow:hidden">
+  <body style="overflow:auto">
   <div style="width:100%; height:100px; background-color:#b0413e">
 	<div class="container">
 		<div class="col-md-12 text-right">

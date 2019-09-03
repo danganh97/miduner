@@ -2,7 +2,7 @@
 
 namespace App\Http\Exceptions;
 
-use App\Main\AppException;
+use App\Main\Http\Exceptions\AppException;
 
 class Exception extends AppException
 {
