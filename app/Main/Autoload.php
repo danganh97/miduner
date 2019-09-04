@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Exceptions\Exception;
+
 class Autoload
 {
     private $root;
@@ -15,16 +17,18 @@ class Autoload
 
     public function load($class)
     {
-        switch($this->server) {
+        switch ($this->server) {
             case 'linux':
-            $file = $this->root . '/' . str_replace('\\', '/', lcfirst($class) . '.php');
+                $file = $this->root . '/' . str_replace('\\', '/', lcfirst($class) . '.php');
+                break;
             case 'windows':
-            $file = $this->root . '\\' . $class . '.php';
+                $file = $this->root . '\\' . $class . '.php';
+                break;
         }
         if (file_exists($file)) {
             require_once $file;
         } else {
-            throw new \Exception("Class $class doesn't exists");
+            throw new Exception("Class $class doesn't exists");
         }
     }
 
@@ -35,7 +39,7 @@ class Autoload
                 require_once $this->root . '/' . $file;
             }
         } catch (\Throwable $th) {
-            toPre($this->root.'/'.$file);
+            toPre($this->root . '/' . $file);
         }
 
     }

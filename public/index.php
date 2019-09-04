@@ -7,7 +7,7 @@
  * @author   danganh97 <danganh.dev@gmail.com.com>
  */
 
-define('MIDUNER_START', microtime(true));
+ define('MIDUNER_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------

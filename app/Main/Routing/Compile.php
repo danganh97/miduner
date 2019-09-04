@@ -3,23 +3,20 @@
 namespace App\Main\Routing;
 
 use App\Http\Exceptions\Exception;
-use App\Main\Http\Middlewares\Kernel;
+use App\Http\Kernel;
 
 class Compile
 {
-    public function __construct($action, array $params, $middleware = null)
+    public function __construct($action = null, array $params = null, $middleware = null)
     {
-        if($middleware != null) {
-            if(count(explode('\\', $middleware)) > 1) {
-                new $middleware($action);
-            } else {
-                foreach((new Kernel)->routeMiddleware as $key => $value) {
-                    if($middleware == $key) {
-                        new $value($action);
-                    }
-                }
-            }
+        if ($middleware != null) {
+            return $this->handleMiddleware($middleware, $action, $params);
         }
+        return $this->handle($action, $params);
+    }
+
+    public function handle($action, $params)
+    {
         if (!is_array($action)) {
             $action = explode('@', $action);
         }
@@ -57,4 +54,17 @@ class Compile
         throw new Exception("Class {$className} doesn't exists !");
     }
 
+    public function handleMiddleware($middleware, $action, $params)
+    {
+        if (count(explode('\\', $middleware)) > 1) {
+            new $middleware($this, $action, $params);
+        } else {
+            foreach ((new Kernel)->routeMiddlewares as $key => $value) {
+                if ($middleware == $key) {
+                    return new $value($this, $action, $params);
+                }
+            }
+            throw new Exception("Middleware {$middleware} doesn't exists");
+        }
+    }
 }

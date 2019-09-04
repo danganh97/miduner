@@ -2,18 +2,12 @@
 
 namespace App\Http\Middlewares;
 
-use App\Http\Exceptions\Exception;
 use App\Main\Middleware;
 
 class Auth extends Middleware
 {
-    public function handle()
+    public function handle($callback, $action, $params)
     {
-        // return simpleView('403');
-        return true;
-        // return response()->json([
-        //     'success' => false,
-        //     'message' => 'Access denied !'
-        // ], 401);
+        return parent::next($action, $params);
     }
 }
