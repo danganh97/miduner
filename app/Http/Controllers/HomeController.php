@@ -8,7 +8,6 @@ class HomeController extends Controller
 {
     public function home()
     {
-        // return action([HomeController::class, 'about']);
         return view('pages/home');
     }
 

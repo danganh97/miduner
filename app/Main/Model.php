@@ -4,15 +4,24 @@ namespace App\Main;
 
 use App\Http\Exceptions\Exception;
 use App\Main\QueryBuilder as DB;
+use App\Main\Traits\Eloquent\GetAttribute;
 use App\Main\Traits\Eloquent\With;
 
 abstract class Model
 {
-    use With;
+    use With, GetAttribute;
+    
     protected $appends = [];
     protected $casts = [];
     protected $fillable = [];
     protected $hidden = [];
+    protected $table;
+    protected $primaryKey;
+    protected $username;
+    protected $password;
+
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
 
     public function __construct()
     {
@@ -22,14 +31,6 @@ abstract class Model
         $this->callServiceGetAttributes();
         $this->callServiceHidden();
     }
-
-    protected $table;
-    protected $primaryKey;
-    protected $username;
-    protected $password;
-
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
 
     public function setTable($table)
     {

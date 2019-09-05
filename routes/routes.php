@@ -9,12 +9,12 @@ Route::get('/post', [App\Http\Controllers\HomeController::class, 'post'])->middl
 
 Route::get('/contact', [App\Http\Controllers\HomeController::class, 'contact']);
 
-Route::resource('users', 'UserController')->except(['create', 'edit']);
-
 Route::resources([
     'posts' => 'PostController',
     'partners' => 'PartnerController',
 ])->except(['create', 'edit'])->middleware('auth');
+
+Route::resource('users', 'UserController')->except(['create', 'edit'])->middleware('auth');
 
 Route::get('/add-to-cart/{id}', 'CartController@addToCart');
 Route::get('/get-cart', 'CartController@getCart');

@@ -2,10 +2,12 @@
 
 namespace App\Main;
 
-use App\Http\Exceptions\Exception;
+use PDO;
+use PDOException;
 use App\Main\Compile;
 use App\Main\Database;
-use \PDO;
+use App\Http\Exceptions\Exception;
+use App\Main\Http\Exceptions\ModelException;
 
 class QueryBuilder
 {
@@ -95,10 +97,15 @@ class QueryBuilder
 
     /**
      * Take 1 record
-     * 
+     *
      * @var boolean
      */
     private $first = false;
+
+    /**
+     * Fails throw Exception
+     */
+    private $isThrow = false;
 
     /**
      * Create a new query builder instance.
@@ -122,6 +129,17 @@ class QueryBuilder
     public static function table($table)
     {
         return new self($table);
+    }
+
+    /**
+     * Create new query builder from model
+     *
+     * @param ConnectionInterface $this->bindClass
+     * return self
+     */
+    public static function bindClass($class)
+    {
+        return new self((new $class)->table());
     }
 
     /**
@@ -486,11 +504,30 @@ class QueryBuilder
         $sql .= $this->compile->compileColumns($this->columns);
         $sql .= $this->compile->compileFrom($this->table);
         $sql .= $this->compile->compileWheres($this->wheres);
-        $sql .= $this->compile->compileLimit($this->limit);
         return $this->request($sql);
     }
-    
-     /**
+
+    /**
+     * Find 1 record usually use column id
+     *
+     * @param string value
+     * @param string column
+     * @return \SupportSqlCollection
+     */
+    public function findOrFail($value, $column = 'id')
+    {
+        $this->find = true;
+        $this->limit = 1;
+        $this->isThrow = true;
+        $this->where($column, '=', $value);
+        $sql = $this->compile->compileSelect($this->distinct);
+        $sql .= $this->compile->compileColumns($this->columns);
+        $sql .= $this->compile->compileFrom($this->table);
+        $sql .= $this->compile->compileWheres($this->wheres);
+        return $this->request($sql);
+    }
+
+    /**
      * First 1 record usually use column id
      *
      * @param string value
@@ -505,6 +542,21 @@ class QueryBuilder
         return $this->request($sql);
     }
 
+    /**
+     * First 1 record usually use column id
+     *
+     * @param string value
+     * @param string column
+     * @return \SupportSqlCollection
+     */
+    public function firstOrFail()
+    {
+        $this->first = true;
+        $this->isThrow = true;
+        $this->limit = 1;
+        $sql = $this->paze();
+        return $this->request($sql);
+    }
     /**
      * Quick login with array params
      *
@@ -558,27 +610,33 @@ class QueryBuilder
             $type = explode(" ", $sql);
             switch ($type[0]) {
                 case 'SELECT':
-                    if($this->find === true) {
-                        if(empty($this->calledFromModel)) {
+                    if ($this->find === true) {
+                        if (!empty($this->calledFromModel)) {
                             $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-                            if(is_array($resource) && count($resource) > 0) {
+                            if (is_array($resource) && count($resource) > 0) {
                                 return $resource[0];
                             }
-                            throw new Exception("Resource not found");
-                        }
-                        return $object->fetch();
-                    }
-                    if($this->first === true) {
-                        if(empty($this->calledFromModel)) {
-                            $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-                            if(is_array($resource) && count($resource) > 0) {
-                                return $resource[0];
+                            if ($this->isThrow === true) {
+                                throw new ModelException("Resource not found");
                             }
                             return null;
                         }
                         return $object->fetch();
                     }
-                    if(!empty($this->calledFromModel)) {
+                    if ($this->first === true) {
+                        if (!empty($this->calledFromModel)) {
+                            $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+                            if (is_array($resource) && count($resource) > 0) {
+                                return $resource[0];
+                            }
+                            if ($this->isThrow === true) {
+                                throw new ModelException("Resource not found");
+                            }
+                            return null;
+                        }
+                        return $object->fetch();
+                    }
+                    if (!empty($this->calledFromModel)) {
                         return $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
                     }
                     return $object->fetchAll(PDO::FETCH_OBJ);
@@ -591,7 +649,7 @@ class QueryBuilder
                     break;
             }
             return $object;
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             throw new Exception($e->getMessage());
         }
     }

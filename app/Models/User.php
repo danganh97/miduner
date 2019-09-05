@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Main\Model;
+use App\Main\Authenticate;
 
-class User extends Model
+class User extends Authenticate
 {
     protected $table = 'users';
     protected $primaryKey = 'user_id';

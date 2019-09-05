@@ -91,17 +91,19 @@ class Route
 
     public function __destruct()
     {
-        if (self::$resources && self::$resources != [] && self::$resources != null) {
+        if (self::$resources) {
             foreach (self::$resources as $resource) {
                 $flag['index'] = false;
                 $flag['create'] = false;
                 $flag['store'] = false;
+                $flag['show'] = false;
                 $flag['edit'] = false;
                 $flag['update'] = false;
                 $flag['destroy'] = false;
                 $uri['index'] = "/{$resource['uri']}";
                 $uri['create'] = "/{$resource['uri']}/create";
                 $uri['store'] = "/{$resource['uri']}";
+                $uri['show'] = '/' . $resource['uri'] . '/' . '{' . $resource['uri'] . '}';
                 $uri['edit'] = '/' . $resource['uri'] . '/' . '{' . $resource['uri'] . '}' . '/' . 'edit';
                 $uri['update'] = '/' . $resource['uri'] . '/' . '{' . $resource['uri'] . '}';
                 $uri['destroy'] = '/' . $resource['uri'] . '/' . '{' . $resource['uri'] . '}';
@@ -112,6 +114,9 @@ class Route
                         }
                         if ($route['uri'] == $uri['create'] && strpos(strtolower($route['method']), 'get') !== false) {
                             $flag['create'] = true;
+                        }
+                        if ($route['uri'] == $uri['show'] && strpos(strtolower($route['method']), 'get') !== false) {
+                            $flag['show'] = true;
                         }
                         if ($route['uri'] == $uri['store'] && strpos(strtolower($route['method']), 'post') !== false) {
                             $flag['store'] = true;
@@ -145,6 +150,15 @@ class Route
                         'middleware' => $this->middleware ?: null,
                     ]);
                 }
+                if (!in_array('show', $this->except) && $flag['show'] == false) {
+                    array_push(self::$routes, [
+                        'uri' => "/{$resource['uri']}" . '/' . '{' . $resource['uri'] . '}',
+                        'action' => "{$resource['action']}@show",
+                        'method' => 'GET',
+                        'name' => "{$resource['uri']}.show",
+                        'middleware' => $this->middleware ?: null,
+                    ]);
+                }
                 if (!in_array('store', $this->except) && $flag['store'] == false) {
                     array_push(self::$routes, [
                         'uri' => "/{$resource['uri']}",
@@ -158,7 +172,7 @@ class Route
                     array_push(self::$routes, [
                         'uri' => '/' . $resource['uri'] . '/' . '{' . $resource['uri'] . '}' . '/' . 'edit',
                         'action' => "{$resource['action']}@edit",
-                        'method' => 'POST',
+                        'method' => 'GET',
                         'name' => "{$resource['uri']}.edit",
                         'middleware' => $this->middleware ?: null,
                     ]);

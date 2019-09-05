@@ -2,22 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Http\Request;
-use App\Http\Exceptions\Exception;
 use App\Main\Controller;
 use App\Main\QueryBuilder as DB;
-use App\Models\User;
 
 class UserController extends Controller
 {
     public function index(Request $request = null)
     {
-        try {
-            $users = User::get();
-            return view('users/index', compact('users'));
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        $users = DB::bindClass(User::class)->where('user_id', '>', 1)->take(10)->get();
+        return view('users/index', compact('users'));
     }
 
     public function create()
@@ -34,11 +29,10 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::find($id);
+        $user = DB::bindClass(User::class)->findOrFail($id, 'user_id');
         if (!$user) {
-            echo 'user not found !';
+            return $this->respondError("User not found");
         }
-        toPre($user);die();
         return response()->json($user);
     }
 
