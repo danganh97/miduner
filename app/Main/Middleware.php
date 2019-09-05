@@ -3,8 +3,9 @@
 namespace App\Main;
 
 use App\Main\Routing\Compile;
+use App\Http\Exceptions\Exception;
 
-class Middleware
+abstract class Middleware
 {
     private $action;
     private $params;
@@ -15,13 +16,16 @@ class Middleware
         $this->callback = $callback;
         $this->action = $action;
         $this->params = $params;
-        return $this->handle($callback, $action, $params);
+        if (method_exists($this, 'handle')) {
+            return call_user_func_array([$this, 'handle'], [$callback, $action, $params]);
+        }
+        throw new Exception("Method handle not exists.");
     }
 
-    protected function next($action = null, $params = null)
+    protected function next($callback = null, $action = null, $params = null)
     {
-        if($action != null) {
-            return (new $this->callback($action, $params));
+        if ($callback != null) {
+            return (new $callback($action, $params));
         }
         return (new $this->callback($this->action, $this->params));
     }

@@ -8,6 +8,6 @@ class Auth extends Middleware
 {
     public function handle($callback, $action, $params)
     {
-        return parent::next($action, $params);
+        return parent::next($callback, $action, $params);
     }
 }
