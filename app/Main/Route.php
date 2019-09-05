@@ -84,6 +84,12 @@ class Route
         return $this;
     }
 
+    public function except(array $methods)
+    {
+        $this->except = $methods;
+        return $this;
+    }
+    
     public function callableAction($action, array $params = null)
     {
         return (new Compile($action, (array) $params));
@@ -115,11 +121,11 @@ class Route
                         if ($route['uri'] == $uri['create'] && strpos(strtolower($route['method']), 'get') !== false) {
                             $flag['create'] = true;
                         }
-                        if ($route['uri'] == $uri['show'] && strpos(strtolower($route['method']), 'get') !== false) {
-                            $flag['show'] = true;
-                        }
                         if ($route['uri'] == $uri['store'] && strpos(strtolower($route['method']), 'post') !== false) {
                             $flag['store'] = true;
+                        }
+                        if ($route['uri'] == $uri['show'] && strpos(strtolower($route['method']), 'get') !== false) {
+                            $flag['show'] = true;
                         }
                         if ($route['uri'] == $uri['edit'] && strpos(strtolower($route['method']), 'get') !== false) {
                             $flag['edit'] = true;
@@ -206,12 +212,7 @@ class Route
                 'middleware' => $this->middleware,
             ]);
         }
-    }
-
-    public function except(array $method)
-    {
-        $this->except = $method;
-        return $this;
+        self::$resources = [];
     }
 
     public function run()

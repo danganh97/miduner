@@ -14,8 +14,7 @@ Route::resources([
     'partners' => 'PartnerController',
 ])->except(['create', 'edit'])->middleware('auth');
 
-Route::resource('users', 'UserController')->except(['create', 'edit'])->middleware('auth');
-
+Route::resource('users', 'UserController')->middleware('auth')->except(['destroy', 'edit']);
 Route::get('/add-to-cart/{id}', 'CartController@addToCart');
 Route::get('/get-cart', 'CartController@getCart');
 Route::get('/remove-cart/{id}', 'CartController@removeCart');

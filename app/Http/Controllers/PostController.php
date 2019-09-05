@@ -8,36 +8,36 @@ class PostController extends Controller
 {
     public function index()
     {
-        echo 'post index';
+        return $this->respond("Post index");
     }
 
     public function create()
     {
-        echo 'post create';
+        return $this->respond("Post create");
     }
 
     public function store()
     {
-        echo 'post store';
+        return $this->respond("Post Store");
     }
 
     public function show($id)
     {
-        echo 'post show' . $id;
+        return $this->respond("Post show {$id}");
     }
 
     public function edit($id)
     {
-        echo 'post edit' . $id;
+        return $this->respond("Post edit {$id}");
     }
 
     public function update($id)
     {
-        echo 'post update' . $id;
+        return $this->respond("Post update {$id}");
     }
 
     public function destroy($id)
     {
-        echo 'post destroy' . $id;
+        return $this->respond("Post destroy {$id}");
     }
 }

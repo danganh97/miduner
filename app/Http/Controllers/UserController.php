@@ -17,6 +17,7 @@ class UserController extends Controller
 
     public function create()
     {
+        return $this->respond("User create");
         return simpleView('users/create');
     }
 
