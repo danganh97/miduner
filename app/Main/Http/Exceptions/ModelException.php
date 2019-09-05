@@ -26,7 +26,7 @@ class ModelException extends Exception
             return response()->json([
                 'status' => false,
                 'message' => $exception->getMessage()
-            ], 500);
+            ], $exception->getCode());
         }
         $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');
         $title = 'Model Exception';

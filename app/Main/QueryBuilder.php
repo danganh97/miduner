@@ -617,7 +617,7 @@ class QueryBuilder
                                 return $resource[0];
                             }
                             if ($this->isThrow === true) {
-                                throw new ModelException("Resource not found");
+                                throw new ModelException("Resource not found", 404);
                             }
                             return null;
                         }
@@ -630,7 +630,7 @@ class QueryBuilder
                                 return $resource[0];
                             }
                             if ($this->isThrow === true) {
-                                throw new ModelException("Resource not found");
+                                throw new ModelException("Resource not found", 404);
                             }
                             return null;
                         }
