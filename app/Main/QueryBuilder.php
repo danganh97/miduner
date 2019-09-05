@@ -191,7 +191,7 @@ class QueryBuilder
      * @param  bool    $where
      * @return $this
      */
-    public function join($tableJoin, $st, $operator, $nd, $type = 'inner')
+    public function join($tableJoin, $st, $operator, $nd, $type = 'INNER')
     {
         $this->joins[] = [$tableJoin, $st, $operator, $nd, $type];
         return $this;
@@ -208,7 +208,7 @@ class QueryBuilder
      */
     public function leftJoin($tableJoin, $st, $operator = '=', $nd)
     {
-        return $this->join($tableJoin, $st, $operator, $nd, 'left');
+        return $this->join($tableJoin, $st, $operator, $nd, 'LEFT');
     }
 
     /**
@@ -222,7 +222,7 @@ class QueryBuilder
      */
     public function rightJoin($tableJoin, $st, $operator = '=', $nd)
     {
-        return $this->join($tableJoin, $st, $operator, $nd, 'right');
+        return $this->join($tableJoin, $st, $operator, $nd, 'RIGHT');
     }
 
     /**
@@ -234,9 +234,15 @@ class QueryBuilder
      * @param  string  $boolean
      * @return $this
      */
-    public function where($column, $operator = '=', $value, $boolean = 'and')
+    public function where($column, $operator = '=', $value = null, $boolean = 'AND')
     {
-        $this->wheres[] = [$column, $operator, $value, $boolean];
+        if (!is_callable($column)) {
+            $this->wheres[] = [$column, $operator, $value, $boolean];
+            return $this;
+        }
+        $this->wheres[] = ['start_where'];
+        call_user_func_array($column, [$this]);
+        $this->wheres[] = ['end_where'];
         return $this;
     }
 
@@ -248,9 +254,16 @@ class QueryBuilder
      * @param  mixed   $value
      * @return \Database\QueryBuilder|static
      */
-    public function orWhere($column, $operator = '=', $value, $boolean = 'and')
+    public function orWhere($column, $operator = '=', $value = null)
     {
-        return $this->where($column, $operator, $value, 'or');
+        if (!is_callable($column)) {
+            return $this->where($column, $operator, $value, 'OR');
+        }
+        $this->wheres[] = ['start_or'];
+        call_user_func_array($column, [$this]);
+        $this->wheres[] = ['end_or'];
+        return $this;
+        // return $this->where($column, $operator, $value, 'OR');
     }
 
     /**

@@ -43,13 +43,46 @@ class Compile
 
     public function compileWheres(array $wheres)
     {
+        // toPre($wheres);
         $sql = " WHERE";
         foreach ($wheres as $key => $where) {
-            $sql .= " $where[0] $where[1] '$where[2]'";
-            if ($key < count($wheres) - 1) {
-                $sql .= (strtolower($where[3] === 'and') ? ' AND' : ' OR');
+            if ($key == 0) {
+                if ($where[0] == 'start_where') {
+                    $sql .= ' (';
+                }
+            } else {
+                if ($where[0] == 'start_where') {
+                    $sql .= ' AND (';
+                }
+            }
+            if ($where[0] == 'start_or') {
+                $sql .= ' OR (';
+            }
+            if ($where[0] == 'end_where' || $where[0] == 'end_or') {
+                $sql .= ') ';
+            }
+            if ($key == 0) {
+                if ($where[0] !== 'start_where' && $where[0] !== 'end_where') {
+                    $sql .= " {$where[0]} {$where[1]} '{$where[2]}'";
+                }
+            } else {
+                if ($wheres[$key - 1][0] !== 'start_where') {
+                    if ($where[0] !== 'start_where' && $where[0] !== 'end_where') {
+                        $sql .= " {$where[3]} {$where[0]} {$where[1]} '{$where[2]}'";
+                    }
+                } else {
+                    if ($where[0] !== 'start_where' && $where[0] !== 'end_where' && $key != 0) {
+                        $sql .= "{$where[0]} {$where[1]} '{$where[2]}'";
+                    }
+                }
             }
         }
+        // foreach ($wheres as $key => $where) {
+        //     $sql .= " {$where[0]} {$where[1]} '{$where[2]}'";
+        //     if ($key < count($wheres) - 1) {
+        //         $sql .= (strtolower($where[3] === 'and') ? ' AND' : ' OR');
+        //     }
+        // }
         return $sql;
     }
 
@@ -97,14 +130,14 @@ class Compile
     {
         $sql = " WHERE {$wherein[0]} IN ";
         $array = explode(", ", $wherein[1]);
-        foreach($array as $key => $arr){
-            if($key + 1 == count($array)){
+        foreach ($array as $key => $arr) {
+            if ($key + 1 == count($array)) {
                 $array[$key] = "'{$arr}'";
-            }else{
+            } else {
                 $array[$key] = "'{$arr}',";
             }
         }
-        $string = implode("",$array);
+        $string = implode("", $array);
         return " WHERE {$wherein[0]} IN ({$string})";
     }
 
