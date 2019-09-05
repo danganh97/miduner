@@ -43,21 +43,24 @@ class Compile
 
     public function compileWheres(array $wheres)
     {
-        // toPre($wheres);
         $sql = " WHERE";
         foreach ($wheres as $key => $where) {
             if ($key == 0) {
                 if ($where[0] == 'start_where') {
                     $sql .= ' (';
                 }
+                if ($where[0] == 'start_or') {
+                    $sql .= ' (';
+                }
             } else {
                 if ($where[0] == 'start_where') {
                     $sql .= ' AND (';
                 }
+                if ($where[0] == 'start_or') {
+                    $sql .= ' OR (';
+                }
             }
-            if ($where[0] == 'start_or') {
-                $sql .= ' OR (';
-            }
+            
             if ($where[0] == 'end_where' || $where[0] == 'end_or') {
                 $sql .= ') ';
             }
@@ -67,22 +70,20 @@ class Compile
                 }
             } else {
                 if ($wheres[$key - 1][0] !== 'start_where') {
-                    if ($where[0] !== 'start_where' && $where[0] !== 'end_where') {
-                        $sql .= " {$where[3]} {$where[0]} {$where[1]} '{$where[2]}'";
+                    if ($where[0] !== 'start_where' && $where[0] !== 'end_where' && $where[0] !== 'start_or' && $where[0] !== 'end_or') {
+                        if($wheres[$key - 1][0] !== 'start_or') {
+                            $sql .= " $where[3] $where[0] $where[1] '$where[2]'";
+                        } else {
+                            $sql .= " $where[0] $where[1] '$where[2]'";
+                        }
                     }
                 } else {
                     if ($where[0] !== 'start_where' && $where[0] !== 'end_where' && $key != 0) {
-                        $sql .= "{$where[0]} {$where[1]} '{$where[2]}'";
+                        $sql .= "$where[0] $where[1] '$where[2]'";
                     }
                 }
             }
         }
-        // foreach ($wheres as $key => $where) {
-        //     $sql .= " {$where[0]} {$where[1]} '{$where[2]}'";
-        //     if ($key < count($wheres) - 1) {
-        //         $sql .= (strtolower($where[3] === 'and') ? ' AND' : ' OR');
-        //     }
-        // }
         return $sql;
     }
 

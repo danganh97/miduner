@@ -4,27 +4,22 @@ namespace App\Http\Controllers;
 
 use App\Main\Controller;
 use App\Main\QueryBuilder as DB;
-use App\Models\User;
+use App\Models\Partner;
 
 class HomeController extends Controller
 {
     public function home()
     {
-        $a = DB::bindClass(User::class)
-            // ->where('user_id', '=', 1222123123)
+        $a = DB::bindClass(Partner::class)
             ->where(function ($query) {
-                $query->where('user_id', '=', 1);
+                $query->where('pid', '=', 1);
                 $query->orWhere('created_at', '>=', '123123');
-                // $query->where(function ($query) {
-                //     $query->orWhere('updated_at', '>=', '123123');
-                // });
             })
-            // ->orWhere('user_id', '=', '1232')
-            ->where(function ($query) {
-                $query->where('user_id', '=', 2);
-                $query->orWhere('created_at', '=', 'zzzz');
+            ->orWhere(function ($query) {
+                $query->where('pid', '<>', 2);
+                $query->where('created_at', '=', 'zzzz');
             })
-            ->tosql();
+            ->get();
         return view('pages/home');
     }
 
