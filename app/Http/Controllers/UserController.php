@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Http\Request;
 use App\Main\Controller;
+use App\Main\Http\Request;
 use App\Main\QueryBuilder as DB;
 
 class UserController extends Controller
@@ -64,15 +64,15 @@ class UserController extends Controller
         $user = User::login($data);
         if ($user) {
             session('user', $user);
-            return sendMessage('Login successfully', 200);
+            return $this->respondSuccess("Login successfully.");
         }
-        return sendMessage('Login fails', 401);
+        return $this->respondError('Login fails', 401);
     }
 
     public function logout()
     {
         if (unsetsession('user')) {
-            return sendMessage('Logout successfully !', 200);
+            return $this->respondSuccess("Logout successfully !");
         }
     }
 }
