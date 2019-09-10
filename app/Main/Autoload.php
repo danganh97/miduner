@@ -5,6 +5,8 @@ use App\Http\Exceptions\Exception;
 class Autoload
 {
     private $root;
+    private $autoload;
+    private $server;
 
     public function __construct($config)
     {
@@ -39,7 +41,7 @@ class Autoload
                 require_once $this->root . '/' . $file;
             }
         } catch (\Throwable $th) {
-            toPre($this->root . '/' . $file);
+            toPre($th->getMessage());
         }
 
     }

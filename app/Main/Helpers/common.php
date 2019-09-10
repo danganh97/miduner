@@ -69,14 +69,14 @@ if (!function_exists('unsetsession')) {
 if (!function_exists('request')) {
     function request()
     {
-        return new \App\Http\Request;
+        return new \App\Main\Http\Request;
     }
 }
 
 if (!function_exists('readDotENV')) {
     function readDotENV()
     {
-        $app_url = dirname(dirname(__FILE__));
+        $app_url = dirname(dirname(dirname(dirname(__FILE__))));
         $path = $app_url . '/.env';
         $handle = file_get_contents($path);
         $paze = explode("\n", $handle);
@@ -89,7 +89,6 @@ if (!function_exists('readDotENV')) {
         return $env;
     }
 }
-
 if (!function_exists('env')) {
     function env($variable, $ndvalue = null)
     {

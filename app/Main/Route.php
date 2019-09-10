@@ -1,5 +1,4 @@
 <?php
-namespace App\Main;
 
 use App\Main\HandleRoute;
 use App\Main\Routing\Compile;

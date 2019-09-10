@@ -55,7 +55,7 @@ abstract class Model
 
     public function createStatic($data)
     {
-        return DB::table($this->table)->insert($data);
+        return DB::table($this->table)->create($data);
     }
 
     public function getStatic($column)

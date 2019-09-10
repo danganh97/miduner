@@ -8,6 +8,8 @@ use \PDOException;
 
 class Database
 {
+    public $config;
+    
     public function __construct()
     {
         $this->config = config('database.connection');

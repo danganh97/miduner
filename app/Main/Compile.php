@@ -2,16 +2,26 @@
 
 namespace App\Main;
 
+use App\Http\Exceptions\Exception;
+
 class Compile
 {
     public function compileSelect($distinct)
     {
-        return $distinct ? "SELECT DISTINCT " : "SELECT ";
+        try {
+            return $distinct ? "SELECT DISTINCT " : "SELECT ";
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     public function compileColumns($columns)
     {
-        return is_array($columns) ? implode(', ', $columns) : '*';
+        try {
+            return is_array($columns) ? implode(', ', $columns) : '*';
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     public function compileFrom($table)
@@ -60,7 +70,7 @@ class Compile
                     $sql .= ' OR (';
                 }
             }
-            
+
             if ($where[0] == 'end_where' || $where[0] == 'end_or') {
                 $sql .= ') ';
             }
@@ -71,7 +81,7 @@ class Compile
             } else {
                 if ($wheres[$key - 1][0] !== 'start_where') {
                     if ($where[0] !== 'start_where' && $where[0] !== 'end_where' && $where[0] !== 'start_or' && $where[0] !== 'end_or') {
-                        if($wheres[$key - 1][0] !== 'start_or') {
+                        if ($wheres[$key - 1][0] !== 'start_or') {
                             $sql .= " $where[3] $where[0] $where[1] '$where[2]'";
                         } else {
                             $sql .= " $where[0] $where[1] '$where[2]'";
@@ -152,6 +162,25 @@ class Compile
         $values = implode(', ', $values);
 
         return "INSERT INTO $table($columns) VALUES ($values)";
+    }
+
+    public function compileCreate($table, array $fillable, array $hidden, array $data)
+    {
+        try {
+            foreach ($data as $key => $value) {
+                if (in_array($key, $fillable) || (!in_array($key, $fillable) && in_array($key, $hidden))) {
+                    $columns[] = $key;
+                    $values[] = "'$value'";
+                } else {
+                    throw new Exception("Value '{$key}' doesn't exists");
+                }
+            }
+            $columns = implode(', ', $columns);
+            $values = implode(', ', $values);
+            return "INSERT INTO $table($columns) VALUES ($values)";
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     public function compileLogin($table, array $cre)

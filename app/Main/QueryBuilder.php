@@ -502,6 +502,26 @@ class QueryBuilder
     }
 
     /**
+     * Create new record
+     *
+     * @param array data
+     *
+     * @return \SupportSqlCollection
+     */
+    public function create(array $data)
+    {
+        if (!empty($this->calledFromModel)) {
+            $object = (new $this->calledFromModel);
+            $fillable = $object->fillable();
+            $hidden = $object->hidden();
+            $sql = $this->compile->compileCreate($this->table, $fillable, $hidden, $data);
+            return $this->request($sql);
+        } else {
+            throw new Exception("Method 'create' doesn't exists");
+        }
+    }
+
+    /**
      * Find 1 record usually use column id
      *
      * @param string value
@@ -655,7 +675,25 @@ class QueryBuilder
                     return $object->fetchAll(PDO::FETCH_OBJ);
                     break;
                 case 'INSERT':
-                    return $connection->lastInsertId() === "0";
+                    if (!empty($this->calledFromModel)) {
+                        $primaryKey = (new $this->calledFromModel)->primaryKey();
+                        return $this->find($connection->lastInsertId(), $primaryKey);
+                    }
+                    $lastInsertId = $connection->lastInsertId();
+                    $getConfigFromConnection = (new Database);
+                    $connection = $getConfigFromConnection->connection();
+                    $databaseName = $getConfigFromConnection->config['database'];
+                    $newObject = $connection->prepare("
+                    SELECT
+                        COLUMN_NAME
+                    FROM
+                        INFORMATION_SCHEMA.COLUMNS
+                    WHERE
+                        TABLE_SCHEMA = '{$databaseName}' AND
+                        TABLE_NAME = '{$this->table}' AND EXTRA = 'auto_increment'
+                    ");
+                    $newObject->execute();
+                    return $this->find($lastInsertId, $newObject->fetch()->COLUMN_NAME);
                     break;
                 case 'UPDATE':
                     return $this->find($this->wheres[0][0], $this->wheres[0][2]);

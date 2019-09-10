@@ -2,7 +2,6 @@
 
 require __DIR__ . '/Autoload.php';
 use App\Main\Registry;
-use App\Main\Route;
 
 class App
 {

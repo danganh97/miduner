@@ -34,7 +34,7 @@ require __DIR__.'/../app/Main/App.php';
 | the responses back to the browser and delight our users.
 |
 */
-require __DIR__.'/../helpers/common.php';
+require __DIR__.'/../app/Main/Helpers/common.php';
 $config = require __DIR__.'/../config/app.php';
 
 /*
