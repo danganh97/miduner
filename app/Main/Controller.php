@@ -62,6 +62,8 @@ class Controller
         if ($path !== null) {
             if (file_exists($path)) {
                 require $path;exit;
+            } else {
+                throw new Exception("View now found $path");
             }
         }
     }
