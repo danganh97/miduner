@@ -1,7 +1,8 @@
 <?php
 
-use App\Http\Exceptions\Exception;
 use App\Main\Registry;
+use App\Http\Exceptions\Exception;
+use App\Main\Http\Exceptions\AppException;
 
 if (!function_exists('redirect')) {
     function redirect($url)
@@ -78,6 +79,9 @@ if (!function_exists('readDotENV')) {
     {
         $app_url = dirname(dirname(dirname(dirname(__FILE__))));
         $path = $app_url . '/.env';
+        if(!file_exists($path)) {
+            throw new \Exception("Env doesn't exists !");
+        }
         $handle = file_get_contents($path);
         $paze = explode("\n", $handle);
         foreach ($paze as $key => $value) {
