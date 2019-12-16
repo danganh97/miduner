@@ -177,3 +177,9 @@ if (!function_exists('is_json')) {
         return (json_decode(json_encode($argument)) != NULL) ? true : false;
     }
 }
+
+if (!function_exists('dd')) {
+    function dd($arg) {
+        var_dump($arg);die();
+    }
+}

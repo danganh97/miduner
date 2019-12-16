@@ -14,7 +14,7 @@ class ApiResponseResource
 
     public function message($message, $code = 200)
     {
-        (new \App\Http\HttpResponseCode($code));
+        (new \App\Main\Http\HttpResponseCode($code));
         $response['message'] = $message;
         echo json_encode($response);
     }
