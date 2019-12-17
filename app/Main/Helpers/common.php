@@ -134,9 +134,23 @@ if (!function_exists('action')) {
 }
 
 if(!function_exists('route')) {
-    function route(string $name = null, $params = null)
+    function route(string $name)
     {
-        return app()->routes;
+        $routes = app()->routes;
+        $flag = false;
+        $uri = '';
+        foreach($routes as $key => $route) {
+            if(strtolower($name) === strtolower($route['name'])) {
+                $flag = true;
+                $uri = $route['uri'];
+            }
+        }
+        if($flag === true) {
+            echo $uri;
+        } else {
+            throw new Exception("The route " . '"' . $name . '"' . " doesn't exists");
+        }
+        
     }
 }
 
