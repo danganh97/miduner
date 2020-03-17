@@ -13,7 +13,7 @@
 <?php $this->setVars('meta', $meta)?>
 
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('assets/template/img/home-bg.jpg')">
+<header class="masthead" style="background-image: url('<?php echo assets('assets/template/img/home-bg.jpg') ?>')">
   <div class="overlay"></div>
   <div class="container">
     <div class="row">

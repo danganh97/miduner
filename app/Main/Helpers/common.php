@@ -79,7 +79,7 @@ if (!function_exists('readDotENV')) {
     {
         $app_url = dirname(dirname(dirname(dirname(__FILE__))));
         $path = $app_url . '/.env';
-        if(!file_exists($path)) {
+        if (!file_exists($path)) {
             throw new \Exception("Env doesn't exists !");
         }
         $handle = file_get_contents($path);
@@ -133,24 +133,23 @@ if (!function_exists('action')) {
     }
 }
 
-if(!function_exists('route')) {
+if (!function_exists('route')) {
     function route(string $name)
     {
         $routes = app()->routes;
         $flag = false;
         $uri = '';
-        foreach($routes as $key => $route) {
-            if(strtolower($name) === strtolower($route['name'])) {
+        foreach ($routes as $key => $route) {
+            if (strtolower($name) === strtolower($route['name'])) {
                 $flag = true;
                 $uri = $route['uri'];
             }
         }
-        if($flag === true) {
+        if ($flag === true) {
             echo $uri;
         } else {
             throw new Exception("The route " . '"' . $name . '"' . " doesn't exists");
         }
-        
     }
 }
 
@@ -179,7 +178,21 @@ if (!function_exists('is_json')) {
 }
 
 if (!function_exists('dd')) {
-    function dd($arg) {
-        var_dump($arg);die();
+    function dd($arg)
+    {
+        var_dump($arg);
+        die();
+    }
+}
+
+if (!function_exists('assets')) {
+    function assets($path)
+    {
+        if (php_sapi_name() == 'cli-server') {
+            return "/public/$path";
+        } else {
+            return $path;
+        }
+        throw new Exception("");
     }
 }

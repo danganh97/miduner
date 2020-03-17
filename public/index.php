@@ -7,7 +7,7 @@
  * @author   danganh97 <danganh.dev@gmail.com.com>
  */
 
- define('MIDUNER_START', microtime(true));
+define('MIDUNER_START', microtime(true));
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +21,7 @@
 |
 */
 
-require __DIR__.'/../app/Main/App.php';
+require __DIR__ . '/../app/Main/App.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -34,8 +34,8 @@ require __DIR__.'/../app/Main/App.php';
 | the responses back to the browser and delight our users.
 |
 */
-require __DIR__.'/../app/Main/Helpers/common.php';
-$config = require __DIR__.'/../config/app.php';
+require __DIR__ . '/../app/Main/Helpers/common.php';
+$config = require __DIR__ . '/../config/app.php';
 
 /*
 |--------------------------------------------------------------------------
