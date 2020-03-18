@@ -55,6 +55,6 @@ class AppException extends Exception
 
     public function report()
     {
-        echo 'Reported !';
+        // echo 'Reported !';
     }
 }

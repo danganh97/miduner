@@ -113,6 +113,12 @@ class QueryBuilder
      * @param  ConnectionInterface  $this->table
      * @return void
      */
+
+    /**
+     * Compile instance
+     */
+    private $compile;
+
     public function __construct($table)
     {
         $this->calledFromModel = app()->callModel;
