@@ -35,7 +35,18 @@ require __DIR__ . '/../app/Main/App.php';
 |
 */
 require __DIR__ . '/../app/Main/Helpers/common.php';
-$config = require __DIR__ . '/../config/app.php';
+
+/*
+|--------------------------------------------------------------------------
+/ Include the config file
+/ This file is needed to run the app
+/ Please make sure you're run midun config:cache before
+|--------------------------------------------------------------------------
+*/
+if (!file_exists(__DIR__ . '/../cache/app.php')) {
+    die('Please configuration cache.');
+}
+$config = require __DIR__ . '/../cache/app.php';
 
 /*
 |--------------------------------------------------------------------------

@@ -80,7 +80,8 @@ if (!function_exists('readDotENV')) {
         $app_base = dirname(dirname(dirname(dirname(__FILE__))));
         $path = $app_base . '/.env';
         if (!file_exists($path)) {
-            throw new \Exception("Env doesn't exists !");
+            system("echo ". 'Missing .env file.');
+            exit;
         }
         $handle = file_get_contents($path);
         $paze = explode("\n", $handle);
@@ -99,8 +100,8 @@ if (!function_exists('env')) {
         $base_path = dirname(dirname(dirname(dirname(__FILE__))));
         $path = $base_path . '/cache/environments.php';
         if (!file_exists($path)) {
-            shell_exec("touch $path");
-            system("echo " . 'Environment file not found.');
+            // system("echo " . 'Environment file not found.');
+            throw new AppException("asds");
             exit;
         }
         $env = include $path;
