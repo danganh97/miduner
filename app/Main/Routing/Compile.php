@@ -35,7 +35,6 @@ class Compile
                 throw new Exception("Controller wrong format !");
                 break;
         }
-
         if (explode('\\', $className)[0] === 'App') {
             $controller = $className;
         } else {

@@ -14,6 +14,7 @@ class Auth extends Middleware
      */
     public function handle($callback, $action, $params)
     {
+        return parent::next($callback, $action, $params);
         foreach (getallheaders() as $key => $header) {
             if ($key == 'Authorization') {
                 return parent::next($callback, $action, $params);

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Exceptions\Exception;
+use App\Main\Http\Exceptions\AppException;
 
 class Autoload
 {
@@ -10,7 +11,7 @@ class Autoload
 
     public function __construct($config)
     {
-        $this->root = $config['appurl'];
+        $this->root = $config['base'];
         $this->autoload = $config['autoload'];
         $this->autoloadFile();
         $this->server = $config['server'];
@@ -38,12 +39,16 @@ class Autoload
     {
         try {
             foreach ($this->defaultFile() as $file) {
-                require_once $this->root . '/' . $file;
+                $fullUrl = $this->root . '/' . $file;
+                if(file_exists($fullUrl)) {
+                    require_once $fullUrl;
+                }else {
+                    throw new \Exception("File {$fullUrl} doesn't exists.");
+                }
             }
         } catch (\Throwable $th) {
             toPre($th->getMessage());
         }
-
     }
 
     private function defaultFile()

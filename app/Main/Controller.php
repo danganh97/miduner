@@ -14,7 +14,7 @@ class Controller
 
     public function __construct()
     {
-        $this->app_url = config('app.appurl');
+        $this->app_base = config('app.base');
         $this->layout = config('app.layout');
     }
 
@@ -30,7 +30,7 @@ class Controller
 
     public function render($view, $data = null)
     {
-        $root = $this->app_url;
+        $root = $this->app_base;
         $layoutPath = $root . '/resources/views/layouts/' . $this->layout . '.php';
         $viewPath = $root . '/resources/views/' . $view . '.php';
         if (!file_exists($viewPath)) {
@@ -54,7 +54,7 @@ class Controller
 
     public function singleRender($view, $data = null)
     {
-        $root = $this->app_url;
+        $root = $this->app_base;
         $path = $root . '/resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
@@ -70,7 +70,7 @@ class Controller
 
     public function getViewContent($view, $data = null)
     {
-        $root = $this->app_url;
+        $root = $this->app_base;
         $path = $root . '/resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
@@ -84,7 +84,7 @@ class Controller
 
     public function partialRender($view, $data = null)
     {
-        $root = $this->app_url;
+        $root = $this->app_base;
         $path = $root . '/resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");

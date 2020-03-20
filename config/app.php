@@ -2,8 +2,8 @@
 
 return [
     'server' => env('APP_SERVER', 'windows'),
-    'baseurl' => env('BASE_URL', '/public'),
-    'appurl' => env('APP_URL', dirname(dirname(__FILE__))),
+    'base' => env('APP_BASE', '/var/www/html/miduner'),
+    'appurl' => env('APP_URL', '127.0.0.1:8000'),
     'layout' => env('MAIN_LAYOUT', 'master'),
     'autoload' => [
         'app/Main/Route.php',

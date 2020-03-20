@@ -9,7 +9,6 @@ require_once './app/Main/Helpers/common.php';
  */
 $config = require './config/app.php';
 new Autoload($config);
-// var_dump($argv[1]);
 switch ($argv[1]) {
     case 'config:cache':
         writeConfig('cache.php', $config);
@@ -26,10 +25,28 @@ switch ($argv[1]) {
                 include './database/migration/' . $file;
                 $classes = get_declared_classes();
                 $class = end($classes);
+                system("echo ". 'Migrating: ' . $class);
                 $object = new $class;
                 $object->up();
+                system("echo ". 'Migrated: ' . $class);
             }
         }
+        break;
+    case 'ser':
+        $host = '127.0.0.1';
+        $port = '8000';
+        if (isset($argv[2])) {
+            if (strpos($argv[2], '--host=') !== false) {
+                $host = str_replace('--host=', '', $argv[2]);
+            }
+        }
+        if (isset($argv[3])) {
+            if (strpos($argv[3], '--port=') !== false) {
+                $port = str_replace('--port=', '', $argv[3]);
+            }
+        }
+        system("echo " . "Starting development at: http://{$host}:{$port}");
+        system("php -S {$host}:{$port} server.php");
     default:
         # code...
         break;
