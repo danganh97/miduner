@@ -96,10 +96,17 @@ if (!function_exists('readDotENV')) {
 if (!function_exists('env')) {
     function env($variable, $ndvalue = null)
     {
-        $env = readDotENV();
+        $base_path = dirname(dirname(dirname(dirname(__FILE__))));
+        $path = $base_path . '/cache/environments.php';
+        if (!file_exists($path)) {
+            shell_exec("touch $path");
+            system("echo " . 'Environment file not found.');
+            exit;
+        }
+        $env = include $path;
         foreach ($env as $key => $value) {
             if ($variable == $key) {
-                $result = preg_replace('/\s+/', '', $value);
+                $result = $value;
                 if (!empty($result)) {
                     return $result;
                 }
@@ -117,12 +124,17 @@ if (!function_exists('config')) {
         if (count($paze) != 2) {
             throw new Exception("The {$variable} doesn't exists !");
         }
-        if (!$url = env('APP_BASE') . "/config/{$paze[0]}.php") {
-            throw new Exception("The $url doesn't exists !");
-        } else {
-            $config = require $url;
+        $base_path = dirname(dirname(dirname(dirname(__FILE__))));
+        $path = $base_path . '/cache/' . $paze[0] . '.php';
+        if (!file_exists($path)) {
+            system("echo " . "file $paze[0] not found in cache.");
+            exit;
         }
-        return $config[$paze[1]];
+        $config = include $path;
+        if(isset($config[$paze[1]])) {
+            return $config[$paze[1]];
+        }
+        return "{$variable} not exists.";
     }
 }
 

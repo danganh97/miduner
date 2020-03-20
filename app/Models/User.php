@@ -30,7 +30,7 @@ class User extends Authenticate
 
     public function getFullNameAttribute()
     {
-        return 'anh deptrai ' . $this->user_id;
+        return 'anh deptrai ' . @$this->user_id;
     }
 
     public function getEmailAttribute()

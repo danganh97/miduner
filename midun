@@ -1,22 +1,58 @@
 <?php
-require_once './app/Main/Autoload.php';
+
 require_once './app/Main/Helpers/common.php';
-/**
- * Miduner - A PHP Framework For Amatur
- *
- * @package  Miduner
- * @author   Dang Anh <danganh.dev@gmail.com>
- */
-$config = require './config/app.php';
-new Autoload($config);
+
+if (isset($argv[1]) && $argv[1] != 'config:cache') {
+    require_once './app/Main/Autoload.php';
+
+    /**
+     * Miduner - A PHP Framework For Amatur
+     *
+     * @package  Miduner
+     * @author   Dang Anh <danganh.dev@gmail.com>
+     */
+    $config = require './config/app.php';
+    new Autoload($config);
+}
+
 switch ($argv[1]) {
     case 'config:cache':
-        writeConfig('cache.php', $config);
+        $myfile = fopen("cache/environments.php", "w") or die("Unable to open file!");
+        system("echo " . 'Configuration cache cleared!');
+        $env = readDotENV();
+        fwrite($myfile, "<?php\n");
+        fwrite($myfile, "return array(\n");
+        foreach ($env as $key => $value) {
+            $key = trim($key);
+            $value = trim($value);
+            fwrite($myfile, "    '{$key}' => '{$value}',\n");
+        }
+        fwrite($myfile, ");");
+        // environments
+        foreach (scandir('config') as $file) {
+            if (strlen($file) > 5) {
+                $config = include './config/' . $file;
+                $myfile = fopen("cache/$file", "w") or die("Unable to open file!");
+                fwrite($myfile, "<?php\n");
+                fwrite($myfile, "return array(\n");
+                foreach ($config as $key => $value) {
+                    fwrite($myfile, "    '{$key}' => ");
+                    if (is_array($value)) {
+                        fwrite($myfile, "array(\n");
+                        foreach ($value as $k => $v) {
+                            fwrite($myfile, "        '{$k}' => '{$v}',\n");
+                        }
+                        fwrite($myfile, "    ),\n");
+                    } else {
+                        fwrite($myfile, "'{$value}',\n");
+                    }
+                }
+                fwrite($myfile, ");");
+            }
+        }
+        system("echo " . 'Configuration cached successfully!');
         break;
     case 'db:seed':
-        // require_once './database/Seed/DatabaseTableSeeder.php';
-        // $seed = new DatabaseTableSeeder();
-        // $seed->run();
         system("echo " . 'Seeded');
         break;
     case 'migrate':
@@ -25,9 +61,9 @@ switch ($argv[1]) {
                 include './database/migration/' . $file;
                 $classes = get_declared_classes();
                 $class = end($classes);
-                system("echo ". 'Migrating: ' . $class);
+                system("echo " . 'Migrating: ' . $class);
                 $object = new $class;
-                system("echo ". 'Migrated: ' . $class);
+                system("echo " . 'Migrated: ' . $class);
             }
         }
         break;
