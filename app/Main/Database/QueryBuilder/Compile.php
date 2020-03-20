@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Main;
+namespace App\Main\Database\QueryBuilder;
 
 use App\Http\Exceptions\Exception;
 

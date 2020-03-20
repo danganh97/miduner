@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Main;
+namespace App\Main\Database\QueryBuilder;
 
 use PDO;
 use PDOException;
-use App\Main\Compile;
-use App\Main\Database;
+use App\Main\Database\Connection;
 use App\Http\Exceptions\Exception;
+use App\Main\Database\QueryBuilder\Compile;
 use App\Main\Http\Exceptions\ModelException;
 
-class QueryBuilder
+class DB
 {
     /**
      * The columns that should be returned.
@@ -643,7 +643,7 @@ class QueryBuilder
     public function request($sql)
     {
         try {
-            $connection = (new Database)->connection();
+            $connection = (new Connection)->getConnection();
             $object = $connection->prepare($sql);
             $object->execute();
             $type = explode(" ", $sql);
@@ -686,8 +686,8 @@ class QueryBuilder
                         return $this->find($connection->lastInsertId(), $primaryKey);
                     }
                     $lastInsertId = $connection->lastInsertId();
-                    $getConfigFromConnection = (new Database);
-                    $connection = $getConfigFromConnection->connection();
+                    $getConfigFromConnection = (new Connection);
+                    $connection = $getConfigFromConnection->getConnection();
                     $databaseName = $getConfigFromConnection->config['database'];
                     $newObject = $connection->prepare("
                     SELECT

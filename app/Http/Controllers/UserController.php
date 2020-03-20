@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Main\Controller;
 use App\Main\Http\Request;
-use App\Main\QueryBuilder as DB;
+use App\Main\Database\QueryBuilder\DB;
 
 class UserController extends Controller
 {

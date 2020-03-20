@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Main;
+namespace App\Main\Database;
 
 use App\Http\Exceptions\Exception;
 use \PDO;
 use \PDOException;
 
-class Database
+class Connection
 {
     public $config;
     
@@ -20,7 +20,7 @@ class Database
         $password = $this->config['password'];
         $this->pdo = new PDO("$connection:host=$host;dbname=$database_name", $username, $password, null);
     }
-    public function connection()
+    public function getConnection()
     {
         try {
             $this->pdo->beginTransaction();
