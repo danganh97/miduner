@@ -1,14 +1,13 @@
 <?php
 
+use App\Main\Colors;
+use App\Main\Database\Migrations\Migration;
 use App\Main\QueryBuilder as DB;
 
-class CreateUserTable
+class CreateUserTable extends Migration
 {
-    public function __construct()
-    {
-    }
-
-    public function up()
-    {
-    }
+    // public function up()
+    // {
+        
+    // }
 }

@@ -1,11 +1,9 @@
 <?php
 
-class CreateRoleTable
+use App\Main\Database\Migrations\Migration;
+
+class CreateRoleTable extends Migration
 {
-    public function __construct()
-    {
-    }
     public function up()
-    {
-    }
+    { }
 }

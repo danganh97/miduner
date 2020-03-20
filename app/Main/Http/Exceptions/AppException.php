@@ -14,10 +14,11 @@ class AppException extends Exception
     public function __construct($message, $code = null)
     {
         if (PHP_SAPI === 'cli') {
-            system("echo " . $message);
+            system("echo " . printf($message));
+            die;
         }
         set_exception_handler([$this, 'render']);
-        $this->root = Registry::getInstance()->config['appurl'];
+        $this->root = config('app.base');
         parent::__construct($message, $code);
         $this->report();
     }

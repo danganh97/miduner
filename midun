@@ -27,7 +27,6 @@ switch ($argv[1]) {
                 $class = end($classes);
                 system("echo ". 'Migrating: ' . $class);
                 $object = new $class;
-                $object->up();
                 system("echo ". 'Migrated: ' . $class);
             }
         }
