@@ -1,0 +1,36 @@
+<?php
+require_once './app/Main/Autoload.php';
+require_once './app/Main/Helpers/common.php';
+/**
+ * Miduner - A PHP Framework For Amatur
+ *
+ * @package  Miduner
+ * @author   Dang Anh <danganh.dev@gmail.com>
+ */
+$config = require './config/app.php';
+new Autoload($config);
+// var_dump($argv[1]);
+switch ($argv[1]) {
+    case 'config:cache':
+        writeConfig('cache.php', $config);
+        break;
+    case 'db:seed':
+        // require_once './database/Seed/DatabaseTableSeeder.php';
+        // $seed = new DatabaseTableSeeder();
+        // $seed->run();
+        system("echo " . 'Seeded');
+        break;
+    case 'migrate':
+        foreach (scandir('database/migration', 1) as $file) {
+            if (strlen($file) > 5) {
+                include './database/migration/' . $file;
+                $classes = get_declared_classes();
+                $class = end($classes);
+                $object = new $class;
+                $object->up();
+            }
+        }
+    default:
+        # code...
+        break;
+}

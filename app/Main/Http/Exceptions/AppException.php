@@ -13,6 +13,9 @@ class AppException extends Exception
 
     public function __construct($message, $code = null)
     {
+        if (PHP_SAPI === 'cli') {
+            system("echo " . $message);
+        }
         set_exception_handler([$this, 'render']);
         $this->root = Registry::getInstance()->config['appurl'];
         parent::__construct($message, $code);

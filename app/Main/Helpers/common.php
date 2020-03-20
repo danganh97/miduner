@@ -117,7 +117,7 @@ if (!function_exists('config')) {
         if (count($paze) != 2) {
             throw new Exception("The {$variable} doesn't exists !");
         }
-        if (!$url = Registry::getInstance()->config['appurl'] . "/config/{$paze[0]}.php") {
+        if (!$url = env('APP_URL', dirname(dirname(dirname(dirname(__FILE__))))) . "/config/{$paze[0]}.php") {
             throw new Exception("The $url doesn't exists !");
         } else {
             $config = require $url;
