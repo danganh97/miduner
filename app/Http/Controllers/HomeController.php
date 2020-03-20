@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Main\Controller;
-
 class HomeController extends Controller
 {
     public function home()

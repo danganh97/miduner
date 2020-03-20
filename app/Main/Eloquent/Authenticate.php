@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Main;
+namespace App\Main\Eloquent;
 
 use App\Main\QueryBuilder as DB;
 

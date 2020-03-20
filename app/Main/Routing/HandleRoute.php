@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Main;
-
-use App\Main\Routing\Route;
+namespace App\Main\Routing;
 
 class HandleRoute
 {

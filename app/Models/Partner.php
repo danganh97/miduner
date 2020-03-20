@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Main\Model;
+use App\Main\Eloquent\Model;
 
 class Partner extends Model
 {

@@ -1,7 +1,7 @@
 <?php
 
-use App\Main\HandleRoute;
 use App\Main\Routing\Compile;
+use App\Main\Routing\HandleRoute;
 
 class Route
 {

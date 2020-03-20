@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Main;
+namespace App\Main\Http;
 
 use App\Main\Routing\Compile;
 use App\Http\Exceptions\Exception;

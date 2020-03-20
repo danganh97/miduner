@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Main;
+namespace App\Main\Eloquent;
 
 use App\Http\Exceptions\Exception;
 use App\Main\Traits\Response\JsonResponse;
