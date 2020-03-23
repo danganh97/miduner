@@ -14,14 +14,14 @@ if (!function_exists('redirect')) {
 if (!function_exists('view')) {
     function view($view, $data = null)
     {
-        return (new App\Main\Controller)->render($view, $data);
+        return (new App\Main\Eloquent\Controller)->render($view, $data);
     }
 }
 
 if (!function_exists('simpleView')) {
     function simpleView($view, $data = null)
     {
-        return (new App\Main\Controller)->singleRender($view, $data);
+        return (new App\Main\Eloquent\Controller)->singleRender($view, $data);
     }
 }
 
@@ -80,7 +80,7 @@ if (!function_exists('readDotENV')) {
         $app_base = dirname(dirname(dirname(dirname(__FILE__))));
         $path = $app_base . '/.env';
         if (!file_exists($path)) {
-            system("echo ". 'Missing .env file.');
+            system("echo " . 'Missing .env file.');
             exit;
         }
         $handle = file_get_contents($path);
@@ -100,8 +100,7 @@ if (!function_exists('env')) {
         $base_path = dirname(dirname(dirname(dirname(__FILE__))));
         $path = $base_path . '/cache/environments.php';
         if (!file_exists($path)) {
-            // system("echo " . 'Environment file not found.');
-            throw new AppException("asds");
+            system("echo " . 'Missing environment file.');
             exit;
         }
         $env = include $path;
@@ -132,7 +131,7 @@ if (!function_exists('config')) {
             exit;
         }
         $config = include $path;
-        if(isset($config[$paze[1]])) {
+        if (isset($config[$paze[1]])) {
             return $config[$paze[1]];
         }
         return "{$variable} not exists.";
@@ -207,5 +206,17 @@ if (!function_exists('assets')) {
             return $path;
         }
         throw new Exception("");
+    }
+}
+
+if (!function_exists('included')) {
+    function included($path)
+    {
+        $path = config('app.base') . '/resources/views/' . str_replace('.', '/', $path) . '.php';
+        if (file_exists($path)) {
+            include($path);
+        } else {
+            throw new AppException("File $path not found.");
+        }
     }
 }

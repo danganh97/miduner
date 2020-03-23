@@ -22,13 +22,13 @@
 </head>
 
 <body>
-  <?php require_once __DIR__ . '/../../resources/views/layouts/header.php'; ?>
+  <?php @included('layouts.header'); ?>
   [content]
   <hr>
-  <?php require_once __DIR__ . '/../../resources/views/layouts/footer.php'; ?>
+  <?php @included('layouts.footer'); ?>
 
   <!-- Bootstrap core JavaScript -->
-  <?php require_once __DIR__ . '/../../resources/views/layouts/script.php'; ?>
+  <?php @included('layouts.script'); ?>
 
 </body>
 

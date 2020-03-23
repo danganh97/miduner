@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partner;
-use App\Main\Controller;
 use App\Main\Http\Request;
 use App\Http\Exceptions\Exception;
 

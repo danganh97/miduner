@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Main\Controller;
-
 class PostController extends Controller
 {
     public function index()

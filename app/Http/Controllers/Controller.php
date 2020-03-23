@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Main\Eloquent\Controller as AppController;
+use App\Main\Eloquent\Controller as MidunerController;
 
-class Controller extends AppController
+class Controller extends MidunerController
 {
 
 }

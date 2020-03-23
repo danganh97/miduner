@@ -2,7 +2,7 @@
 
 require_once './app/Main/Helpers/common.php';
 
-if (isset($argv[1]) && $argv[1] != 'config:cache') {
+if (isset($argv[1]) && strtolower($argv[1]) != 'config:cache') {
     require_once './app/Main/Autoload.php';
 
     /**
@@ -14,8 +14,7 @@ if (isset($argv[1]) && $argv[1] != 'config:cache') {
     $config = require './config/app.php';
     new Autoload($config);
 }
-
-switch ($argv[1]) {
+switch (strtolower($argv[1])) {
     case 'config:cache':
         $myfile = fopen("cache/environments.php", "w") or die("Unable to open file!");
         system("echo " . 'Configuration cache cleared!');
