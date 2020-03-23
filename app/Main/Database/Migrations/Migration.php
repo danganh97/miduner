@@ -17,6 +17,9 @@ abstract class Migration
             return call_user_func([$this, 'up']);
         }
         $message = "Method 'up' doesn't exists in " . get_called_class();
+        if(config('app.server') == 'windows') {
+            system("echo $message");exit;
+        }
         echo $this->colors->printError($message);
         exit;
     }

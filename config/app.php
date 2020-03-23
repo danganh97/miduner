@@ -4,6 +4,7 @@ return [
     'server' => env('APP_SERVER', 'windows'),
     'base' => env('APP_BASE', '/var/www/html/miduner'),
     'appurl' => env('APP_URL', '127.0.0.1:8000'),
+    'key' => env('APP_KEY', ''),
     'layout' => env('MAIN_LAYOUT', 'master'),
     'autoload' => [
         'app/Main/Route.php',

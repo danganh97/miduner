@@ -4,21 +4,25 @@ require_once './app/Main/Helpers/common.php';
 
 if (isset($argv[1]) && strtolower($argv[1]) != 'config:cache') {
     require_once './app/Main/Autoload.php';
-
     /**
      * Miduner - A PHP Framework For Amatur
      *
      * @package  Miduner
      * @author   Dang Anh <danganh.dev@gmail.com>
      */
-    $config = require './config/app.php';
+    $config = require_once './cache/app.php';
     new Autoload($config);
 }
 switch (strtolower($argv[1])) {
     case 'config:cache':
-        $myfile = fopen("cache/environments.php", "w") or die("Unable to open file!");
+        foreach (scandir('cache') as $file) {
+            if ($file != '.' && $file != '..' && $file != '.gitignore') {
+                unlink("cache/$file");
+            }
+        }
         system("echo " . 'Configuration cache cleared!');
         $env = readDotENV();
+        $myfile = fopen("cache/environments.php", "w") or die("Unable to open file!");
         fwrite($myfile, "<?php\n");
         fwrite($myfile, "return array(\n");
         foreach ($env as $key => $value) {
@@ -81,6 +85,25 @@ switch (strtolower($argv[1])) {
         }
         system("echo " . "Starting development at: http://{$host}:{$port}");
         system("php -S {$host}:{$port} server.php");
+    case 'key:':
+        $env = '.env';
+        $file_contents = file_get_contents($env);
+        $each = explode("\n", $file_contents);
+        $file = fopen($env, 'w');
+        for ($i = 0; $i <= count($each) - 1; $i++) {
+            if ($i == count($each) - 1) {
+                if (strlen($each[$i]) <= 0) {
+                    continue;
+                }
+            }
+            $value = $each[$i];
+            if (strpos($value, 'APP_KEY') !== false) {
+                $value = 'APP_KEY=' . base64_encode(microtime(true));
+            }
+            fwrite($file, $value . "\n");
+        }
+        fclose($file);
+        break;
     default:
         # code...
         break;
