@@ -6,8 +6,8 @@ use App\Main\QueryBuilder as DB;
 
 class CreateUserTable extends Migration
 {
-    // public function up()
-    // {
+    public function up()
+    {
         
-    // }
+    }
 }

@@ -2,16 +2,21 @@
 
 require_once './app/Main/Helpers/common.php';
 
-if (isset($argv[1]) && strtolower($argv[1]) != 'config:cache') {
-    require_once './app/Main/Autoload.php';
-    /**
-     * Miduner - A PHP Framework For Amatur
-     *
-     * @package  Miduner
-     * @author   Dang Anh <danganh.dev@gmail.com>
-     */
-    $config = require_once './cache/app.php';
-    new Autoload($config);
+if (isset($argv[1])) {
+    if (
+        strtolower($argv[1]) != 'config:cache'
+        && strtolower($argv[1]) != 'key:'
+    ) {
+        require_once './app/Main/Autoload.php';
+        /**
+         * Miduner - A PHP Framework For Amatur
+         *
+         * @package  Miduner
+         * @author   Dang Anh <danganh.dev@gmail.com>
+         */
+        $config = require_once './cache/app.php';
+        new Autoload($config);
+    }
 }
 switch (strtolower($argv[1])) {
     case 'config:cache':

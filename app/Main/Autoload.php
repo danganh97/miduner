@@ -15,6 +15,7 @@ class Autoload
         $this->autoload = $config['autoload'];
         $this->autoloadFile();
         $this->server = $config['server'];
+        $this->checkAppKey($config['key']);
         spl_autoload_register([$this, 'load']);
     }
 
@@ -48,6 +49,13 @@ class Autoload
             }
         } catch (\Throwable $th) {
             toPre($th->getMessage());
+        }
+    }
+
+    private function checkAppKey(string $appkey)
+    {
+        if(empty($appkey) || $appkey == '' || $appkey == null) {
+            die("Please generate app key.");
         }
     }
 
