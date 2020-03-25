@@ -2,6 +2,8 @@
 
 namespace App\Main\Routing;
 
+use App\Main\Eloquent\Controller;
+
 class HandleRoute
 {
     public $flag = false;

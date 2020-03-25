@@ -83,15 +83,7 @@ if (!function_exists('readDotENV')) {
             system("echo " . 'Missing .env file.');
             exit;
         }
-        $handle = file_get_contents($path);
-        $paze = explode("\n", $handle);
-        foreach ($paze as $key => $value) {
-            $vl[$key] = explode("=", $value);
-            if (isset($vl[$key][0]) && isset($vl[$key][1])) {
-                $env[$vl[$key][0]] = $vl[$key][1];
-            }
-        }
-        return $env;
+        return parse_ini_file($path);
     }
 }
 if (!function_exists('env')) {
