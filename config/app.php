@@ -2,7 +2,7 @@
 
 return [
     'server' => env('APP_SERVER', 'windows'),
-    'base' => env('APP_BASE', '/var/www/html/miduner'),
+    'base' => env('APP_BASE',  dirname(dirname(__FILE__))),
     'appurl' => env('APP_URL', '127.0.0.1:8000'),
     'key' => env('APP_KEY', ''),
     'layout' => env('MAIN_LAYOUT', 'master'),

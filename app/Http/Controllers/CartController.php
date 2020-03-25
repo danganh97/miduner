@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Main\QueryBuilder as DB;
+use App\Main\Database\QueryBuilder\DB;
 
 session_start();
 
@@ -10,7 +10,7 @@ class CartController extends Controller
 {
     public function addToCart($id)
     {
-        $product = DB::table('products')->select(['id', 'name'])->find('id', $id);
+        $product = DB::table('products')->select(['id', 'name'])->find($id);
         if (!$product) {
             return sendMessage('Product not found !');
         }
