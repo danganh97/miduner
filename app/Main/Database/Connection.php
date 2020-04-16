@@ -15,10 +15,11 @@ class Connection
         $this->config = config('database.connection');
         $connection = $this->config['driver'];
         $host = $this->config['host'];
+        $port = $this->config['port'];
         $database_name = $this->config['database'];
         $username = $this->config['username'];
         $password = $this->config['password'];
-        $this->pdo = new PDO("$connection:host=$host;dbname=$database_name", $username, $password, null);
+        $this->pdo = new PDO("$connection:host=$host;port=$port;dbname=$database_name", $username, $password, null);
     }
     public function getConnection()
     {

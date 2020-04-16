@@ -20,7 +20,7 @@ class User extends Authenticate
     ];
 
     protected $appends = [
-        'full_name',
+        'full_name', 'url_social'
     ];
 
     protected $casts = [
@@ -36,6 +36,14 @@ class User extends Authenticate
     public function getEmailAttribute()
     {
         return $this->email;
+    }
+
+    public function getUrlSocialAttribute()
+    {
+        return [
+            'facebook' => 'facebook.com' . '/' . $this->user_id,
+            'instagram' => 'instagram.com'
+        ];
     }
 
     const CREATED_AT = 'created_at';

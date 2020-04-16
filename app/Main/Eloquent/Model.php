@@ -10,7 +10,7 @@ use App\Main\Traits\Eloquent\With;
 abstract class Model
 {
     use With, GetAttribute;
-    
+
     protected $appends = [];
     protected $casts = [];
     protected $fillable = [];
@@ -30,6 +30,13 @@ abstract class Model
         $this->callServiceCasts();
         $this->callServiceGetAttributes();
         $this->callServiceHidden();
+    }
+
+    public function __get($property)
+    {
+        if (property_exists($this, $property)) {
+            return $this->$property;
+        }
     }
 
     public function setTable($table)
@@ -70,27 +77,27 @@ abstract class Model
 
     public static function create($data)
     {
-        return (new static )->createStatic($data);
+        return (new static)->createStatic($data);
     }
 
     public static function find($param)
     {
-        return (new static )->findStatic($param);
+        return (new static)->findStatic($param);
     }
 
     public static function first()
     {
-        return (new static )->firstStatic();
+        return (new static)->firstStatic();
     }
 
     public static function get($column = ['*'])
     {
-        return (new static )->getStatic($column);
+        return (new static)->getStatic($column);
     }
 
     public static function login($data)
     {
-        return (new static )->loginStatic($data);
+        return (new static)->loginStatic($data);
     }
 
     private function callServiceAppends()
@@ -98,7 +105,7 @@ abstract class Model
         foreach ($this->appends as $key => $value) {
             $values = explode('_', $value);
             $func = '';
-            foreach($values as $app) {
+            foreach ($values as $app) {
                 $func .= ucfirst($app);
             }
             $this->$value = call_user_func([$this, "get{$func}Attribute"]);
@@ -107,40 +114,40 @@ abstract class Model
 
     private function callServiceCasts()
     {
-        foreach($this->casts as $key => $value) {
-            if(!in_array($key, $this->fillable)) {
+        foreach ($this->casts as $key => $value) {
+            if (!in_array($key, $this->fillable)) {
                 throw new Exception("The attribute $key not exists in fillable.");
             }
-            switch($value) {
+            switch ($value) {
                 case 'int':
-                $this->{$key} = isset($this->{$key}) ? (int) $this->{$key} : null;
-                break;
+                    $this->{$key} = isset($this->{$key}) ? (int) $this->{$key} : null;
+                    break;
                 case 'array':
-                $this->{$key} = isset($this->{$key}) ? (array) $this->{$key} : null;
-                break;
+                    $this->{$key} = isset($this->{$key}) ? (array) $this->{$key} : null;
+                    break;
                 case 'object':
-                $this->{$key} = isset($this->{$key}) ? (object) $this->{$key} : null;
-                break;
+                    $this->{$key} = isset($this->{$key}) ? (object) $this->{$key} : null;
+                    break;
                 case 'float':
-                $this->{$key} = isset($this->{$key}) ? (float) $this->{$key} : null;
-                break;
+                    $this->{$key} = isset($this->{$key}) ? (float) $this->{$key} : null;
+                    break;
                 case 'double':
-                $this->{$key} = isset($this->{$key}) ? (double) $this->{$key} : null;
-                break;
+                    $this->{$key} = isset($this->{$key}) ? (float) $this->{$key} : null;
+                    break;
                 case 'string':
-                $this->{$key} = isset($this->{$key}) ? (string) $this->{$key} : null;
-                break;
+                    $this->{$key} = isset($this->{$key}) ? (string) $this->{$key} : null;
+                    break;
                 case 'boolean':
-                $this->{$key} = isset($this->{$key}) ? (boolean) $this->{$key} : null;
-                break;
+                    $this->{$key} = isset($this->{$key}) ? (bool) $this->{$key} : null;
+                    break;
             }
         }
     }
 
     private function callServiceGetAttributes()
     {
-        foreach(get_class_methods($this) as $key => $value) {
-            if(strpos($value, 'get') !== false && strpos($value, 'Attribute') !== false) {
+        foreach (get_class_methods($this) as $key => $value) {
+            if (strpos($value, 'get') !== false && strpos($value, 'Attribute') !== false) {
                 $this->handleServiceGetAttribute($value);
             }
         }
@@ -150,23 +157,22 @@ abstract class Model
     {
         $pazeGet = str_replace('get', '', $value);
         $pazeAttribute = str_replace('Attribute', '', $pazeGet);
-        foreach($this->fillable as $fillable) {
+        foreach ($this->fillable as $fillable) {
             $values = explode('_', $fillable);
             $func = '';
-            foreach($values as $app) {
+            foreach ($values as $app) {
                 $func .= ucfirst($app);
             }
-            if($func == $pazeAttribute) {
-                $this->$fillable = call_user_func([$this,"get{$func}Attribute"]);
+            if ($func == $pazeAttribute) {
+                $this->$fillable = call_user_func([$this, "get{$func}Attribute"]);
             }
         }
     }
 
     public function callServiceHidden()
     {
-        foreach($this->hidden as $hidden) {
+        foreach ($this->hidden as $hidden) {
             unset($this->$hidden);
         }
     }
-
 }
