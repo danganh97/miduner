@@ -20,3 +20,11 @@ If you discover a security vulnerability within Miduner, please send an e-mail t
 ## License
 
 The Miduner Framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+
+## How to start ?
+ ```cd miduner
+    cp .env.example .env
+    php midun key:
+    php midun config:cache
+    php midun ser
+ ```
