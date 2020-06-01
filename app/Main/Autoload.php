@@ -28,6 +28,9 @@ class Autoload
             case 'windows':
                 $file = $this->root . '\\' . $class . '.php';
                 break;
+            case 'macosx':
+                $file = $this->root . '/' . str_replace('\\', '/', lcfirst($class) . '.php');
+                break;
         }
         if (file_exists($file)) {
             require_once $file;
@@ -41,9 +44,9 @@ class Autoload
         try {
             foreach ($this->defaultFile() as $file) {
                 $fullUrl = $this->root . '/' . $file;
-                if(file_exists($fullUrl)) {
+                if (file_exists($fullUrl)) {
                     require_once $fullUrl;
-                }else {
+                } else {
                     throw new \Exception("File {$fullUrl} doesn't exists.");
                 }
             }
@@ -54,7 +57,7 @@ class Autoload
 
     private function checkAppKey(string $appkey)
     {
-        if(empty($appkey) || $appkey == '' || $appkey == null) {
+        if (empty($appkey) || $appkey == '' || $appkey == null) {
             die("Please generate app key.");
         }
     }

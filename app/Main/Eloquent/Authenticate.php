@@ -2,7 +2,7 @@
 
 namespace App\Main\Eloquent;
 
-use App\Main\QueryBuilder as DB;
+use App\Main\Database\QueryBuilder\DB;
 
 abstract class Authenticate extends Model
 {

@@ -3,7 +3,7 @@
 namespace App\Main\Eloquent;
 
 use App\Http\Exceptions\Exception;
-use App\Main\QueryBuilder as DB;
+use App\Main\Database\QueryBuilder\DB;
 use App\Main\Traits\Eloquent\GetAttribute;
 use App\Main\Traits\Eloquent\With;
 
