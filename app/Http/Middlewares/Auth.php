@@ -20,6 +20,6 @@ class Auth extends Middleware
                 return parent::next($callback, $action, $params);
             }
         }
-        throw new AppException("Unauthorized !");
+        throw new AppException("Unauthorized !", 401);
     }
 }

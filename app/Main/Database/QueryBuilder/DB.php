@@ -2,12 +2,12 @@
 
 namespace App\Main\Database\QueryBuilder;
 
-use PDO;
-use PDOException;
-use App\Main\Database\Connection;
 use App\Http\Exceptions\Exception;
+use App\Main\Database\Connection;
 use App\Main\Database\QueryBuilder\Compile;
 use App\Main\Http\Exceptions\ModelException;
+use PDO;
+use PDOException;
 
 class DB
 {
@@ -649,65 +649,133 @@ class DB
             $type = explode(" ", $sql);
             switch ($type[0]) {
                 case 'SELECT':
-                    if ($this->find === true) {
-                        if (!empty($this->calledFromModel)) {
-                            $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-                            if (is_array($resource) && count($resource) > 0) {
-                                return $resource[0];
-                            }
-                            if ($this->isThrow === true) {
-                                throw new ModelException("Resource not found", 404);
-                            }
-                            return null;
-                        }
-                        return $object->fetch();
-                    }
-                    if ($this->first === true) {
-                        if (!empty($this->calledFromModel)) {
-                            $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-                            if (is_array($resource) && count($resource) > 0) {
-                                return $resource[0];
-                            }
-                            if ($this->isThrow === true) {
-                                throw new ModelException("Resource not found", 404);
-                            }
-                            return null;
-                        }
-                        return $object->fetch();
-                    }
-                    if (!empty($this->calledFromModel)) {
-                        return $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-                    }
-                    return $object->fetchAll(PDO::FETCH_OBJ);
-                    break;
+                    return $this->inCaseSelect($object);
                 case 'INSERT':
-                    if (!empty($this->calledFromModel)) {
-                        $primaryKey = (new $this->calledFromModel)->primaryKey();
-                        return $this->find($connection->lastInsertId(), $primaryKey);
-                    }
-                    $lastInsertId = $connection->lastInsertId();
-                    $getConfigFromConnection = (new Connection);
-                    $connection = $getConfigFromConnection->getConnection();
-                    $databaseName = $getConfigFromConnection->config['database'];
-                    $newObject = $connection->prepare("
-                    SELECT
-                        COLUMN_NAME
-                    FROM
-                        INFORMATION_SCHEMA.COLUMNS
-                    WHERE
-                        TABLE_SCHEMA = '{$databaseName}' AND
-                        TABLE_NAME = '{$this->table}' AND EXTRA = 'auto_increment'
-                    ");
-                    $newObject->execute();
-                    return $this->find($lastInsertId, $newObject->fetch()->COLUMN_NAME);
-                    break;
+                    return $this->inCaseInsert($connection);
                 case 'UPDATE':
                     return $this->find($this->wheres[0][0], $this->wheres[0][2]);
-                    break;
+                default:
+                    return $object;
             }
-            return $object;
         } catch (PDOException $e) {
             throw new Exception($e->getMessage());
         }
+    }
+
+    private function getOneItemHasModel($connection)
+    {
+        $primaryKey = (new $this->calledFromModel)->primaryKey();
+        return $this->find($connection->lastInsertId(), $primaryKey);
+    }
+
+    /**
+     * Exec sql get column id in connection
+     *
+     * @param Object $connection
+     *
+     */
+    private function sqlExecGetColumnIdInConnection($connection)
+    {
+        $lastInsertId = $connection->lastInsertId();
+        $getConfigFromConnection = (new Connection);
+        $connection = $getConfigFromConnection->getConnection();
+        $databaseName = $getConfigFromConnection->config['database'];
+        $newObject = $connection->prepare($this->createSqlStatementGetColumnName($databaseName));
+        $newObject->execute();
+        return $this->find($lastInsertId, $newObject->fetch()->COLUMN_NAME);
+    }
+
+    /**
+     * Create sql statement get column name
+     *
+     * @param String $databaseName
+     *
+     */
+    private function createSqlStatementGetColumnName($databaseName)
+    {
+        return "
+            SELECT
+                COLUMN_NAME
+            FROM
+                INFORMATION_SCHEMA.COLUMNS
+            WHERE
+                TABLE_SCHEMA = '{$databaseName}' AND
+                TABLE_NAME = '{$this->table}' AND EXTRA = 'auto_increment'
+        ";
+    }
+
+    /**
+     * Handle in case insert SQL
+     *
+     * @param Object $connection
+     *
+     */
+    private function inCaseInsert($connection)
+    {
+        if (!empty($this->calledFromModel)) {
+            return $this->getOneItemHasModel($connection);
+        }
+        return $this->sqlExecGetColumnIdInConnection($connection);
+    }
+
+    /**
+     * Handle in case select SQL
+     *
+     * @param Object $object
+     *
+     */
+    private function inCaseSelect($object)
+    {
+        if ($this->find === true || $this->first === true) {
+            if (!empty($this->calledFromModel)) {
+                return $this->fetchOnlyOneItemHasModel($object);
+            }
+            return $object->fetch();
+        }
+        if (!empty($this->calledFromModel)) {
+            return $this->fetchListItemsHasModel($object);
+        }
+        return $this->fetchOneItemWithoutModel($object);
+    }
+
+    /**
+     * Fetch one item without model
+     *
+     * @param Object $object
+     *
+     */
+    private function fetchOneItemWithoutModel($object)
+    {
+        return $object->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    /**
+     * Fetch list items has model
+     *
+     * @param Object $object
+     *
+     */
+    private function fetchListItemsHasModel($object)
+    {
+        return $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+    }
+
+    /**
+     * Fetch one item has model
+     *
+     * @param Object $object
+     * @throws ModelException
+     *
+     */
+    private function fetchOnlyOneItemHasModel($object)
+    {
+        $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+        if (is_array($resource) && count($resource) > 0) {
+            return $resource[0];
+        }
+        if ($this->isThrow === true) {
+            throw new ModelException("Resource not found", 404);
+        }
+        return null;
     }
 }

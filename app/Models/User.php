@@ -6,8 +6,8 @@ use App\Main\Eloquent\Authenticate;
 
 class User extends Authenticate
 {
-    protected $table = 'users';
-    protected $primaryKey = 'user_id';
+    protected $table = 'user';
+    protected $primaryKey = 'id';
     protected $username = 'email';
     protected $password = 'password';
 

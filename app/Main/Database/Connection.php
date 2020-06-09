@@ -25,6 +25,12 @@ class Connection
             throw new Exception($e->getMessage());
         }
     }
+
+    /**
+     * Get the connection
+     *
+     * @return \PDOInstance
+     */
     public function getConnection()
     {
         try {
