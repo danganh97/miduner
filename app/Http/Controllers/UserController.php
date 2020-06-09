@@ -11,7 +11,7 @@ class UserController extends Controller
     public function index(Request $request = null)
     {
         $users = DB::bindClass(User::class)->take(10)->get();
-        // return $this->respond($users);
+        return $this->respond($users);
         return view('users/index', compact('users'));
     }
 
