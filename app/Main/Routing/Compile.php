@@ -4,6 +4,7 @@ namespace App\Main\Routing;
 
 use App\Http\Exceptions\Exception;
 use App\Http\Kernel;
+use App\Main\Http\Request;
 
 class Compile
 {
@@ -41,6 +42,11 @@ class Compile
             $controller = 'App\\Http\\Controllers\\' . $className;
         }
         if (class_exists($controller)) {
+            $ref = new \ReflectionMethod($controller, $methodName);
+            $listParameters = $ref->getParameters();
+            if(count($listParameters) > 0 && isset($listParameters[0]) && $listParameters[0]->name === 'request') {
+                array_unshift($params, new Request);
+            }
             $object = new $controller;
             if (method_exists($controller, $methodName) && $cloud === true) {
                 return call_user_func_array([$object, $methodName], $params);

@@ -2,12 +2,17 @@
 
 namespace App\Main\Http;
 
+use App\Main\Services\File;
+
 class Request
 {
     public function __construct()
     {
-        foreach(array_merge($_GET, $_POST) as $key => $value){
+        foreach(self::getRequest() as $key => $value){
             $this->$key = $value;
+        }
+        foreach($_FILES as $key => $value){
+            $this->$key = new File($value);
         }
     }
 
@@ -18,7 +23,9 @@ class Request
      */
     public static function getRequest()
     {
-        return $_REQUEST;
+        return array_merge($_REQUEST, array_map(function ($file) {
+            return new File($file);
+        }, $_FILES));
     }
 
     /**
@@ -28,11 +35,7 @@ class Request
      */
     public static function all()
     {
-        $request = [];
-        foreach (self::getRequest() as $name => $value) {
-            $request[$name] = $value;
-        }
-        return $request;
+        return self::getRequest();
     }
 
     /**
@@ -63,7 +66,7 @@ class Request
                 $request[$name] = $value;
             }
         }
-        return $request;
+        return (object) $request;
     }
 
     /**
@@ -79,6 +82,6 @@ class Request
                 $request[$name] = $value;
             }
         }
-        return $request;
+        return (object) $request;
     }
 }

@@ -8,7 +8,7 @@ use App\Main\Database\QueryBuilder\DB;
 
 class UserController extends Controller
 {
-    public function index(Request $request = null)
+    public function index(Request $request)
     {
         $users = DB::bindClass(User::class)->take(10)->get();
         return $this->respond($users);
@@ -21,9 +21,9 @@ class UserController extends Controller
         return simpleView('users/create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $data = Request::all();
+        $data = $request->all();
         $user = User::create($data);
         return response()->json($user, 201);
     }
@@ -37,7 +37,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
         $user = User::find($id);
         if (!$user) {

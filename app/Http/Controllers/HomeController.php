@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Main\Http\Request;
+
 class HomeController extends Controller
 {
-    public function home()
+    public function home(Request $request)
     {
         return view('pages/home');
     }
