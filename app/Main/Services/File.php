@@ -12,6 +12,9 @@ class File
     public function __construct($file)
     {
         $this->rawFile = $file;
+        foreach($file as $key => $value) {
+            $this->$key = $value;
+        }
         $this->name = isset($file['name']) && count(explode('.', $file['name'])) > 1 ? explode('.', $file['name'])[0] : '';
         $this->ext = isset($file['name']) && count(explode('.', $file['name'])) > 1 ? end(explode('.', $file['name'])) : '';
         $this->size = isset($file['size']) ? $file['size'] : 0;
