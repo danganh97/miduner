@@ -39,65 +39,19 @@ abstract class Model
         }
     }
 
-    public function setTable($table)
+    public function __set($property, $value)
     {
-        $this->table = $table;
-        return $this;
+        $this->$property = $value;
     }
 
-    public function getTable()
+    public static function __callStatic($method, $args)
     {
-        return $this->table;
+        return (new static)->execCallStatic($method, $args);
     }
 
-    public function findStatic($param)
+    private function execCallStatic($method, $args)
     {
-        return DB::table($this->table)->find($param, $this->primaryKey);
-    }
-
-    public function firstStatic()
-    {
-        return DB::table($this->table)->first();
-    }
-
-    public function createStatic($data)
-    {
-        return DB::table($this->table)->create($data);
-    }
-
-    public function getStatic($column)
-    {
-        return DB::table($this->table)->select($column)->get();
-    }
-
-    public function loginStatic($data)
-    {
-        return $this->table == 'users' ? DB::table($this->table)->login([$this->username => $data[$this->username], $this->password => $data[$this->password]]) : false;
-    }
-
-    public static function create($data)
-    {
-        return (new static)->createStatic($data);
-    }
-
-    public static function find($param)
-    {
-        return (new static)->findStatic($param);
-    }
-
-    public static function first()
-    {
-        return (new static)->firstStatic();
-    }
-
-    public static function get($column = ['*'])
-    {
-        return (new static)->getStatic($column);
-    }
-
-    public static function login($data)
-    {
-        return (new static)->loginStatic($data);
+        return DB::staticEloquentBuilder($this->table, $method, $args);
     }
 
     private function callServiceAppends()

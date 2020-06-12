@@ -160,9 +160,7 @@ if (!function_exists('route')) {
 if (!function_exists('toPre')) {
     function toPre($collection): void
     {
-        echo '<pre>';
         print_r($collection);
-        echo '</pre>';
         exit;
     }
 }
@@ -182,10 +180,12 @@ if (!function_exists('is_json')) {
 }
 
 if (!function_exists('dd')) {
-    function dd($arg)
+    function dd()
     {
-        var_dump($arg);
-        die();
+        array_map(function($x) { 
+            print_r($x); 
+        }, func_get_args());
+        die;
     }
 }
 
