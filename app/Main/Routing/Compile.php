@@ -45,7 +45,7 @@ class Compile
             $ref = new \ReflectionMethod($controller, $methodName);
             $listParameters = $ref->getParameters();
             if(count($listParameters) > 0 && isset($listParameters[0]) && $listParameters[0]->name === 'request') {
-                array_unshift($params, new Request);
+                array_unshift($params, Request::getInstance());
             }
             $object = new $controller;
             if (method_exists($controller, $methodName) && $cloud === true) {

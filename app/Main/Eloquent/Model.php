@@ -6,10 +6,11 @@ use App\Http\Exceptions\Exception;
 use App\Main\Database\QueryBuilder\DB;
 use App\Main\Traits\Eloquent\GetAttribute;
 use App\Main\Traits\Eloquent\With;
+use App\Main\Traits\Instance;
 
 abstract class Model
 {
-    use With, GetAttribute;
+    use With, GetAttribute, Instance;
 
     protected $appends = [];
     protected $casts = [];
@@ -23,6 +24,10 @@ abstract class Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
+    const LIST_OF_ORM_METHODS = [
+        'with'
+    ];
+
     public function __construct()
     {
         app()->callModel = get_called_class();
@@ -30,6 +35,7 @@ abstract class Model
         $this->callServiceCasts();
         $this->callServiceGetAttributes();
         $this->callServiceHidden();
+        $this->callServiceWithes();
     }
 
     public function __get($property)
@@ -46,10 +52,20 @@ abstract class Model
 
     public static function __callStatic($method, $args)
     {
-        return (new static)->execCallStatic($method, $args);
+        if(in_array($method, self::LIST_OF_ORM_METHODS)) {
+            $property = "{$method}s";
+            list($function) = $args;
+            static::getInstance()->$property = $function;
+        }
+        return static::getInstance()->execCallStatic($method, $args);
     }
 
-    private function execCallStatic($method, $args)
+    public function __call($method, $args)
+    {
+        return static::getInstance()->execCallStatic($method, $args);
+    }
+
+    public function execCallStatic($method, $args)
     {
         return DB::staticEloquentBuilder($this->table, $method, $args);
     }
@@ -127,6 +143,14 @@ abstract class Model
     {
         foreach ($this->hidden as $hidden) {
             unset($this->$hidden);
+        }
+    }
+
+    public function callServiceWithes()
+    {
+        foreach($this->withes as $with) {
+            $function = "{$with}Exec";
+            $this->$with = $this->$function();
         }
     }
 }

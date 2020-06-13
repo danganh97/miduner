@@ -4,7 +4,7 @@
  * Miduner - A PHP Framework For Amatur
  *
  * @package  Miduner
- * @author   danganh97 <danganh.dev@gmail.com.com>
+ * @author   danganh97 <danganh.dev@gmail.com>
  */
 
 define('MIDUNER_START', microtime(true));

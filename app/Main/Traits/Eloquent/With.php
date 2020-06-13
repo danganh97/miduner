@@ -4,8 +4,9 @@ namespace App\Main\Traits\Eloquent;
 
 trait With
 {
-    public function with(string $function)
+    public function withExec(string $function, $instance)
     {
-        $this->{strtolower($function)} = call_user_func([$this, $function]);
+        $instance->{strtolower($function)} = call_user_func([$instance, $function]);
+        return $instance;
     }
 }

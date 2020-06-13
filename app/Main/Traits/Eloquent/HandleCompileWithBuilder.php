@@ -107,6 +107,8 @@ trait HandleCompileWithBuilder
             case 'login':
                 list($data) = $args;
                 return (new self($table))->login($data);
+            default:
+                return new self($table);
         }
         return (new self($table))->$method($args);
     }
