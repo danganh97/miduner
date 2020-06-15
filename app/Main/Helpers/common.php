@@ -112,21 +112,25 @@ if (!function_exists('env')) {
 if (!function_exists('config')) {
     function config($variable)
     {
-        $paze = explode('.', $variable);
-        if (count($paze) != 2) {
-            throw new Exception("The {$variable} doesn't exists !");
-        }
+        $variable = 'app.aliases.test.test2.test3';
+        $pase = explode('.', $variable);
         $base_path = dirname(dirname(dirname(dirname(__FILE__))));
-        $path = $base_path . '/cache/' . $paze[0] . '.php';
+        $path = $base_path . '/cache/' . $pase[0] . '.php';
         if (!file_exists($path)) {
-            system("echo " . "file $paze[0] not found in cache.");
+            system("echo " . "file $pase[0] not found in cache.");
             exit;
         }
-        $config = include $path;
-        if (isset($config[$paze[1]])) {
-            return $config[$paze[1]];
+        array_shift($pase);
+        $configs = include $path;
+        $initValue = $configs[$pase[0]];
+        array_shift($pase);
+        foreach($pase as $p) {
+            if(!$initValue[$p]) {
+                die("Variable $variable not found.");
+            }
+            $value = $initValue = $initValue[$p];
         }
-        return "{$variable} not exists.";
+        return $value;
     }
 }
 

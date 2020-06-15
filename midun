@@ -9,7 +9,7 @@ if (isset($argv[1])) {
     ) {
         require_once './app/Main/Autoload.php';
         /**
-         * Miduner - A PHP Framework For Amatur
+         * Miduner - A PHP Framework For Amateur
          *
          * @package  Miduner
          * @author   Dang Anh <danganh.dev@gmail.com>
@@ -20,6 +20,8 @@ if (isset($argv[1])) {
 }
 switch (strtolower($argv[1])) {
     case 'config:cache':
+    case 'c:c':
+    case 'c:f':
         foreach (scandir('cache') as $file) {
             if ($file != '.' && $file != '..' && $file != '.gitignore') {
                 unlink("cache/$file");
@@ -76,21 +78,24 @@ switch (strtolower($argv[1])) {
         }
         break;
     case 'ser':
+    case 'serve':
+    case 'serv':
         $host = '127.0.0.1';
         $port = '8000';
-        if (isset($argv[2])) {
-            if (strpos($argv[2], '--host=') !== false) {
-                $host = str_replace('--host=', '', $argv[2]);
+        foreach ($argv as $param) {
+            if (strpos($param, '--host=') !== false) {
+                $host = str_replace('--host=', '', $param);
             }
-        }
-        if (isset($argv[3])) {
-            if (strpos($argv[3], '--port=') !== false) {
-                $port = str_replace('--port=', '', $argv[3]);
+            if (strpos($param, '--port=') !== false) {
+                $port = str_replace('--port=', '', $param);
             }
         }
         system("echo " . "Starting development at: http://{$host}:{$port}");
+        exec("open ". "http://{$host}:{$port}");
         system("php -S {$host}:{$port} server.php");
     case 'key:':
+    case 'key:generate':
+    case 'key:gen':
         $env = '.env';
         $file_contents = file_get_contents($env);
         $each = explode("\n", $file_contents);
