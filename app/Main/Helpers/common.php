@@ -112,7 +112,6 @@ if (!function_exists('env')) {
 if (!function_exists('config')) {
     function config($variable)
     {
-        $variable = 'app.aliases.test.test2.test3';
         $pase = explode('.', $variable);
         $base_path = dirname(dirname(dirname(dirname(__FILE__))));
         $path = $base_path . '/cache/' . $pase[0] . '.php';
