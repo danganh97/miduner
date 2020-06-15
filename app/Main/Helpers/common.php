@@ -123,6 +123,9 @@ if (!function_exists('config')) {
         $configs = include $path;
         $initValue = $configs[$pase[0]];
         array_shift($pase);
+        if(empty($pase)) {
+            return $initValue;
+        }
         foreach($pase as $p) {
             if(!$initValue[$p]) {
                 die("Variable $variable not found.");
