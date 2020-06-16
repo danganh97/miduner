@@ -40,12 +40,12 @@ class UserController extends Controller
 
     public function edit(Request $request, $id)
     {
-        $user = User::with('company')->where('id', '=', 123)->first();
-            if (!$user) {
+        $user = User::with('company')->where('id', '=', $id)->first();
+        if (!$user) {
             throw new ModelException("User not found", 404);
         }
-        return $this->respond($user);
-        return simpleView('users/edit', ['user' => $user]);
+        // return $this->respond($user);
+        return view('users/edit', ['user' => $user]);
     }
 
     public function update($id)

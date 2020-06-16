@@ -1,3 +1,4 @@
+<?php $this->setMaster('layouts.master') ?>
 <?php $this->setVars('title', 'Clean Blog - About') ?>
 <?php ob_start(); ?>
 <meta property="og:type" content="website" />

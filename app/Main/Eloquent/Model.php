@@ -25,7 +25,7 @@ abstract class Model
     const UPDATED_AT = 'updated_at';
 
     const LIST_OF_ORM_METHODS = [
-        'with'
+        'with',
     ];
 
     public function __construct()
@@ -52,7 +52,7 @@ abstract class Model
 
     public static function __callStatic($method, $args)
     {
-        if(in_array($method, self::LIST_OF_ORM_METHODS)) {
+        if (in_array($method, self::LIST_OF_ORM_METHODS)) {
             $property = "{$method}s";
             list($function) = $args;
             static::getInstance()->$property = $function;
@@ -148,9 +148,11 @@ abstract class Model
 
     public function callServiceWithes()
     {
-        foreach($this->withes as $with) {
-            $function = "{$with}Exec";
-            $this->$with = $this->$function();
+        if ($this->withes) {
+            foreach ($this->withes as $with) {
+                $function = "{$with}Exec";
+                $this->$with = $this->$function();
+            }
         }
     }
 }

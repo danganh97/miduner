@@ -39,16 +39,22 @@ class Controller
             extract($data, EXTR_PREFIX_SAME, "data");
         }
         $content = $this->getViewContent($view, $data);
-        $layoutPath = $root . '/resources/views/' . str_replace('.', '/', $this->master) . '.php';
-        if (!file_exists($layoutPath)) {
-            throw new AppException("Layout $layoutPath not found");
+        if($this->master) {
+            $layoutPath = $root . '/resources/views/' . str_replace('.', '/', $this->master) . '.php';
+            if (!file_exists($layoutPath)) {
+                throw new AppException("Layout $layoutPath not found");
+            }
+            $layouts = file_get_contents($layoutPath);
+            foreach ($this->vars as $key => $value) {
+                $layouts = preg_replace('/\[' . $key . '\]/', $value, $layouts);
+            }
+            $layouts = preg_replace('/\[content\]/', $content, $layouts);
+            eval(' ?>' . $layouts);
+        } else {
+            eval(' ?>' . $content);
         }
-        $layouts = file_get_contents($layoutPath);
-        foreach ($this->vars as $key => $value) {
-            $layouts = preg_replace('/\[' . $key . '\]/', $value, $layouts);
-        }
-        $layouts = preg_replace('/\[content\]/', $content, $layouts);
-        eval(' ?>' . $layouts);
+        return true;
+        
     }
 
     public function getViewContent($view, $data = null)
