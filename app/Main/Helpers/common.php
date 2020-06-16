@@ -21,7 +21,7 @@ if (!function_exists('view')) {
 if (!function_exists('simpleView')) {
     function simpleView($view, $data = null)
     {
-        return (new App\Main\Eloquent\Controller)->singleRender($view, $data);
+        return (new App\Main\Eloquent\Controller)->render($view, $data);
     }
 }
 

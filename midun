@@ -1,10 +1,13 @@
 <?php
 
 require_once './app/Main/Helpers/common.php';
+require_once './app/Main/Helpers/execHelpers.php';
 
 if (isset($argv[1])) {
     if (
         strtolower($argv[1]) != 'config:cache'
+        && strtolower($argv[1]) != 'c:f'
+        && strtolower($argv[1]) != 'c:c'
         && strtolower($argv[1]) != 'key:'
     ) {
         require_once './app/Main/Autoload.php';
@@ -22,97 +25,27 @@ switch (strtolower($argv[1])) {
     case 'config:cache':
     case 'c:c':
     case 'c:f':
-        foreach (scandir('cache') as $file) {
-            if ($file != '.' && $file != '..' && $file != '.gitignore') {
-                unlink("cache/$file");
-            }
-        }
+        execClearCache();
         system("echo " . 'Configuration cache cleared!');
-        $env = readDotENV();
-        $myfile = fopen("cache/environments.php", "w") or die("Unable to open file!");
-        fwrite($myfile, "<?php\n");
-        fwrite($myfile, "return array(\n");
-        foreach ($env as $key => $value) {
-            $key = trim($key);
-            $value = trim($value);
-            fwrite($myfile, "    '{$key}' => '{$value}',\n");
-        }
-        fwrite($myfile, ");");
-        // environments
-        foreach (scandir('config') as $file) {
-            if (strlen($file) > 5) {
-                $config = include './config/' . $file;
-                $myfile = fopen("cache/$file", "w") or die("Unable to open file!");
-                fwrite($myfile, "<?php\n");
-                fwrite($myfile, "return array(\n");
-                foreach ($config as $key => $value) {
-                    fwrite($myfile, "    '{$key}' => ");
-                    if (is_array($value)) {
-                        fwrite($myfile, "array(\n");
-                        foreach ($value as $k => $v) {
-                            fwrite($myfile, "        '{$k}' => '{$v}',\n");
-                        }
-                        fwrite($myfile, "    ),\n");
-                    } else {
-                        fwrite($myfile, "'{$value}',\n");
-                    }
-                }
-                fwrite($myfile, ");");
-            }
-        }
-        system("echo " . 'Configuration cached successfully!');
+        execWriteCache();
+        execWriteConfigCache();
+        readDataViews('views');
+        system("ec ho " . 'Configuration cached successfully!');
         break;
     case 'db:seed':
         system("echo " . 'Seeded');
         break;
     case 'migrate':
-        foreach (scandir('database/migration', 1) as $file) {
-            if (strlen($file) > 5) {
-                include './database/migration/' . $file;
-                $classes = get_declared_classes();
-                $class = end($classes);
-                system("echo " . 'Migrating: ' . $class);
-                $object = new $class;
-                system("echo " . 'Migrated: ' . $class);
-            }
-        }
+        execMigrate();
         break;
     case 'ser':
     case 'serve':
     case 'serv':
-        $host = '127.0.0.1';
-        $port = '8000';
-        foreach ($argv as $param) {
-            if (strpos($param, '--host=') !== false) {
-                $host = str_replace('--host=', '', $param);
-            }
-            if (strpos($param, '--port=') !== false) {
-                $port = str_replace('--port=', '', $param);
-            }
-        }
-        system("echo " . "Starting development at: http://{$host}:{$port}");
-        exec("open ". "http://{$host}:{$port}");
-        system("php -S {$host}:{$port} server.php");
+        execCreateServerCli($argv);
     case 'key:':
     case 'key:generate':
     case 'key:gen':
-        $env = '.env';
-        $file_contents = file_get_contents($env);
-        $each = explode("\n", $file_contents);
-        $file = fopen($env, 'w');
-        for ($i = 0; $i <= count($each) - 1; $i++) {
-            if ($i == count($each) - 1) {
-                if (strlen($each[$i]) <= 0) {
-                    continue;
-                }
-            }
-            $value = $each[$i];
-            if (strpos($value, 'APP_KEY') !== false) {
-                $value = 'APP_KEY=' . str_replace('=', '', base64_encode(microtime(true)));
-            }
-            fwrite($file, $value . "\n");
-        }
-        fclose($file);
+        execGenerateKey();
         break;
     default:
         # code...

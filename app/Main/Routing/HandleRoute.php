@@ -18,7 +18,7 @@ class HandleRoute
 
     public function __destruct()
     {
-        return app()->routeFlag != true ? (new Controller)->singleRender('404') : true;
+        return app()->routeFlag != true ? (new Controller)->render('404') : true;
     }
 
 }

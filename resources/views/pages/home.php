@@ -1,3 +1,4 @@
+<?php $this->setMaster('layouts.master') ?>
 <?php $this->setVars('title', 'Clean Blog - Home')?>
 <?php $this->setVars('script', '')?>
 <?php ob_start();?>
