@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partner;
-use App\Main\Http\Request;
+use Main\Http\Request;
 use App\Http\Exceptions\Exception;
 
 class PartnerController extends Controller

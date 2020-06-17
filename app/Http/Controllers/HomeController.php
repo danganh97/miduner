@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Main\Http\Request;
+use Main\Http\Request;
 
 class HomeController extends Controller
 {

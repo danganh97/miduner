@@ -2,8 +2,8 @@
 
 namespace App\Http\Middlewares;
 
-use App\Main\Http\Middleware;
-use App\Main\Http\Exceptions\AppException;
+use Main\Http\Middleware;
+use Main\Http\Exceptions\AppException;
 
 class Auth extends Middleware
 {

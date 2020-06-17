@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Main\Http\Request;
-use App\Main\Database\QueryBuilder\DB;
-use App\Main\Http\Exceptions\ModelException;
+use Main\Http\Request;
+use Main\Database\QueryBuilder\DB;
+use Main\Http\Exceptions\ModelException;
 
 class UserController extends Controller
 {
@@ -41,6 +41,7 @@ class UserController extends Controller
     public function edit(Request $request, $id)
     {
         $user = User::with('company')->where('id', '=', $id)->first();
+        dd($user);
         if (!$user) {
             throw new ModelException("User not found", 404);
         }

@@ -2,7 +2,7 @@
 
 namespace App\Http;
 
-use App\Main\Http\Kernel as MidunerKernel;
+use Main\Http\Kernel as MidunerKernel;
 
 class Kernel extends MidunerKernel
 {

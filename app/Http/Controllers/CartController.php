@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Main\Database\QueryBuilder\DB;
+use Main\Database\QueryBuilder\DB;
 
 session_start();
 

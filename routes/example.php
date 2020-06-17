@@ -1,6 +1,6 @@
 <?php
 
-use App\Main\QueryBuilder as DB;
+use Main\QueryBuilder as DB;
 /*
 |--------------------------------------------------------------------------
 | Routing of the Application

@@ -1,8 +1,8 @@
 <?php
 
-use App\Main\Colors;
-use App\Main\Database\Migrations\Migration;
-use App\Main\QueryBuilder as DB;
+use Main\Colors;
+use Main\Database\Migrations\Migration;
+use Main\QueryBuilder as DB;
 
 class CreateUserTable extends Migration
 {

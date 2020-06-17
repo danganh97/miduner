@@ -2,8 +2,8 @@
 
 namespace App\Http\Exceptions;
 
-use App\Main\Http\Request;
-use App\Main\Http\Exceptions\ModelException as MidunerModelException;
+use Main\Http\Request;
+use Main\Http\Exceptions\ModelException as MidunerModelException;
 
 class ModelException extends MidunerModelException
 {
