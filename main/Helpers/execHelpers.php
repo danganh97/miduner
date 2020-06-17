@@ -60,6 +60,12 @@ if (!function_exists('execWriteCache')) {
     }
 }
 
+if(!function_exists('execWriteDataViews')) {
+    function execWriteDataViews() {
+        readDataViews('views');
+        system("echo " . 'Configuration cached successfully!');
+    }
+}
 if (!function_exists('execWriteConfigCache')) {
     function execWriteConfigCache()
     {
