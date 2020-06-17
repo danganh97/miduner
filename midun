@@ -1,7 +1,7 @@
 <?php
 
-require_once './app/Main/Helpers/common.php';
-require_once './app/Main/Helpers/execHelpers.php';
+require_once './main/Helpers/common.php';
+require_once './main/Helpers/execHelpers.php';
 
 if (isset($argv[1])) {
     if (
@@ -10,7 +10,7 @@ if (isset($argv[1])) {
         && strtolower($argv[1]) != 'c:c'
         && strtolower($argv[1]) != 'key:'
     ) {
-        require_once './app/Main/Autoload.php';
+        require_once './main/Autoload.php';
         /**
          * Miduner - A PHP Framework For Amateur
          *
@@ -19,6 +19,7 @@ if (isset($argv[1])) {
          */
         $config = require_once './cache/app.php';
         new Autoload($config);
+
     }
 }
 switch (strtolower($argv[1])) {
@@ -26,14 +27,13 @@ switch (strtolower($argv[1])) {
     case 'c:c':
     case 'c:f':
         execClearCache();
-        system("echo " . 'Configuration cache cleared!');
         execWriteCache();
         execWriteConfigCache();
         readDataViews('views');
-        system("ec ho " . 'Configuration cached successfully!');
+        system("echo " . 'Configuration cached successfully!');
         break;
     case 'db:seed':
-        system("echo " . 'Seeded');
+        execRunSeed();
         break;
     case 'migrate':
         execMigrate();
@@ -42,6 +42,7 @@ switch (strtolower($argv[1])) {
     case 'serve':
     case 'serv':
         execCreateServerCli($argv);
+        break;
     case 'key:':
     case 'key:generate':
     case 'key:gen':

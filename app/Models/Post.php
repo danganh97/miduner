@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Main\Eloquent\Model;
+use Main\Eloquent\Model;
 
 
 class Post extends Model

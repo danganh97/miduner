@@ -21,7 +21,7 @@ define('MIDUNER_START', microtime(true));
 |
 */
 
-require __DIR__ . '/../app/Main/App.php';
+require __DIR__ . '/../main/App.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -34,7 +34,7 @@ require __DIR__ . '/../app/Main/App.php';
 | the responses back to the browser and delight our users.
 |
 */
-require __DIR__ . '/../app/Main/Helpers/common.php';
+require __DIR__ . '/../main/Helpers/common.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -59,7 +59,6 @@ $config = require __DIR__ . '/../cache/app.php';
 | and wonderful application we have prepared for them.
 |
 */
-
 $app = new App($config);
 
 $app->run();

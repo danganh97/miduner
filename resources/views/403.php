@@ -12,10 +12,6 @@
   <body>
       <style>
             @import url('https://fonts.googleapis.com/css?family=Press+Start+2P');
-            $color: #54FE55;
-            $color2: #1a4f1a;
-            $glowSize: 10px;
-
             html,body{
             width: 100%;
             height: 100%;
@@ -33,14 +29,15 @@
                 height: 100%;
                 justify-content: center;
                 align-items: center;
-                color: $color;
-                text-shadow: 0px 0px $glowSize ;
+                color: #54FE55;
+                text-shadow: 0px 0px 10px ;
                 font-size: 6rem;
                 flex-direction: column;
-                .txt {
+                
+            }
+            .txt {
                     font-size: 1.8rem;
                 }
-            }
             @keyframes blink {
                 0%   {opacity: 0}
                 49%  {opacity: 0}

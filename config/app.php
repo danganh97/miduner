@@ -7,16 +7,16 @@ return [
     'key' => env('APP_KEY', ''),
     'layout' => env('MAIN_LAYOUT', 'master'),
     'autoload' => [
-        'app/Main/Route.php',
+        'main/Route.php',
         'helpers/helpers.php',
         'routes/routes.php',
     ],
 
     'aliases' => [
-        'Route' => App\Main\Route::class,
-        'DB' => App\Main\QueryBuilder::class,
-        'AppException' => App\Main\Http\Exceptions\AppException::class,
-        'Session' => App\Main\Session::class,
-        'Request' => App\Http\Request::class
+        'Route' => Main\Route::class,
+        'DB' => Main\QueryBuilder::class,
+        'AppException' => AMan\Http\Exceptions\AppException::class,
+        'Session' => Main\Session::class,
+        'Request' => Http\Request::class
     ]
 ];

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Main\Eloquent\Authenticate;
+use Main\Eloquent\Authenticate;
 
 class User extends Authenticate
 {
