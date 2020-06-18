@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Miduner - A PHP Framework For Amatur
+ * Miduner - A PHP Framework For Amateur
  *
  * @package  Miduner
  * @author   Dang Anh <danganh.dev@gmail.com>
