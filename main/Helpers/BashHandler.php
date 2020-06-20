@@ -48,9 +48,9 @@ class BashHandler
         }
     }
 
-    private function _checkRequireAutoload()
+    private function _checkRequireAutoload(): void
     {
-        if (isset($this->argv[1])) {
+        if (isset($this->argv[1])){
             if (
                 strtolower($this->argv[1]) != 'config:cache'
                 && strtolower($this->argv[1]) != 'c:f'

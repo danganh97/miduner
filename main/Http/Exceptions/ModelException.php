@@ -2,7 +2,6 @@
 
 namespace Main\Http\Exceptions;
 
-use App\Http\Exceptions\Exception;
 use Main\Registry;
 use Main\Http\Request;
 

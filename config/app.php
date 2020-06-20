@@ -15,7 +15,7 @@ return [
     'aliases' => [
         'Route' => Main\Route::class,
         'DB' => Main\QueryBuilder::class,
-        'AppException' => AMan\Http\Exceptions\AppException::class,
+        'AppException' => Main\Http\Exceptions\AppException::class,
         'Session' => Main\Session::class,
         'Request' => Http\Request::class
     ]
