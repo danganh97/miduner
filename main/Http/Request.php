@@ -8,7 +8,7 @@ use Main\Traits\Instance;
 class Request
 {
     use Instance;
-    
+
     public function __construct()
     {
         foreach(self::getRequest() as $key => $value){

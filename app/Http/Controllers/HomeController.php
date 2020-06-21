@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Main\Http\Request;
+use App\Http\Requests\Request;
+use App\Http\Requests\TestRequest;
 
 class HomeController extends Controller
 {
-    public function home(Request $request)
+    public function home(TestRequest $request, Request $id)
     {
         return view('pages/home');
     }

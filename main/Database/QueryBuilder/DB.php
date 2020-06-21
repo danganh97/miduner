@@ -91,7 +91,7 @@ class DB
     /**
      * Take 1 record
      *
-     * @var b0olean
+     * @var boolean
      */
     private $find = false;
 
