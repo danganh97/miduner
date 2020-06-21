@@ -8,6 +8,8 @@ use Main\Http\Request;
 
 class Compile
 {
+    private $requestInstance;
+
     public function __construct($action = null, array $params = null, $middleware = null)
     {
         if ($middleware != null) {
@@ -42,11 +44,10 @@ class Compile
             $controller = 'App\\Http\\Controllers\\' . $className;
         }
         if (class_exists($controller)) {
-            $ref = new \ReflectionMethod($controller, $methodName);
-            $listParameters = $ref->getParameters();
-            if(count($listParameters) > 0 && isset($listParameters[0]) && $listParameters[0]->name === 'request') {
-                array_unshift($params, Request::getInstance());
-            }
+            $params = $this->execRequest($controller, $methodName, $params);
+            // if (count($listParameters) > 0 && isset($listParameters[0]) && $listParameters[0]->name === 'request') {
+            //     array_unshift($params, $this->requestInstance);
+            // }
             $object = new $controller;
             if (method_exists($controller, $methodName) && $cloud === true) {
                 return call_user_func_array([$object, $methodName], $params);
@@ -71,5 +72,22 @@ class Compile
             }
             throw new Exception("Middleware {$middleware} doesn't exists");
         }
+    }
+
+    private function execRequest($controller, $methodName, $params)
+    {
+        $ref = new \ReflectionMethod($controller, $methodName);
+        $listParameters = $ref->getParameters();
+        $array = [];
+        foreach($listParameters as $key => $param) {
+            $refParam = new \ReflectionParameter([$controller, $methodName], $key);
+            if(is_object($refParam->getClass())) {
+                $object = $refParam->getClass()->getName();
+                $array[$param->getName()] = new $object;
+            } else {
+                array_push($array, array_shift($params));
+            }
+        }
+        return $array;
     }
 }

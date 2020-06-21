@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\TestRequest;
 use App\Models\User;
 use Main\Http\Request;
 use Main\Database\QueryBuilder\DB;
@@ -31,21 +32,19 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = DB::bindClass(User::class)->findOrFail($id);
+        $user = User::findOrFail($id);
         if (!$user) {
             return $this->respondError("User not found");
         }
         return response()->json($user);
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $id, TestRequest $testRequest)
     {
-        $user = User::with('company')->where('id', '=', $id)->first();
-        dd($user);
+        $user = User::where('id', '=', $id)->first();
         if (!$user) {
             throw new ModelException("User not found", 404);
         }
-        // return $this->respond($user);
         return view('users/edit', ['user' => $user]);
     }
 
