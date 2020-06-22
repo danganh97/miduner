@@ -8,20 +8,22 @@ class TestRequest extends BaseRequest
 {
     public function authorize()
     {
-        return false;
+        return true;
     }
 
     public function rules()
     {
         return [
-            'param1' => 'required|max:100'
+            'id' => 'required|number|min:2|max:5',
+            'title' => 'required|min:2|max:5|string',
         ];
     }
 
     public function messages()
     {
         return [
-            'param1.required' => 'Param 1 is required',
+            'id.required' => trans('validation.required', ['attribute' => 'id']),
+            'id.number' => trans('validation.number', ['attribute' => 'id']),
         ];
     }
 }
