@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Main\Http\BaseRequest;
+use Main\Http\RequestValidation;
 
-class TestRequest extends BaseRequest
+class TestRequest extends RequestValidation
 {
     public function authorize()
     {
