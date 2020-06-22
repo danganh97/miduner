@@ -115,7 +115,6 @@ if (!function_exists('config')) {
         $base_path = dirname(dirname(dirname(__FILE__)));
         $path = $base_path . '/cache/' . $pase[0] . '.php';
         if (!file_exists($path)) {
-            dd($path);
             system("echo " . "file $pase[0] not found in cache.");
             exit;
         }
@@ -133,6 +132,40 @@ if (!function_exists('config')) {
             $value = $initValue = $initValue[$p];
         }
         return $value;
+    }
+}
+
+if(!function_exists('trans')) {
+    function trans($variable, $params = [], $lang = 'en')
+    {
+        $variable = explode('.', $variable);
+        $file = array_shift($variable);
+        $root = dirname(dirname(dirname(__FILE__)));
+        $configs = require "$root/resources/lang/$file/$lang.php";
+        $initValue = $configs[$variable[0]];
+        $needValue = '';
+        array_shift($variable);
+        if(empty($variable)) {
+            $needValue = $initValue;
+        } else {
+            foreach($variable as $p) {
+                if(!$initValue[$p]) {
+                    die("Variable $variable not found.");
+                }
+                $needValue = $initValue = $initValue[$p];
+            }
+        }
+        foreach($params as $key => $param) {
+            $needValue = str_replace(":$key", $param, $needValue);
+        }
+        return $needValue;
+    }
+}
+
+if(!function_exists('__')) {
+    function __($variable, $lang = 'en')
+    {
+
     }
 }
 

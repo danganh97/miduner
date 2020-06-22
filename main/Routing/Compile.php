@@ -4,6 +4,7 @@ namespace Main\Routing;
 
 use App\Http\Exceptions\Exception;
 use App\Http\Kernel;
+use Main\Http\BaseRequest;
 use Main\Http\Request;
 
 class Compile
@@ -45,9 +46,6 @@ class Compile
         }
         if (class_exists($controller)) {
             $params = $this->execRequest($controller, $methodName, $params);
-            // if (count($listParameters) > 0 && isset($listParameters[0]) && $listParameters[0]->name === 'request') {
-            //     array_unshift($params, $this->requestInstance);
-            // }
             $object = new $controller;
             if (method_exists($controller, $methodName) && $cloud === true) {
                 return call_user_func_array([$object, $methodName], $params);
@@ -83,11 +81,21 @@ class Compile
             $refParam = new \ReflectionParameter([$controller, $methodName], $key);
             if(is_object($refParam->getClass())) {
                 $object = $refParam->getClass()->getName();
-                $array[$param->getName()] = new $object;
+                $array[$param->getName()] = $this->_executeValidation($object);
+                // $array[$param->getName()] = new $object;
             } else {
                 array_push($array, array_shift($params));
             }
         }
         return $array;
+    }
+
+    private function _executeValidation($object)
+    {
+        $object = new $object;
+        if($object instanceof BaseRequest) {
+            $object->executeValidate();
+        }
+        return $object;
     }
 }

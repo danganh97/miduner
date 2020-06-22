@@ -4,12 +4,18 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Request;
 use App\Http\Requests\TestRequest;
+use App\Http\Requests\TestRequestFile;
 
 class HomeController extends Controller
 {
-    public function home(TestRequest $request, Request $id)
+    public function home(TestRequest $request, $id)
     {
         return view('pages/home');
+    }
+
+    public function testPostFile(TestRequestFile $request)
+    {
+        
     }
 
     public function about()

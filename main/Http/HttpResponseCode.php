@@ -6,7 +6,7 @@ class HttpResponseCode
 {
     public function __construct($code)
     {
-        return self::http_response_code($code);
+        return $this->http_response_code($code);
     }
     
     public function http_response_code($code = NULL) 
@@ -45,6 +45,7 @@ class HttpResponseCode
                 case 413: $text = 'Request Entity Too Large'; break;
                 case 414: $text = 'Request-URI Too Large'; break;
                 case 415: $text = 'Unsupported Media Type'; break;
+                case 422: $text = 'Unprocessable Entity'; break;
                 case 500: $text = 'Internal Server Error'; break;
                 case 501: $text = 'Not Implemented'; break;
                 case 502: $text = 'Bad Gateway'; break;

@@ -39,7 +39,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function edit(Request $request, $id, TestRequest $testRequest)
+    public function edit(TestRequest $testRequest, $id)
     {
         $user = User::where('id', '=', $id)->first();
         if (!$user) {
