@@ -59,6 +59,6 @@ $config = require __DIR__ . '/../cache/app.php';
 | and wonderful application we have prepared for them.
 |
 */
-$app = new App($config);
+$app = App::getInstance($config);
 
 $app->run();

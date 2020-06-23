@@ -2,6 +2,7 @@
 
 use Main\Registry;
 use Main\Http\Exceptions\AppException;
+require_once dirname(dirname(__FILE__)) . '/App.php';
 
 if (!function_exists('redirect')) {
     function redirect($url)
@@ -207,7 +208,7 @@ if (!function_exists('toPre')) {
 if (!function_exists('app')) {
     function app()
     {
-        return Registry::getInstance();
+        return App::getInstance();
     }
 }
 
