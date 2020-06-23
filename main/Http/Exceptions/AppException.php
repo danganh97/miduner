@@ -14,8 +14,7 @@ class AppException extends Exception
     public function __construct($message, $code = null)
     {
         if (PHP_SAPI === 'cli') {
-            system("echo " . printf($message));
-            die;
+            die($message);
         }
         set_exception_handler([$this, 'render']);
         $this->root = config('app.base');
