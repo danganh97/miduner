@@ -2,14 +2,15 @@
 
 require __DIR__ . '/Autoload.php';
 
-use Main\Http\Exceptions\AppException;
-use Main\Registry;
-
 class App
 {
+    private static $instance;
+
+    private $storage;
+
     private $route;
 
-    public function __construct($config)
+    private function __construct($config)
     {
         $this->registerClassAutoload($config);
         $this->registerGlobalConfig($config);
@@ -22,7 +23,7 @@ class App
      *
      * @return void
      */
-    public function setRouter()
+    private function setRouter()
     {
         $this->route = new Route();
     }
@@ -34,8 +35,8 @@ class App
      */
     private function registerGlobalConfig($config)
     {
-        Registry::getInstance()->config = $config;
-        Registry::getInstance()->route = $this->route;
+        $this->config = $config;
+        $this->route = $this->route;
     }
 
     /**
@@ -58,13 +59,12 @@ class App
         return $this->route->run();
     }
 
-
     /**
      * Catcher exception fatal
      *
      * @return \PDOInstance
      */
-    public function catchExceptionFatal()
+    private function catchExceptionFatal()
     {
         register_shutdown_function(function () {
             $error = error_get_last();
@@ -73,4 +73,23 @@ class App
             }
         });
     }
+
+    public static function getInstance($config = null)
+    {
+        if (!isset(self::$instance) && $config !== null) {
+            self::$instance = new self($config);
+        }
+        return self::$instance;
+    }
+
+    public function __set($name, $value)
+    {
+        $this->storage[$name] = !isset($this->storage[$name]) ? $value : $this->storage[$name];
+    }
+
+    public function __get($name)
+    {
+        return isset($this->storage[$name]) ? $this->storage[$name] : null;
+    }
+
 }
