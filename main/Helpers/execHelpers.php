@@ -1,5 +1,7 @@
 <?php
 
+require_once './main/Colors.php';
+
 if (!function_exists('readDataViews')) {
     function readDataViews($folder)
     {
@@ -60,8 +62,9 @@ if (!function_exists('execWriteCache')) {
     }
 }
 
-if(!function_exists('execWriteDataViews')) {
-    function execWriteDataViews() {
+if (!function_exists('execWriteDataViews')) {
+    function execWriteDataViews()
+    {
         readDataViews('views');
         system("echo " . 'Configuration cached successfully!');
     }
@@ -93,7 +96,7 @@ if (!function_exists('execWriteConfigCache')) {
     }
 }
 
-if(!function_exists('execMigrate')) {
+if (!function_exists('execMigrate')) {
     function execMigrate()
     {
         foreach (scandir('database/migration', 1) as $file) {
@@ -109,7 +112,7 @@ if(!function_exists('execMigrate')) {
     }
 }
 
-if(!function_exists('execCreateServerCli')) {
+if (!function_exists('execCreateServerCli')) {
     function execCreateServerCli($argv)
     {
         $host = '127.0.0.1';
@@ -128,7 +131,7 @@ if(!function_exists('execCreateServerCli')) {
     }
 }
 
-if(!function_exists('execGenerateKey')) {
+if (!function_exists('execGenerateKey')) {
     function execGenerateKey()
     {
         $env = '.env';
@@ -152,9 +155,81 @@ if(!function_exists('execGenerateKey')) {
     }
 }
 
-if(!function_exists('execRunSeed')) {
+if (!function_exists('execRunSeed')) {
     function execRunSeed()
     {
         system("echo " . 'Seeded');
+    }
+}
+
+if (!function_exists('execMakeController')) {
+    function execMakeController($name)
+    {
+        $paseController = explode('/', $name);
+        $namespace = ';';
+        $fullDir = 'app/Http/Controllers/';
+        if (count($paseController) > 1) {
+            $controller = array_pop($paseController);
+            $namespace = implode("\\", $paseController) . ';';
+            foreach ($paseController as $dir) {
+                $fullDir .= "{$dir}";
+                if (is_dir($fullDir) !== 1) {
+                    @mkdir($fullDir, 0777, true);
+                    $fullDir .= '/';
+                }
+            }
+        } else {
+            $controller = $name;
+        }
+        $defaultControllerPath = dirname(__FILE__) . '/Init/controller.txt';
+        $defaultController = file_get_contents($defaultControllerPath);
+        $defaultController = str_replace(':namespace', $namespace, $defaultController);
+        $defaultController = str_replace(':controller', $controller, $defaultController);
+        $needleController = "{$fullDir}$controller.php";
+        if (!file_exists($needleController)) {
+            $myfile = fopen($needleController, "w") or die("Unable to open file!");
+            fwrite($myfile, $defaultController);
+            fclose($myfile);
+            (new Main\Colors)->printSuccess("Created controller {$controller}");
+        } else {
+            (new Main\Colors)->printWarning("Controller {$needleController} already exists");
+        }
+        return true;
+    }
+}
+
+if (!function_exists('execMakeModel')) {
+    function execMakeModel($name)
+    {
+        $paseModel = explode('/', $name);
+        $namespace = ';';
+        $fullDir = 'app/Models/';
+        if (count($paseModel) > 1) {
+            $model = array_pop($paseModel);
+            $namespace = implode("\\", $paseModel) . ';';
+            foreach ($paseModel as $dir) {
+                $fullDir .= "{$dir}";
+                if (is_dir($fullDir) !== 1) {
+                    @mkdir($fullDir, 0777, true);
+                    $fullDir .= '/';
+                }
+            }
+        } else {
+            $model = $name;
+        }
+        $defaultModelPath = dirname(__FILE__) . '/Init/model.txt';
+        $defaultModel = file_get_contents($defaultModelPath);
+        $defaultModel = str_replace(':namespace', $namespace, $defaultModel);
+        $defaultModel = str_replace(':model', $model, $defaultModel);
+        $needleModel = "{$fullDir}$model.php";
+        if (!file_exists($needleModel)) {
+            $myfile = fopen($needleModel, "w") or die("Unable to open file!");
+            fwrite($myfile, $defaultModel);
+            fclose($myfile);
+            (new Main\Colors)->printSuccess("Created model {$model}");
+        } else {
+            (new Main\Colors)->printWarning("Model {$needleModel} already exists");
+        }
+        return true;
     }
 }

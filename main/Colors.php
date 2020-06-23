@@ -76,6 +76,11 @@ class Colors
 
     public function printWarning($warning)
     {
-        echo $this->getColoredString($warning, "purple", "yellow") . "\n";
+        echo $this->getColoredString($warning, "black", "yellow") . "\n";
+    }
+
+    public function printSuccess($success)
+    {
+        echo $this->getColoredString($success, "green", "black") . "\n";
     }
 }
