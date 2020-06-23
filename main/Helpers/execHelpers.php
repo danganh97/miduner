@@ -117,16 +117,23 @@ if (!function_exists('execCreateServerCli')) {
     {
         $host = '127.0.0.1';
         $port = '8000';
+        $open = false;
         foreach ($argv as $param) {
-            if (strpos($param, '--host=') !== false) {
+            if (strpos($param, '-h=') !== false || strpos($param, '--host=') !== false) {
                 $host = str_replace('--host=', '', $param);
             }
-            if (strpos($param, '--port=') !== false) {
+            if (strpos($param, '-p=') !== false || strpos($param, '--port=') !== false) {
                 $port = str_replace('--port=', '', $param);
             }
+            if (strpos($param, '-o') !== false || strpos($param, '--open') !== false) {
+                $open = true;
+            }
+
         }
         system("echo " . "Starting development at: http://{$host}:{$port}");
-        exec("open " . "http://{$host}:{$port}");
+        if ($open) {
+            exec("open " . "http://{$host}:{$port}");
+        }
         system("php -S {$host}:{$port} server.php");
     }
 }
