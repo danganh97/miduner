@@ -24,10 +24,6 @@ abstract class Model
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
-    const LIST_OF_ORM_METHODS = [
-        'with',
-    ];
-
     public function __construct()
     {
         app()->callModel = get_called_class();
@@ -52,22 +48,14 @@ abstract class Model
 
     public static function __callStatic($method, $args)
     {
-        if (in_array($method, self::LIST_OF_ORM_METHODS)) {
-            $property = "{$method}s";
-            list($function) = $args;
-            static::getInstance()->$property = $function;
-        }
-        return static::getInstance()->execCallStatic($method, $args);
-    }
-
-    public function __call($method, $args)
-    {
-        return static::getInstance()->execCallStatic($method, $args);
-    }
-
-    public function execCallStatic($method, $args)
-    {
-        return DB::staticEloquentBuilder($this->table, $method, $args);
+        $static = static::getInstance();
+        $table = $static->table();
+        $modelMeta = [
+            'primaryKey' => $static->primaryKey(),
+            'fillable' => $static->fillable(),
+            'hidden' => $static->hidden(),
+        ];
+        return DB::staticEloquentBuilder($table, $modelMeta, $method, $args);
     }
 
     private function callServiceAppends()

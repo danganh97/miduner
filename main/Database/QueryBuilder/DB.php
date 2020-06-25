@@ -2,15 +2,23 @@
 
 namespace Main\Database\QueryBuilder;
 
-use Main\Database\Connection;
 use App\Http\Exceptions\Exception;
-use Main\Traits\Eloquent\ExecuteQuery;
+use Main\Database\Connection;
 use Main\Database\QueryBuilder\Compile;
+use Main\Traits\Eloquent\ExecuteQuery;
 use Main\Traits\Eloquent\HandleCompileWithBuilder;
 
 class DB
 {
     use HandleCompileWithBuilder, ExecuteQuery;
+
+    /**
+     * The list of accept operator using in query builder
+     */
+    private $operator = [
+        '=', '<>', '>', '<', '<=', '>=',
+    ];
+
     /**
      * The columns that should be returned.
      *
@@ -243,9 +251,14 @@ class DB
     public function where($column, $operator = '=', $value = null, $boolean = 'AND')
     {
         if (!is_callable($column)) {
-            $this->wheres[] = [$column, $operator, $value, $boolean];
+            if (!in_array($operator, $this->operator)) {
+                $this->wheres[] = [$column, '=', $operator, $boolean];
+            } else {
+                $this->wheres[] = [$column, $operator, $value, $boolean];
+            }
             return $this;
         }
+
         $this->wheres[] = ['start_where'];
         call_user_func_array($column, [$this]);
         $this->wheres[] = ['end_where'];

@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use Main\Database\QueryBuilder\DB;
 use Main\Eloquent\Authenticate;
 
 class User extends Authenticate
 {
-    protected $table = 'user';
-    protected $primaryKey = 'id';
+    protected $table = 'users';
+    protected $primaryKey = 'user_id';
     protected $username = 'email';
     protected $password = 'password';
 
@@ -52,6 +53,11 @@ class User extends Authenticate
             'asdasd'=> 'asdasd',
             'xcvxcvvcx'=> 'asdasd'
         ];
+    }
+
+    public function profile()
+    {
+        return DB::table('user_profiles')->where('user_id', '=', $this->user_id)->first();
     }
 
     const CREATED_AT = 'created_at';
