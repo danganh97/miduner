@@ -32,7 +32,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::with(['profile', 'socials'])->where('user_id', '>', 1)->take(10)->get();
+        $user = User::where('user_id', '>', 1)->with(['profile'])->take(10)->get();
         if (!$user) {
             return $this->respondError("User not found");
         }

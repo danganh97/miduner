@@ -115,4 +115,11 @@ trait HandleCompileWithBuilder
         }
         return true;
     }
+
+    public function with($with)
+    {
+        $this->with = is_array($with) ? $with : func_get_args();
+        return $this;
+    }
+
 }

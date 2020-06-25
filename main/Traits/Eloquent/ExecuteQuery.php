@@ -342,11 +342,13 @@ trait ExecuteQuery
     {
         $resources = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
         foreach ($resources as $resource) {
-            foreach ($this->with as $w) {
-                if (method_exists($resource, $w)) {
-                    $resource->$w = $resource->$w();
-                } else {
-                    throw new AppException("Method '{$w}' not found in class {$this->calledFromModel}");
+            if (!empty($this->with)) {
+                foreach ($this->with as $w) {
+                    if (method_exists($resource, $w)) {
+                        $resource->$w = $resource->$w();
+                    } else {
+                        throw new AppException("Method '{$w}' not found in class {$this->calledFromModel}");
+                    }
                 }
             }
         }
