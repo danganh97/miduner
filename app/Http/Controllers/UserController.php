@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\TestRequest;
 use App\Models\User;
 use Main\Http\Request;
+use App\Http\Requests\TestRequest;
 use Main\Database\QueryBuilder\DB;
 use Main\Http\Exceptions\ModelException;
 
@@ -32,7 +32,7 @@ class UserController extends Controller
 
     public function show($id)
     {
-        $user = User::findOrFail($id);
+        $user = User::with(['profile', 'socials'])->where('user_id', '>', 1)->take(10)->get();
         if (!$user) {
             return $this->respondError("User not found");
         }

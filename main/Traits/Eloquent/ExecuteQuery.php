@@ -3,10 +3,9 @@
 namespace Main\Traits\Eloquent;
 
 use PDO;
-use App\Http\Exceptions\Exception;
 use PDOException;
 use Main\Database\Connection;
-use Http\Exceptions\ModelException;
+use Main\Http\Exceptions\AppException;
 
 trait ExecuteQuery
 {
@@ -136,7 +135,7 @@ trait ExecuteQuery
         $this->find = true;
         $this->limit = 1;
         $this->isThrow = true;
-        $this->where($column, '=', $value);
+        $this->where($this->calledFromModel ? $this->getCalledModelInstance()->primaryKey() : $column, '=', $value);
         $sql = $this->compile->compileSelect($this->distinct);
         $sql .= $this->compile->compileColumns($this->columns);
         $sql .= $this->compile->compileFrom($this->table);
@@ -236,7 +235,7 @@ trait ExecuteQuery
                     return $object;
             }
         } catch (PDOException $e) {
-            throw new Exception($e->getMessage());
+            throw new AppException($e->getMessage());
         }
     }
 
@@ -341,7 +340,17 @@ trait ExecuteQuery
      */
     private function fetchListItemsHasModel($object)
     {
-        return $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+        $resources = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+        foreach ($resources as $resource) {
+            foreach ($this->with as $w) {
+                if (method_exists($resource, $w)) {
+                    $resource->$w = $resource->$w();
+                } else {
+                    throw new AppException("Method '{$w}' not found in class {$this->calledFromModel}");
+                }
+            }
+        }
+        return $resources;
     }
 
     /**
@@ -353,12 +362,22 @@ trait ExecuteQuery
      */
     private function fetchOnlyOneItemHasModel($object)
     {
-        $resource = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-        if (is_array($resource) && count($resource) > 0) {
-            return $resource[0];
+        $object = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+        if (is_array($object) && count($object) > 0) {
+            if (!empty($this->with)) {
+                $object = $object[0];
+                foreach ($this->with as $w) {
+                    if (method_exists($object, $w)) {
+                        $object->$w = $object->$w();
+                    } else {
+                        throw new AppException("Method '{$w}' not found in class {$this->calledFromModel}");
+                    }
+                }
+            }
+            return $object;
         }
         if ($this->isThrow === true) {
-            throw new ModelException("Resource not found", 404);
+            throw new AppException("Resource not found", 404);
         }
         return null;
     }

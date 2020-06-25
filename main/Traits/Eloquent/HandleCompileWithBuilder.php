@@ -5,6 +5,7 @@ namespace Main\Traits\Eloquent;
 trait HandleCompileWithBuilder
 {
     public static $calledModelInstance;
+    public $with;
 
     /**
      * Create new query builder from model
@@ -12,7 +13,7 @@ trait HandleCompileWithBuilder
      * @param ConnectionInterface $this->bindClass
      * return self
      */
-    public static function staticEloquentBuilder($table, $method, $args = null)
+    public static function staticEloquentBuilder($table, $modelMeta, $method, $args = null)
     {
         switch ($method) {
             case 'select':
@@ -97,9 +98,7 @@ trait HandleCompileWithBuilder
                 return (new self($table))->first();
             case 'findOrFail':
                 list($value) = $args;
-                $instance = self::calledModelInstance();
-                $primaryKey = $instance->primaryKey();
-                return (new self($table))->findOrFail($value, $primaryKey);
+                return (new self($table))->findOrFail($value, $modelMeta['primaryKey']);
             case 'firstOrFail':
                 return (new self($table))->firstOrFail();
             case 'delete':
@@ -107,23 +106,13 @@ trait HandleCompileWithBuilder
             case 'login':
                 list($data) = $args;
                 return (new self($table))->login($data);
+            case 'with':
+                $builder = new self($table);
+                $builder->with = $args[0];
+                return $builder;
             default:
                 return new self($table);
         }
-        return (new self($table))->$method($args);
-    }
-    /**
-     * Get instance of called model
-     *
-     * @param ConnectionInterface $this->bindClass
-     * return self
-     */
-    public static function getCalledModelInstance()
-    {
-        $calledModel = app()->callModel;
-        if (!self::$calledModelInstance) {
-            self::$calledModelInstance = (new $calledModel);
-        }
-        return self::$calledModelInstance;
+        return true;
     }
 }
