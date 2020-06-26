@@ -6,7 +6,7 @@ use Main\Http\Exceptions\AppException;
 use Main\Http\Exceptions\ValidateException;
 use Main\Services\File;
 
-abstract class RequestValidation extends Request
+abstract class FormRequest extends Request
 {
     /**
      * Flag checking failed request
