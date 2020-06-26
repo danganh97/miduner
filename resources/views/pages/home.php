@@ -1,7 +1,7 @@
-<?php $this->setMaster('layouts.master') ?>
-<?php $this->setVars('title', 'Clean Blog - Home')?>
-<?php $this->setVars('script', '')?>
-<?php ob_start();?>
+{{ $this->setMaster('layouts.master') }}
+{{ $this->setVars('title', 'Clean Blog - Home') }}
+{{ $this->setVars('script', '') }}
+{{ ob_start() }}
 <meta property="og:type" content="website" />
     <meta property="og:url" content="https://stackoverflow.com/questions/8221022/css-not-loading-after-redirect-with-htaccess-rewrite-rule" />
     <meta property="og:site_name" content="Stack Overflow" />
@@ -10,8 +10,8 @@
     <meta name="twitter:domain" content="stackoverflow.com" />
     <meta name="twitter:title" property="og:title" itemprop="title name" content="CSS not loading after redirect with htaccess rewrite rule" />
     <meta name="twitter:description" property="og:description" itemprop="description" content="I have the following Short-hand for a user profile url" />
-<?php $meta = ob_get_clean()?>
-<?php $this->setVars('meta', $meta)?>
+{{ $meta = ob_get_clean() }}
+{{ $this->setVars('meta', $meta) }}
 
 <!-- Page Header -->
 <header class="masthead" style="background-image: url('<?php echo assets('assets/template/img/home-bg.jpg') ?>')">

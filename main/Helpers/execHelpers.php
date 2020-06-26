@@ -5,7 +5,7 @@ require_once './main/Colors.php';
 if (!function_exists('readDataViews')) {
     function readDataViews($folder)
     {
-        $dataViews = array_filter(scandir("resources/$folder"), function ($view) {
+        $dataViews = array_filter(scandir("$folder"), function ($view) {
             return $view !== '.' && $view !== '..';
         });
         foreach ($dataViews as $item) {
@@ -18,12 +18,30 @@ if (!function_exists('readDataViews')) {
     }
 }
 
+if(!function_exists('compileWatchingViews')) {
+    function compileWatchingViews($view)
+    {
+        $folder = explode('/', $view);
+        $file = array_pop($folder);
+        $folder = implode('/', $folder);
+        writeCache($folder, $file);
+    }
+}
+
 if (!function_exists('writeCache')) {
     function writeCache($folder, $file)
     {
-        $data = file_get_contents("resources/$folder/$file");
+        $data = file_get_contents("$folder/$file");
         $data = str_replace('{{', '<?php', $data);
         $data = str_replace('}}', '?>', $data);
+        $fullDir = 'cache/';
+        foreach(explode('/', $folder) as $f) {
+            $fullDir .= $f;
+            if (is_dir($fullDir) !== 1) {
+                @mkdir($fullDir, 0777, true);
+                $fullDir .= '/';
+            }
+        }
         if (!is_dir("cache/$folder")) {
             mkdir("cache/$folder", 0777);
         }
@@ -65,7 +83,7 @@ if (!function_exists('execWriteCache')) {
 if (!function_exists('execWriteDataViews')) {
     function execWriteDataViews()
     {
-        readDataViews('views');
+        readDataViews('resources/views');
         system("echo " . 'Configuration cached successfully!');
     }
 }

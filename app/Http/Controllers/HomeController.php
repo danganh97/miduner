@@ -11,8 +11,6 @@ class HomeController extends Controller
 {
     public function home(TestRequest $request, $id)
     {
-        $user = User::with('profile')->first();
-        return $this->respond($user);
         return view('pages/home');
     }
 
