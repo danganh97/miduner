@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Request;
 use App\Http\Requests\TestRequest;
 use App\Http\Requests\TestRequestFile;
+use App\Models\User;
 
 class HomeController extends Controller
 {
     public function home(TestRequest $request, $id)
     {
+        $user = User::with('profile')->first();
+        return $this->respond($user);
         return view('pages/home');
     }
 
