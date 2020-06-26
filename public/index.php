@@ -35,6 +35,7 @@ require __DIR__ . '/../main/App.php';
 |
 */
 require __DIR__ . '/../main/Helpers/common.php';
+require __DIR__ . '/../main/Helpers/execHelpers.php';
 
 /*
 |--------------------------------------------------------------------------

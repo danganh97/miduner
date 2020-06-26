@@ -30,21 +30,19 @@ class Controller
 
     public function render($view, $data = null)
     {
-        $root = $this->app_base;
-        $viewPath = $root . '/resources/views/' . $view . '.php';
-        if (!file_exists($viewPath)) {
-            throw new Exception('Not found view ' . $viewPath);
-        }
+        $view = 'resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
         }
         $content = $this->getViewContent($view, $data);
         if($this->master) {
-            $layoutPath = $root . '/resources/views/' . str_replace('.', '/', $this->master) . '.php';
-            if (!file_exists($layoutPath)) {
-                throw new AppException("Layout $layoutPath not found");
+            $layoutPath = "resources/views/" . str_replace('.', '/', $this->master) . ".php";
+            compileWatchingViews($layoutPath);
+            $fullPath = $this->app_base . '/cache/' . $layoutPath;
+            if (!file_exists($fullPath)) {
+                throw new AppException("Layout $fullPath not found");
             }
-            $layouts = file_get_contents($layoutPath);
+            $layouts = file_get_contents($fullPath);
             foreach ($this->vars as $key => $value) {
                 $layouts = preg_replace('/\[' . $key . '\]/', $value, $layouts);
             }
@@ -60,7 +58,8 @@ class Controller
     public function getViewContent($view, $data = null)
     {
         $root = $this->app_base;
-        $path = $root . '/resources/views/' . $view . '.php';
+        compileWatchingViews($view);
+        $path = $root . '/cache/' . $view;
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
         }
