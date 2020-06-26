@@ -4,7 +4,7 @@ namespace Main\Routing;
 
 use App\Http\Exceptions\Exception;
 use App\Http\Kernel;
-use Main\Http\BaseRequest;
+use Main\Http\RequestValidation;
 use Main\Http\Request;
 
 class Compile
@@ -93,7 +93,7 @@ class Compile
     private function _executeValidation($object)
     {
         $object = new $object;
-        if($object instanceof BaseRequest) {
+        if($object instanceof RequestValidation) {
             $object->executeValidate();
         }
         return $object;

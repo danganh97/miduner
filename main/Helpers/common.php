@@ -70,7 +70,7 @@ if (!function_exists('unsetsession')) {
 if (!function_exists('request')) {
     function request()
     {
-        return new \Main\Http\Request;
+        return new \App\Http\Requests\Request;
     }
 }
 

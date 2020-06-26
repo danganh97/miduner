@@ -10,6 +10,7 @@ use Exception;
 class AppException extends Exception
 {
     private $exception;
+    protected $code;
 
     public function __construct($message, $code = null)
     {
@@ -18,6 +19,7 @@ class AppException extends Exception
         }
         set_exception_handler([$this, 'render']);
         $this->root = config('app.base');
+        $this->code = $code;
         parent::__construct($message, $code);
         $this->report();
     }
@@ -30,7 +32,7 @@ class AppException extends Exception
             return response()->json([
                 'status' => false,
                 'message' => $exception->getMessage()
-            ], 500);
+            ], $this->code);
         }
         $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');
         $title = $exception->getMessage();

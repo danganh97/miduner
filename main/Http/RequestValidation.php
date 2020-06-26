@@ -60,7 +60,7 @@ abstract class RequestValidation extends Request
     public function executeValidate()
     {
         if (!$this->authorize()) {
-            throw new AppException("This request is not authorized !");
+            throw new AppException("This request is not authorized !", 401);
         }
         foreach ($this->rules() as $ruleKey => $ruleValue) {
             if (in_array($ruleKey, $this->all()) || empty($this->all()[$ruleKey]) || $this->all()[$ruleKey] === '') {
@@ -97,7 +97,8 @@ abstract class RequestValidation extends Request
             $fails = false;
             $currentRule = $rule;
             if (strpos($rule, ':') !== false) {
-                $rule = array_shift(explode(':', $rule));
+                $rule = explode(':', $rule);
+                $rule = array_shift($rule);
             }
             switch ($rule) {
                 case 'required':
@@ -182,7 +183,7 @@ abstract class RequestValidation extends Request
                 $endpoint = 'file';
                 break;
         }
-        return $this->fetchMessage($ruleKey, $endpoint, $type);
+        return $this->fetchMessage($ruleKey, $endpoint, $type, $value);
     }
 
     /**
@@ -194,13 +195,13 @@ abstract class RequestValidation extends Request
      * 
      * @return string
      */
-    private function fetchMessage($ruleKey, $endpoint, $type)
+    private function fetchMessage($ruleKey, $endpoint, $type, $endpointValue = null)
     {
         if (isset($this->messages()["$ruleKey.$endpoint"])) {
             return $this->messages()["$ruleKey.$endpoint"];
         }
         if ($type) {
-            return trans("validation.$endpoint.$type", ['attribute' => $ruleKey, $endpoint => $type]);
+            return trans("validation.$endpoint.$type", ['attribute' => $ruleKey, $endpoint => $endpointValue]);
         }
         return trans("validation.$endpoint", ['attribute' => $ruleKey]);
     }

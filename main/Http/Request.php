@@ -5,7 +5,7 @@ namespace Main\Http;
 use Main\Services\File;
 use Main\Traits\Instance;
 
-class Request
+abstract class Request
 {
     use Instance;
 
@@ -86,5 +86,13 @@ class Request
             }
         }
         return (object) $request;
+    }
+
+    /**
+     * Get all headers requested
+     */
+    public function headers()
+    {
+        return (object) getallheaders();
     }
 }
