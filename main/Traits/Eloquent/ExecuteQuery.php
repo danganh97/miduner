@@ -4,7 +4,9 @@ namespace Main\Traits\Eloquent;
 
 use PDO;
 use PDOException;
+use PDOStatement;
 use Main\Database\Connection;
+use Main\Eloquent\ModelBindingObject;
 use Main\Http\Exceptions\AppException;
 
 trait ExecuteQuery
@@ -241,7 +243,6 @@ trait ExecuteQuery
 
     private function getOneItemHasModel($connection)
     {
-        // $primaryKey = (new $this->calledFromModel)->primaryKey();
         $primaryKey = self::getCalledModelInstance()->primaryKey();
         return $this->find($connection->lastInsertId(), $primaryKey);
     }
@@ -311,12 +312,12 @@ trait ExecuteQuery
     {
         if ($this->find === true || $this->first === true) {
             if (!empty($this->calledFromModel)) {
-                return $this->fetchOnlyOneItemHasModel($object);
+                return $this->execBindingModelObject($object);
             }
             return $object->fetch();
         }
         if (!empty($this->calledFromModel)) {
-            return $this->fetchListItemsHasModel($object);
+            return $this->execBindingModelObject($object);
         }
         return $this->fetchOneItemWithoutModel($object);
     }
@@ -333,54 +334,25 @@ trait ExecuteQuery
     }
 
     /**
-     * Fetch list items has model
+     * Execute binding model object
      *
-     * @param Object $object
+     * @param PDOStatement $pdoStatementObject
      *
-     */
-    private function fetchListItemsHasModel($object)
-    {
-        $resources = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-        foreach ($resources as $resource) {
-            if (!empty($this->with)) {
-                foreach ($this->with as $w) {
-                    if (method_exists($resource, $w)) {
-                        $resource->$w = $resource->$w();
-                    } else {
-                        throw new AppException("Method '{$w}' not found in class {$this->calledFromModel}");
-                    }
-                }
-            }
-        }
-        return $resources;
-    }
-
-    /**
-     * Fetch one item has model
-     *
-     * @param Object $object
-     * @throws ModelException
+     * @return ModelBindingObject
      *
      */
-    private function fetchOnlyOneItemHasModel($object)
+    private function execBindingModelObject(PDOStatement $pdoStatementObject)
     {
-        $object = $object->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
-        if (is_array($object) && count($object) > 0) {
-            if (!empty($this->with)) {
-                $object = $object[0];
-                foreach ($this->with as $w) {
-                    if (method_exists($object, $w)) {
-                        $object->$w = $object->$w();
-                    } else {
-                        throw new AppException("Method '{$w}' not found in class {$this->calledFromModel}");
-                    }
-                }
-            }
-            return $object;
-        }
-        if ($this->isThrow === true) {
-            throw new AppException("Resource not found", 404);
-        }
-        return null;
+        $resources = $pdoStatementObject->fetchAll(PDO::FETCH_CLASS, $this->calledFromModel);
+        return (new ModelBindingObject)->receive(
+            $this->find || $this->first,
+            !$this->find && !$this->first,
+            $resources,
+            $this->calledFromModel ?: null,
+            [
+                'with' => $this->with,
+            ],
+            $this->isThrow
+        );
     }
 }

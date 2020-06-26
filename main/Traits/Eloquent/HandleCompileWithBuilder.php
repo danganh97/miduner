@@ -108,7 +108,7 @@ trait HandleCompileWithBuilder
                 return (new self($table))->login($data);
             case 'with':
                 $builder = new self($table);
-                $builder->with = $args[0];
+                $builder->with = $args && is_array($args[0]) ? $args[0] : $args;
                 return $builder;
             default:
                 return new self($table);
