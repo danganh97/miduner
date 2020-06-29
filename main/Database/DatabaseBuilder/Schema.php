@@ -10,16 +10,13 @@ class Schema
 {
     use MigrateBuilder;
 
-    public $table;
-    public $columns;
-    public $flagCreate = false;
-
-    public function __construct()
-    {
-        $this->compile = new Compile();
-        $this->connection = (new Connection)->getConnection();
-    }
-
+    /**
+     * Handle call static
+     * @param string $method
+     * @param array $arguments
+     * 
+     * @return void
+     */
     public static function __callStatic($method, $arguments)
     {
         switch ($method) {

@@ -6,6 +6,10 @@ use Main\Database\DatabaseBuilder\ColumnBuilder;
 
 class Create:TableTable extends Migration
 {
+    /** 
+    * Run the migration.
+    * @return void
+    */
     public function up()
     {
         Schema::create(':table', function (ColumnBuilder $table) {
@@ -15,6 +19,10 @@ class Create:TableTable extends Migration
         });
     }
 
+    /** 
+    * Rollback the migration
+    * @return void
+    */
     public function down()
     {
         Schema::dropIfExists(':table');

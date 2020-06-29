@@ -6,6 +6,10 @@ use Main\Database\DatabaseBuilder\ColumnBuilder;
 
 class CreateUsersTable extends Migration
 {
+    /** 
+    * Run the migration.
+    * @return void
+    */
     public function up()
     {
         Schema::create('users', function (ColumnBuilder $table) {
@@ -15,6 +19,10 @@ class CreateUsersTable extends Migration
         });
     }
 
+    /** 
+    * Rollback the migration
+    * @return void
+    */
     public function down()
     {
         Schema::dropIfExists('users');

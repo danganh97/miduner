@@ -4,8 +4,17 @@ namespace Main\Database\DatabaseBuilder;
 
 class Compile
 {
+    /**
+     * List of rows
+     */
     public $rows = [];
 
+    /**
+     * Execute building columns
+     * @param array $columns
+     * 
+     * @return array
+     */
     public function exec(array $columns)
     {
         foreach ($columns as $column) {

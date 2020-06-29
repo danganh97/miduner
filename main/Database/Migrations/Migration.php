@@ -9,7 +9,6 @@ use Main\Http\Exceptions\AppException;
 abstract class Migration
 {
     protected $connection;
-    private $colors;
 
     public function __construct()
     {
