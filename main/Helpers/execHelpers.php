@@ -60,7 +60,7 @@ if (!function_exists('execClearCache')) {
                 // unlink("cache/$file");
             }
         }
-        system("echo " . 'Configuration cache cleared!');
+        (new Main\Colors)->printSuccess("Configuration cache cleared!");
     }
 }
 
@@ -84,7 +84,7 @@ if (!function_exists('execWriteDataViews')) {
     function execWriteDataViews()
     {
         readDataViews('resources/views');
-        system("echo " . 'Configuration cached successfully!');
+        (new Main\Colors)->printSuccess("Configuration cached successfully!");
     }
 }
 if (!function_exists('execWriteConfigCache')) {
@@ -122,9 +122,9 @@ if (!function_exists('execMigrate')) {
                 include './database/migration/' . $file;
                 $classes = get_declared_classes();
                 $class = end($classes);
-                system("echo " . 'Migrating: ' . $class);
+                (new Main\Colors)->printSuccess("Migrating: $class");
                 $object = new $class;
-                system("echo " . 'Migrated: ' . $class);
+                (new Main\Colors)->printSuccess("Migrated: $class");
             }
         }
     }
@@ -148,7 +148,7 @@ if (!function_exists('execCreateServerCli')) {
             }
 
         }
-        system("echo " . "Starting development at: http://{$host}:{$port}");
+        (new Main\Colors)->printSuccess("Starting development at: http://{$host}:{$port} \nUsing argument --open to open server on browser.");
         if ($open) {
             exec("open " . "http://{$host}:{$port}");
         }
@@ -176,14 +176,14 @@ if (!function_exists('execGenerateKey')) {
             fwrite($file, $value . "\n");
         }
         fclose($file);
-        system("echo " . 'Key generated !');
+        (new Main\Colors)->printSuccess("Generate key successfully.");
     }
 }
 
 if (!function_exists('execRunSeed')) {
     function execRunSeed()
     {
-        system("echo " . 'Seeded');
+        (new Main\Colors)->printSuccess("Seeded successfully.");
     }
 }
 
