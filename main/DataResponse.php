@@ -15,9 +15,6 @@ class DataResponse
     public static function toArray($arguments, $code = 200)
     {
         (new HttpResponseCode($code));
-        echo '<pre>';
-        print_r($arguments);
-        echo '</pre>';
-        return;
+        dd($arguments);
     }
 }

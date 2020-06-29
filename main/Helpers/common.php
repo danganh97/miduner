@@ -220,6 +220,11 @@ if (!function_exists('is_json')) {
 }
 
 if (!function_exists('dd')) {
+    /**
+     * @param mixed $x
+     * 
+     * @return die
+     */
     function dd()
     {
         array_map(function($x) { 
