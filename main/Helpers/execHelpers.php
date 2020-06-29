@@ -18,7 +18,7 @@ if (!function_exists('readDataViews')) {
     }
 }
 
-if(!function_exists('compileWatchingViews')) {
+if (!function_exists('compileWatchingViews')) {
     function compileWatchingViews($view)
     {
         $folder = explode('/', $view);
@@ -35,7 +35,7 @@ if (!function_exists('writeCache')) {
         $data = str_replace('{{', '<?php', $data);
         $data = str_replace('}}', '?>', $data);
         $fullDir = 'cache/';
-        foreach(explode('/', $folder) as $f) {
+        foreach (explode('/', $folder) as $f) {
             $fullDir .= $f;
             if (is_dir($fullDir) !== 1) {
                 @mkdir($fullDir, 0777, true);
@@ -122,9 +122,33 @@ if (!function_exists('execMigrate')) {
                 include './database/migration/' . $file;
                 $classes = get_declared_classes();
                 $class = end($classes);
-                (new Main\Colors)->printSuccess("Migrating: $class");
                 $object = new $class;
-                (new Main\Colors)->printSuccess("Migrated: $class");
+                if (method_exists($object, 'up')) {
+                    (new Main\Colors)->printSuccess("Migrating: $class");
+                    $object->up();
+                    (new Main\Colors)->printSuccess("Migrated: $class");
+                }
+            }
+        }
+    }
+}
+
+if (!function_exists('execMigrateRollback')) {
+    function execMigrateRollback()
+    {
+        $files = scandir('database/migration', 1);
+        arsort($files);
+        foreach ($files as $file) {
+            if (strlen($file) > 5) {
+                include './database/migration/' . $file;
+                $classes = get_declared_classes();
+                $class = end($classes);
+                $object = new $class;
+                if (method_exists($object, 'down')) {
+                    (new Main\Colors)->printSuccess("Rolling back: $class");
+                    $object->down();
+                    (new Main\Colors)->printSuccess("Rolled back: $class");
+                }
             }
         }
     }
@@ -254,6 +278,29 @@ if (!function_exists('execMakeModel')) {
             (new Main\Colors)->printSuccess("Created model {$model}");
         } else {
             (new Main\Colors)->printWarning("Model {$needleModel} already exists");
+        }
+        return true;
+    }
+}
+
+if (!function_exists('execMakeMigration')) {
+    function execMakeMigration($table)
+    {
+        $defaultMigratePath = dirname(__FILE__) . '/Init/migrate.txt';
+        $defaultMigrate = file_get_contents($defaultMigratePath);
+        $defaultMigrate = str_replace(':table', $table, $defaultMigrate);
+        $defaultMigrate = str_replace(':Table', ucfirst($table), $defaultMigrate);
+        $fullDir = 'database/migration/';
+        $date = date('Ymd_His');
+        $name = "{$date}_{$table}_migration.php";
+        $needleTable = "{$fullDir}$name";
+        if (!file_exists($needleTable)) {
+            $myfile = fopen($needleTable, "w") or die("Unable to open file!");
+            fwrite($myfile, $defaultMigrate);
+            fclose($myfile);
+            (new Main\Colors)->printSuccess("Created Table {$table}");
+        } else {
+            (new Main\Colors)->printWarning("Table {$needleTable} already exists");
         }
         return true;
     }
