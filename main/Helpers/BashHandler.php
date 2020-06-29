@@ -36,6 +36,16 @@ class BashHandler
             case 'migrate':
                 execMigrate();
                 break;
+            case 'migrate:rollback':
+                execMigrateRollback();
+                break;
+            case 'make:migration':
+                if (!isset($this->argv[2])) {
+                    throw new Main\Http\Exceptions\AppException($this->colors->printError("Missing param table's name.\nPlease using format >midun make:migration table={table}"));
+                }
+                $table = str_replace('table=', '', $this->argv[2]);
+                execMakeMigration($table);
+                break;
             case 'ser':
             case 'serve':
             case 'serv':
