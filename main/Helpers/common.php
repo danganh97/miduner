@@ -1,9 +1,7 @@
 <?php
 
-use Main\Registry;
 use Main\Http\Exceptions\AppException;
 use Main\Application;
-// require_once dirname(dirname(__FILE__)) . '/Application.php';
 
 if (!function_exists('redirect')) {
     function redirect($url)
@@ -15,42 +13,35 @@ if (!function_exists('redirect')) {
 if (!function_exists('view')) {
     function view($view, $data = null)
     {
-        return (new Main\Eloquent\Controller)->render($view, $data);
-    }
-}
-
-if (!function_exists('simpleView')) {
-    function simpleView($view, $data = null)
-    {
-        return (new Main\Eloquent\Controller)->render($view, $data);
+        return app()->make('controller')->render($view, $data);
     }
 }
 
 if (!function_exists('response')) {
     function response()
     {
-        return new \Main\DataResponse;
+        return app()->make('response');
     }
 }
 
 if (!function_exists('ApiResponse')) {
     function ApiResponse($data)
     {
-        return (new Main\Http\ApiResponseResource)->handle($data);
+        return app()->make('ApiResponse')->handle($data);
     }
 }
 
 if (!function_exists('sendMessage')) {
     function sendMessage($message, $code = null)
     {
-        return (new Main\Http\ApiResponseResource)->message($message, $code);
+        return app()->make('ApiResponse')->message($message, $code);
     }
 }
 
 if (!function_exists('session')) {
     function session($key, $value = null)
     {
-        $session = (new Main\Session);
+        $session = app()->make('session');
         if ($value !== null) {
             $session->$key = $value;
             return true;
@@ -64,14 +55,14 @@ if (!function_exists('session')) {
 if (!function_exists('unsetsession')) {
     function unsetsession($key)
     {
-        return Main\Session::unset_session($key);
+        app()->make('session')->unset_session($key);
     }
 }
 
 if (!function_exists('request')) {
     function request()
     {
-        return new \App\Http\Requests\Request;
+        return app()->make('request');
     }
 }
 
@@ -167,14 +158,14 @@ if(!function_exists('trans')) {
 if(!function_exists('__')) {
     function __($variable, $lang = 'en')
     {
-
+        return trans($variable, [], $lang);
     }
 }
 
 if (!function_exists('action')) {
     function action($action, array $params = null)
     {
-        return Registry::getInstance()->route->callableAction($action, $params);
+        return app()->make('route')->callableAction($action, $params);
     }
 }
 
