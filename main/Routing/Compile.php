@@ -4,6 +4,7 @@ namespace Main\Routing;
 
 use App\Http\Exceptions\Exception;
 use App\Http\Kernel;
+use Main\Http\FormRequest;
 use Main\Http\RequestValidation;
 use Main\Http\Request;
 
@@ -82,7 +83,6 @@ class Compile
             if(is_object($refParam->getClass())) {
                 $object = $refParam->getClass()->getName();
                 $array[$param->getName()] = $this->_executeValidation($object);
-                // $array[$param->getName()] = new $object;
             } else {
                 array_push($array, array_shift($params));
             }
@@ -93,7 +93,7 @@ class Compile
     private function _executeValidation($object)
     {
         $object = new $object;
-        if($object instanceof RequestValidation) {
+        if($object instanceof FormRequest) {
             $object->executeValidate();
         }
         return $object;
