@@ -1,5 +1,7 @@
 <?php
 
+namespace Main;
+
 use Main\Routing\Compile;
 use Main\Routing\HandleRoute;
 

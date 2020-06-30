@@ -10,7 +10,7 @@ class HandleRoute
 
     public function __construct($routes = null)
     {
-        app()->routes = $routes;
+        app()->singleton('routes', $routes);
         if($routes) {
             return new Route($routes);
         }
@@ -18,7 +18,7 @@ class HandleRoute
 
     public function __destruct()
     {
-        return app()->routeFlag != true ? (new Controller)->render('404') : true;
+        return app('routeFlag') != true ? (new Controller)->render('404') : true;
     }
 
 }

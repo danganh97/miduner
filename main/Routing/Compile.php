@@ -6,7 +6,6 @@ use App\Http\Exceptions\Exception;
 use App\Http\Kernel;
 use Main\Http\FormRequest;
 use Main\Http\RequestValidation;
-use Main\Http\Request;
 
 class Compile
 {

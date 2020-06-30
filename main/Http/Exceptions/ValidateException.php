@@ -2,9 +2,6 @@
 
 namespace Main\Http\Exceptions;
 
-use Main\Registry;
-use Main\Http\Request;
-use Main\Http\HttpResponseCode;
 use Exception;
 
 class ValidateException extends Exception
@@ -23,14 +20,14 @@ class ValidateException extends Exception
         $this->report();
     }
 
-    public function render($exception, Request $request = null)
+    public function render($exception)
     {
         $this->exception = $exception;
         $header = getallheaders();
         if ($header['Accept'] == 'application/json') {
             return response()->json([
                 'status' => false,
-                'message' => app()->fails
+                'message' => app('fails')
             ], 422);
         }
         $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');

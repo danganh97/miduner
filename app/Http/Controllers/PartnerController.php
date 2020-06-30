@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Partner;
-use Main\Http\Request;
+use App\Http\Requests\Request;
 use App\Http\Exceptions\Exception;
 
 class PartnerController extends Controller
@@ -20,7 +20,6 @@ class PartnerController extends Controller
     public function store()
     {
         $data = Request::all();
-        // toPre($data);
         $user = Partner::create($data);
         return response()->json($user);
     }

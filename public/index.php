@@ -21,7 +21,8 @@ define('MIDUNER_START', microtime(true));
 |
 */
 
-require __DIR__ . '/../main/App.php';
+require __DIR__ . '/../main/Application.php';
+require __DIR__ . '/../main/Autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,11 @@ $config = require __DIR__ . '/../cache/app.php';
 | and wonderful application we have prepared for them.
 |
 */
-$app = App::getInstance($config);
+
+new Autoload($config);
+
+$app = new Main\Application($config);
 
 $app->run();
+
+$app->terminate();

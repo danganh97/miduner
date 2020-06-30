@@ -3,14 +3,13 @@
 namespace App\Http\Exceptions;
 
 use Main\Http\Exceptions\AppException;
-use Main\Http\Request;
 
 class Exception extends AppException
 {
 
-    public function render($exception, Request $request = null)
+    public function render($exception)
     {
-        parent::render($exception, $request);
+        parent::render($exception);
     }
 
     public function report()
