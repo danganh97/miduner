@@ -18,5 +18,9 @@ return [
         'AppException' => Main\Http\Exceptions\AppException::class,
         'Session' => Main\Session::class,
         'Request' => Http\Request::class
+    ],
+    
+    'providers' => [
+        App\Providers\AppServiceProvider::class
     ]
 ];

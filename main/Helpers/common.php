@@ -2,7 +2,8 @@
 
 use Main\Registry;
 use Main\Http\Exceptions\AppException;
-require_once dirname(dirname(__FILE__)) . '/App.php';
+use Main\Application;
+// require_once dirname(dirname(__FILE__)) . '/Application.php';
 
 if (!function_exists('redirect')) {
     function redirect($url)
@@ -180,7 +181,7 @@ if (!function_exists('action')) {
 if (!function_exists('route')) {
     function route(string $name)
     {
-        $routes = app()->routes;
+        $routes = app('routes');
         $flag = false;
         $uri = '';
         foreach ($routes as $key => $route) {
@@ -206,9 +207,12 @@ if (!function_exists('toPre')) {
 }
 
 if (!function_exists('app')) {
-    function app()
+    function app($entity = null)
     {
-        return App::getInstance();
+        if(is_null($entity)) {
+            return Application::getInstance();
+        }
+        return Application::getInstance()->make($entity);
     }
 }
 

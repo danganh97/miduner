@@ -9,9 +9,8 @@ use App\Models\User;
 
 class HomeController extends Controller
 {
-    public function home(TestRequest $request, $id)
+    public function home(Request $request, $id)
     {
-        dd($request->all());
         return view('pages/home');
     }
 

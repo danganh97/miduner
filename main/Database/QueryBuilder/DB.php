@@ -129,7 +129,7 @@ class DB
 
     public function __construct($table)
     {
-        $this->calledFromModel = app()->callModel;
+        $this->calledFromModel = app('callModel');
         $this->table = $table;
         $this->compile = new Compile;
     }

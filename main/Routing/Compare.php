@@ -17,7 +17,7 @@ class Compare
             }
         }
         if ($pazeREQUEST === $pazeROUTE) {
-            app()->routeFlag = true;
+            app()->singleton('routeFlag', true);
             return new Handle($routeParams, $requestParams, $action, $middleware);
         }
     }

@@ -26,7 +26,7 @@ abstract class Model
 
     public function __construct()
     {
-        app()->callModel = get_called_class();
+        app()->singleton('callModel', get_called_class());
         $this->callServiceAppends();
         $this->callServiceCasts();
         $this->callServiceGetAttributes();

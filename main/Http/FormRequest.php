@@ -75,7 +75,7 @@ abstract class FormRequest extends Request
             }
         }
         if ($this->isFailed()) {
-            app()->fails = $this->fails();
+            app()->singleton('fails', $this->fails());
             throw new ValidateException("Unprocessable Entity.", 422);
         }
     }

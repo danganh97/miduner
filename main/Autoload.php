@@ -1,6 +1,6 @@
 <?php
 
-use Main\Http\Exceptions\AppException;
+use Main\Services\Providers\EntityServiceProvider;
 
 class Autoload
 {
@@ -10,6 +10,7 @@ class Autoload
 
     public function __construct($config)
     {
+        $this->catchExceptionFatal();
         $this->setConfig($config);
         $this->autoloadFile();
         $this->checkAppKey($config['key']);
@@ -73,7 +74,7 @@ class Autoload
     /**
      * Create the Windows path file
      * @param string $class
-     * 
+     *
      * @return string
      */
     private function getWindowsPath(string $class)
@@ -100,9 +101,9 @@ class Autoload
 
     /**
      * Check exists file and require
-     * 
+     *
      * @param string $fullUrl
-     * 
+     *
      * @return \PDOInstance
      */
     private function requireAfterCheckExists(string $fullUrl)
@@ -110,10 +111,9 @@ class Autoload
         if (file_exists($fullUrl)) {
             require_once $fullUrl;
         } else {
-            throw new \Exception("File {$fullUrl} doesn't exists.");
+            // throw new \Exception("File {$fullUrl} doesn't exists.");
         }
     }
-
 
     /**
      * Get full the path from file
@@ -136,6 +136,21 @@ class Autoload
         if (empty($appkey) || $appkey == '' || $appkey == null) {
             die("Please generate app key.");
         }
+    }
+
+    /**
+     * Catcher exception fatal
+     *
+     * @return \PDOInstance
+     */
+    private function catchExceptionFatal()
+    {
+        register_shutdown_function(function () {
+            $error = error_get_last();
+            if ($error['type'] === E_ERROR) {
+                echo $error['message'];
+            }
+        });
     }
 
     /**

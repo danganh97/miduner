@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Main\Http\Request;
+use App\Http\Requests\Request;
 use App\Http\Requests\TestRequest;
 use Main\Database\QueryBuilder\DB;
 use Main\Http\Exceptions\ModelException;
