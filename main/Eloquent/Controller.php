@@ -30,6 +30,7 @@ class Controller
 
     public function render($view, $data = null)
     {
+        header('Content-Type: text/html');
         $view = 'resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
