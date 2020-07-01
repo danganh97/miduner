@@ -19,7 +19,7 @@ final class ModelBindingObject
     /**
      * List instance object model binding
      */
-    private $resources = null;
+    private $resources;
 
     /**
      * Model binding
