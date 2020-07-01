@@ -58,6 +58,18 @@ abstract class Model
         return DB::staticEloquentBuilder($table, $modelMeta, $method, $args);
     }
 
+    public function __call($method, $args)
+    {
+        $static = static::getInstance();
+        $table = $static->table();
+        $modelMeta = [
+            'primaryKey' => $static->primaryKey(),
+            'fillable' => $static->fillable(),
+            'hidden' => $static->hidden(),
+        ];
+        return DB::staticEloquentBuilder($table, $modelMeta, $method, $args);
+    }
+
     private function callServiceAppends()
     {
         foreach ($this->appends as $key => $value) {

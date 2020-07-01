@@ -2,6 +2,7 @@
 
 namespace Main;
 
+use Main\Http\Exceptions\AppException;
 use Main\Route;
 use Main\Services\Providers\EntityServiceProvider;
 
@@ -10,6 +11,8 @@ class Application
     private static $instance;
 
     private $storage;
+
+    private $bindings = [];
 
     private $route;
 
@@ -69,6 +72,9 @@ class Application
 
     public function make($entity)
     {
+        if(!$this->__get($entity)) {
+            $this->__set($entity, new $entity);
+        }
         return $this->__get($entity);
     }
 
@@ -78,6 +84,28 @@ class Application
             $singleton = call_user_func($singleton);
         }
         $this->__set($entity, $singleton);
+    }
+
+    /**
+     * Binding interface to classes
+     * @param string $interface
+     * @param string $concrete
+     * 
+     * @return void
+     */
+    public function bind($interface, $concrete)
+    {
+        $this->bindings[$interface] = $concrete;
+    }
+
+    /**
+     * Get list of bindings
+     * 
+     * @return array
+     */
+    public function getBindings()
+    {
+        return $this->bindings;
     }
 
     private function registerServiceProvider($providers = [])

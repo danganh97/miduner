@@ -5,7 +5,6 @@ namespace Main\Routing;
 use App\Http\Exceptions\Exception;
 use App\Http\Kernel;
 use Main\Http\FormRequest;
-use Main\Http\RequestValidation;
 
 class Compile
 {
@@ -46,7 +45,9 @@ class Compile
         }
         if (class_exists($controller)) {
             $params = $this->execRequest($controller, $methodName, $params);
-            $object = new $controller;
+            $initParams = $this->execRequest($controller, '__construct', []);
+            $reflector = new \ReflectionClass($controller);
+            $object = $reflector->newInstanceArgs($initParams);
             if (method_exists($controller, $methodName) && $cloud === true) {
                 return call_user_func_array([$object, $methodName], $params);
             }
@@ -77,9 +78,9 @@ class Compile
         $ref = new \ReflectionMethod($controller, $methodName);
         $listParameters = $ref->getParameters();
         $array = [];
-        foreach($listParameters as $key => $param) {
+        foreach ($listParameters as $key => $param) {
             $refParam = new \ReflectionParameter([$controller, $methodName], $key);
-            if(is_object($refParam->getClass())) {
+            if (is_object($refParam->getClass())) {
                 $object = $refParam->getClass()->getName();
                 $array[$param->getName()] = $this->_executeValidation($object);
             } else {
@@ -91,8 +92,15 @@ class Compile
 
     private function _executeValidation($object)
     {
+        $bindings = app()->getBindings();
+        foreach ($bindings as $interface => $class) {
+            if ($object === $interface) {
+                $object = $class;
+                break;
+            }
+        }
         $object = new $object;
-        if($object instanceof FormRequest) {
+        if ($object instanceof FormRequest) {
             $object->executeValidate();
         }
         return $object;

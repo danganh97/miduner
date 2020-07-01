@@ -5,14 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Http\Requests\Request;
 use App\Http\Requests\TestRequest;
+use App\Repositories\User\UserInterface;
 use Main\Database\QueryBuilder\DB;
 use Main\Http\Exceptions\ModelException;
 
 class UserController extends Controller
 {
+    public $userRepository;
+
+    public function __construct(UserInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function index(Request $request)
     {
-        $users = DB::bindClass(User::class)->take(10)->get();
+        $users = $this->userRepository->index();
         return $this->respond($users);
         return view('users/index', compact('users'));
     }
