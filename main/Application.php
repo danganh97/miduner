@@ -72,9 +72,6 @@ class Application
 
     public function make($entity)
     {
-        if(!$this->__get($entity)) {
-            $this->__set($entity, new $entity);
-        }
         return $this->__get($entity);
     }
 

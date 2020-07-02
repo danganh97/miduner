@@ -1,5 +1,4 @@
 <?php
-use Main\Route;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'home'])->name('home')->middleware(App\Http\Middlewares\Auth::class);
 

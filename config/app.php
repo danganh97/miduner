@@ -14,10 +14,10 @@ return [
 
     'aliases' => [
         'Route' => Main\Route::class,
-        'DB' => Main\QueryBuilder::class,
+        'DB' => Main\Database\QueryBuilder\DB::class,
         'AppException' => Main\Http\Exceptions\AppException::class,
         'Session' => Main\Session::class,
-        'Request' => Http\Request::class
+        'Request' => App\Http\Requests\Request::class
     ],
     
     'providers' => [

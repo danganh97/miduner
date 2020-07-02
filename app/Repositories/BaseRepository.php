@@ -29,6 +29,11 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function makeModel()
     {
+        if(!app()->make($this->model())) {
+            app()->singleton($this->model(), function () {
+                return $this->model()::getInstance();
+            });
+        }
         $this->model = app()->make(
             $this->model()
         );

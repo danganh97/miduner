@@ -7,14 +7,15 @@ class Autoload
     private $root;
     private $autoload;
     private $server;
+    private $aliases;
 
     public function __construct($config)
     {
+        $this->registerAutoload();
         $this->catchExceptionFatal();
         $this->setConfig($config);
         $this->autoloadFile();
         $this->checkAppKey($config['key']);
-        $this->registerAutoload();
     }
 
     /**
@@ -28,6 +29,7 @@ class Autoload
         $this->root = $config['base'];
         $this->autoload = $config['autoload'];
         $this->server = $config['server'];
+        $this->aliases = $config['aliases'];
     }
 
     /**
@@ -48,6 +50,9 @@ class Autoload
      */
     public function load($class)
     {
+        if (isset($this->aliases[$class])) {
+            return $this->loadWithAlias($class);
+        }
         switch ($this->server) {
             case 'linux':
             case 'macosx':
@@ -111,8 +116,19 @@ class Autoload
         if (file_exists($fullUrl)) {
             require_once $fullUrl;
         } else {
-            // throw new \Exception("File {$fullUrl} doesn't exists.");
+            throw new \Exception("File {$fullUrl} doesn't exists.");
         }
+    }
+
+    /**
+     * Load with aliases
+     * @param string $class
+     * 
+     * @return void
+     */
+    private function loadWithAlias($class)
+    {
+        return class_alias($this->aliases[$class], $class);
     }
 
     /**

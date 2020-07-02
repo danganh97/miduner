@@ -2,21 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Request;
-use App\Http\Requests\TestRequest;
+use Request;
 use App\Http\Requests\TestRequestFile;
-use App\Models\User;
+use App\Repositories\User\UserInterface;
+use DB;
 
 class HomeController extends Controller
 {
+    public $userRepository;
+
+    public function __construct(UserInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
     public function home(Request $request, $id)
     {
-        return view('pages/home');
+        $users = $this->userRepository->index();
+        return $this->respond($users);
+        return view('pages/home', compact('users'));
     }
 
     public function testPostFile(TestRequestFile $request)
     {
-        
+
     }
 
     public function about()
