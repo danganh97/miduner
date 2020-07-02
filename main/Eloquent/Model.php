@@ -2,11 +2,11 @@
 
 namespace Main\Eloquent;
 
+use Main\Traits\Instance;
+use Main\Traits\Eloquent\With;
 use App\Http\Exceptions\Exception;
 use Main\Database\QueryBuilder\DB;
 use Main\Traits\Eloquent\GetAttribute;
-use Main\Traits\Eloquent\With;
-use Main\Traits\Instance;
 
 abstract class Model
 {
@@ -26,7 +26,6 @@ abstract class Model
 
     public function __construct()
     {
-        app()->singleton('callModel', get_called_class());
         $this->callServiceAppends();
         $this->callServiceCasts();
         $this->callServiceGetAttributes();
@@ -54,6 +53,7 @@ abstract class Model
             'primaryKey' => $static->primaryKey(),
             'fillable' => $static->fillable(),
             'hidden' => $static->hidden(),
+            'calledClass' => get_called_class(),
         ];
         return DB::staticEloquentBuilder($table, $modelMeta, $method, $args);
     }
@@ -66,6 +66,7 @@ abstract class Model
             'primaryKey' => $static->primaryKey(),
             'fillable' => $static->fillable(),
             'hidden' => $static->hidden(),
+            'calledClass' => get_called_class(),
         ];
         return DB::staticEloquentBuilder($table, $modelMeta, $method, $args);
     }

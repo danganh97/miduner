@@ -7,10 +7,11 @@ use Main\Database\Connection;
 use Main\Database\QueryBuilder\Compile;
 use Main\Traits\Eloquent\ExecuteQuery;
 use Main\Traits\Eloquent\HandleCompileWithBuilder;
+use Main\Traits\Eloquent\Pagination;
 
 class DB
 {
-    use HandleCompileWithBuilder, ExecuteQuery;
+    use HandleCompileWithBuilder, ExecuteQuery, Pagination;
 
     /**
      * The list of accept operator using in query builder
@@ -116,20 +117,29 @@ class DB
     private $isThrow = false;
 
     /**
-     * Create a new query builder instance.
-     *
-     * @param  ConnectionInterface  $this->table
-     * @return void
+     * Flag checking pagination
      */
+    private $isPagination = false;
+
+    /**
+     * Count row execute
+     */
+    private $rowCount = 0;
 
     /**
      * Compile instance
      */
     private $compile;
 
-    public function __construct($table)
+    /**
+     * Create a new query builder instance.
+     *
+     * @param  ConnectionInterface  $this->table
+     * @return void
+     */
+    public function __construct($table, $calledClass = null)
     {
-        $this->calledFromModel = app('callModel');
+        $this->calledFromModel = $calledClass;
         $this->table = $table;
         $this->compile = new Compile;
     }
@@ -240,6 +250,19 @@ class DB
     }
 
     /**
+     * Check condition and execute statement
+     */
+    public function when($condition, $callback, $default = null)
+    {
+        if ($condition) {
+            $callback($this);
+        } elseif (!is_null($default)) {
+            $default($this);
+        }
+        return $this;
+    }
+
+    /**
      * Add a basic where clause to the query.
      *
      * @param  string|array|\Closure  $column
@@ -252,10 +275,10 @@ class DB
     {
         if (!is_callable($column)) {
             if (!in_array($operator, $this->operator)) {
-                $this->wheres[] = [$column, '=', $operator, $boolean];
-            } else {
-                $this->wheres[] = [$column, $operator, $value, $boolean];
+                $value = $operator;
+                $operator = '=';
             }
+            $this->wheres[] = [$column, $operator, $value, $boolean];
             return $this;
         }
 

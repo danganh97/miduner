@@ -15,101 +15,105 @@ trait HandleCompileWithBuilder
      */
     public static function staticEloquentBuilder($table, $modelMeta, $method, $args = null)
     {
+        $object = isset($modelMeta['calledClass']) ? new self($table, $modelMeta['calledClass']) : new self($table);
         switch ($method) {
             case 'select':
                 $select = $args && is_array($args[0]) ? $args[0] : $args;
-                return (new self($table))->select($select);
+                return $object->select($select);
             case 'addSelect':
                 $select = $args && is_array($args[0]) ? $args[0] : $args;
-                return (new self($table))->addSelect($select);
+                return $object->addSelect($select);
             case 'distinct':
-                return (new self($table))->distinct();
+                return $object->distinct();
             case 'join':
                 list($tableJoin, $st, $operator, $nd) = $args;
-                return (new self($table))->join($tableJoin, $st, $operator, $nd);
+                return $object->join($tableJoin, $st, $operator, $nd);
             case 'leftJoin':
                 list($tableJoin, $st, $operator, $nd) = $args;
-                return (new self($table))->leftJoin($tableJoin, $st, $operator, $nd);
+                return $object->leftJoin($tableJoin, $st, $operator, $nd);
             case 'rightJoin':
                 list($tableJoin, $st, $operator, $nd) = $args;
-                return (new self($table))->rightJoin($tableJoin, $st, $operator, $nd);
+                return $object->rightJoin($tableJoin, $st, $operator, $nd);
             case 'where':
                 list($column, $operator, $value) = $args;
-                return (new self($table))->where($column, $operator, $value);
+                return $object->where($column, $operator, $value);
             case 'orWhere':
                 list($column, $operator, $value) = $args;
-                return (new self($table))->orWhere($column, $operator, $value);
+                return $object->orWhere($column, $operator, $value);
             case 'whereIn':
                 list($column, $value) = $args;
-                return (new self($table))->whereIn($column, $value);
+                return $object->whereIn($column, $value);
             case 'whereNotIn':
                 list($column, $value) = $args;
-                return (new self($table))->whereNotIn($column, $value);
+                return $object->whereNotIn($column, $value);
             case 'groupBy':
                 $groupBy = $args && is_array($args[0]) ? $args[0] : $args;
-                return (new self($table))->groupBy($groupBy);
+                return $object->groupBy($groupBy);
             case 'having':
                 list($column, $operator, $value) = $args;
-                return (new self($table))->having($column, $operator, $value);
+                return $object->having($column, $operator, $value);
             case 'orHaving':
                 list($column, $operator, $value) = $args;
-                return (new self($table))->orHaving($column, $operator, $value);
+                return $object->orHaving($column, $operator, $value);
             case 'orderBy':
                 list($columns, $type) = $args;
-                return (new self($table))->orderBy($columns, $type);
+                return $object->orderBy($columns, $type);
             case 'orderByDesc':
                 list($columns) = $args;
-                return (new self($table))->orderByDesc($columns);
+                return $object->orderByDesc($columns);
             case 'latest':
                 list($columns) = $args;
-                return (new self($table))->latest($columns);
+                return $object->latest($columns);
             case 'oldest':
                 list($columns) = $args;
-                return (new self($table))->oldest($columns);
+                return $object->oldest($columns);
             case 'limit':
                 list($limit) = $args;
-                return (new self($table))->limit($limit);
+                return $object->limit($limit);
             case 'take':
                 list($take) = $args;
-                return (new self($table))->take($take);
+                return $object->take($take);
             case 'skip':
                 list($skip) = $args;
-                return (new self($table))->skip($skip);
+                return $object->skip($skip);
             case 'offset':
                 list($offset) = $args;
-                return (new self($table))->offset($offset);
+                return $object->offset($offset);
             case 'get':
-                return (new self($table))->get();
+                return $object->get();
             case 'insert':
                 list($data) = $args;
-                return (new self($table))->insert($data);
+                return $object->insert($data);
             case 'create':
                 list($data) = $args;
-                return (new self($table))->create($data);
+                return $object->create($data);
             case 'update':
                 list($data) = $args;
-                return (new self($table))->update($data);
+                return $object->update($data);
             case 'find':
                 list($value) = $args;
                 $instance = self::calledModelInstance();
                 $primaryKey = $instance->primaryKey();
-                return (new self($table))->find($value, $primaryKey);
+                return $object->find($value, $primaryKey);
             case 'first':
-                return (new self($table))->first();
+                return $object->first();
             case 'findOrFail':
                 list($value) = $args;
-                return (new self($table))->findOrFail($value, $modelMeta['primaryKey']);
+                return $object->findOrFail($value, $modelMeta['primaryKey']);
             case 'firstOrFail':
-                return (new self($table))->firstOrFail();
+                return $object->firstOrFail();
             case 'delete':
-                return (new self($table))->delete();
+                return $object->delete();
             case 'login':
                 list($data) = $args;
-                return (new self($table))->login($data);
+                return $object->login($data);
             case 'with':
-                $builder = new self($table);
-                $builder->with = $args && is_array($args[0]) ? $args[0] : $args;
-                return $builder;
+                $object->with = $args && is_array($args[0]) ? $args[0] : $args;
+                return $object;
+            case 'paginate':
+                return $object->paginate(...$args);
+            case 'when':
+                return $object->when(...$args);
             default:
                 return new self($table);
         }

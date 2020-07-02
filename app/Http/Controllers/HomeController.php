@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Request;
 use App\Http\Requests\TestRequestFile;
+use App\Models\User;
 use App\Repositories\User\UserInterface;
 use DB;
 
@@ -15,10 +16,9 @@ class HomeController extends Controller
     {
         $this->userRepository = $userRepository;
     }
+    
     public function home(Request $request, $id)
     {
-        $users = $this->userRepository->index();
-        return $this->respond($users);
         return view('pages/home', compact('users'));
     }
 

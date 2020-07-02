@@ -28,5 +28,8 @@ class EntityServiceProvider extends ServiceProvider
         $this->app->singleton('session', function () {
             return new \Main\Session;
         });
+        $this->app->singleton('connection', function () {
+            return (new \Main\Database\Connection)->getConnection();
+        });
     }
 }

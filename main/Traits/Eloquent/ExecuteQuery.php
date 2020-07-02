@@ -34,6 +34,14 @@ trait ExecuteQuery
     }
 
     /**
+     * Get full sql statement
+     */
+    public function getFullSql()
+    {
+        return $this->pase();
+    }
+
+    /**
      * Convert variables to sql
      *
      * @return \SupportSqlCollection
@@ -222,11 +230,12 @@ trait ExecuteQuery
     public function request($sql)
     {
         try {
-            $connection = (new Connection)->getConnection();
+            $connection = app()->make('connection');
             $object = $connection->prepare($sql);
             $object->execute();
+            $this->rowCount = $object->rowCount();
             $type = explode(" ", $sql);
-            switch ($type[0]) {
+            switch (array_shift($type)) {
                 case 'SELECT':
                     return $this->inCaseSelect($object);
                 case 'INSERT':

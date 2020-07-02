@@ -42,6 +42,14 @@ abstract class Request
     }
 
     /**
+     * Get all query parameters
+     */
+    public function getQueryParams()
+    {
+        return $_GET;
+    }
+
+    /**
      * Response only 1 data input from param.
      *
      * @param string $input
@@ -49,11 +57,18 @@ abstract class Request
      */
     public static function input($input)
     {
-        foreach (self::getRequest() as $name => $value) {
-            if ($name == $input) {
-                return $value;
-            }
-        }
+        return isset(self::getRequest()[$input]) ? self::getRequest()[$input] : null;
+    }
+
+    /**
+     * Response only 1 data input from param.
+     * 
+     * @param string $input
+     * @return string input value
+     */
+    public function get($input)
+    {
+        return self::input($input);
     }
 
     /**
@@ -94,5 +109,15 @@ abstract class Request
     public function headers()
     {
         return (object) getallheaders();
+    }
+
+    public function __set($name, $value)
+    {
+        $this->$name = $value;
+    }
+
+    public function __get($name)
+    {
+        return isset($this->$name) ? $this->name : null;
     }
 }

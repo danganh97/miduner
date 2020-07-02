@@ -113,7 +113,7 @@ if (!function_exists('config')) {
         }
         array_shift($pase);
         $configs = include $path;
-        $initValue = $configs[$pase[0]];
+        $initValue = isset($configs[$pase[0]]) ? $configs[$pase[0]] : null;
         array_shift($pase);
         if(empty($pase)) {
             return $initValue;
