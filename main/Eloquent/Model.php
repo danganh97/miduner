@@ -5,7 +5,7 @@ namespace Main\Eloquent;
 use Main\Traits\Instance;
 use Main\Traits\Eloquent\With;
 use App\Http\Exceptions\Exception;
-use Main\Database\QueryBuilder\DB;
+use DB;
 use Main\Traits\Eloquent\GetAttribute;
 
 abstract class Model

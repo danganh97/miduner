@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use DB;
+use App\Models\User;
 use App\Http\Requests\Request;
 use App\Http\Requests\TestRequest;
-use App\Models\User;
+use Main\Http\Exceptions\AppException;
 use App\Repositories\User\UserInterface;
-use Main\Database\QueryBuilder\DB;
 use Main\Http\Exceptions\ModelException;
 
 class UserController extends Controller
@@ -20,15 +21,20 @@ class UserController extends Controller
 
     public function index(Request $request)
     {
-        $paginate = $request->paginate ?: config('settings.pagination');
-        $flag = $request->flag;
-        $users = User::when($flag, function ($query) use ($flag) {
-            $query->where('user_id', $flag);
-        }, function ($query) {
-            $query->where('user_id', 3099);
-        })->where('noti_push', 1)->with('profile')->paginate();
-        return $this->respond($users);
-        return view('users/index', compact('users'));
+        try {
+            $paginate = $request->paginate ?: config('settings.pagination');
+            $flag = $request->flag;
+            $users = $this->userRepository
+            ->take(8)
+            ->with('profile')
+                ->offset(1)
+                ->get();
+            return $this->respond($users);
+            return view('users/index', compact('users'));
+        } catch (AppException $e) {
+            throw new AppException($e->getMessage());
+        }
+
     }
 
     public function create()

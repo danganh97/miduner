@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Repositories;
+namespace Main\Supports\Patterns\Abstracts;
 
-abstract class BaseRepository implements RepositoryInterface
+use Main\Supports\Patterns\Interfaces\RepositoryInterface;
+
+abstract class AppRepository implements RepositoryInterface
 {
     /**
      * @var \Main\Eloquent\Model
@@ -10,7 +12,7 @@ abstract class BaseRepository implements RepositoryInterface
     protected $model;
 
     /**
-     * BaseRepository constructor.
+     * AppRepository constructor.
      */
 
     public function __construct()
@@ -29,7 +31,7 @@ abstract class BaseRepository implements RepositoryInterface
      */
     public function makeModel()
     {
-        if(!app()->make($this->model())) {
+        if (!app()->make($this->model())) {
             app()->singleton($this->model(), function () {
                 return $this->model()::getInstance();
             });
@@ -37,6 +39,19 @@ abstract class BaseRepository implements RepositoryInterface
         $this->model = app()->make(
             $this->model()
         );
+    }
+
+    /**
+     * If missing any method for repository
+     * it's will be call with default
+     * @param string $method
+     * @param array $args
+     * 
+     * @return QueryBuilder
+     */
+    public function __call($method, $args)
+    {
+        return $this->model->$method(...$args);
     }
 
     /**
@@ -103,7 +118,6 @@ abstract class BaseRepository implements RepositoryInterface
     {
         return $this->model->first();
     }
-
 
     /**
      * Where
@@ -188,7 +202,6 @@ abstract class BaseRepository implements RepositoryInterface
      * @return mixed
      */
 
-
     public function updateOrCreate($id, $input)
     {
         $result = $this->model->find($id);
@@ -201,7 +214,6 @@ abstract class BaseRepository implements RepositoryInterface
         }
         return false;
     }
-
 
     /**
      * Multi Update
@@ -343,10 +355,31 @@ abstract class BaseRepository implements RepositoryInterface
         return $this->model->with($relation);
     }
 
+    /**
+     * Join with other take
+     * @param string $table
+     * @param string $columnTableA
+     * @param string $condition
+     * @param string $columnTableB
+     *
+     * @return $this
+     */
     public function join($table, $columnTableA = null, $condition = null, $columnTableB = null)
     {
         return $this->model->join($table, $columnTableA, $condition, $columnTableB);
     }
 
-}
+    /**
+     * When function check condition to execute query
+     * @param string $condition
+     * @param Closure $callback
+     * @param Closure $default
+     *
+     * @return $this
+     */
+    public function when($condition, $callback, $default = null)
+    {
+        return $this->model->when($condition, $callback, $default);
+    }
 
+}

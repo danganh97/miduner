@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Main\Database\QueryBuilder\DB;
+use DB;
 use Main\Eloquent\Authenticate;
 
 class User extends Authenticate
@@ -31,7 +31,7 @@ class User extends Authenticate
 
     public function getFullNameAttribute()
     {
-        return 'anh deptrai ' . @$this->user_id;
+        return 'anh dep trai ' . $this->user_id;
     }
 
     public function getEmailAttribute()

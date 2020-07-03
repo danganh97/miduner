@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repositories;
+namespace Main\Supports\Patterns\Interfaces;
 
 interface RepositoryInterface
 {
@@ -33,6 +33,13 @@ interface RepositoryInterface
      */
     public function find($id, $column = ['*']);
 
+    /**
+     * Find or fail
+     *
+     * @param $id
+     * @param array $column
+     * @return mixed
+     */
     public function findOrFail($id);
 
     /**
@@ -170,5 +177,24 @@ interface RepositoryInterface
      */
     public function has($relation);
 
+    /**
+     * Join with other take
+     * @param string $table
+     * @param string $columnTableA
+     * @param string $condition
+     * @param string $columnTableB
+     *
+     * @return $this
+     */
     public function join($table, $columnTableA = null, $condition = null, $columnTableB = null);
+
+    /**
+     * When function check condition to execute query
+     * @param string $condition
+     * @param Closure $callback
+     * @param Closure $default
+     *
+     * @return $this
+     */
+    public function when($condition, $callback, $default = null);
 }

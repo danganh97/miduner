@@ -9,7 +9,7 @@ use Main\Traits\Eloquent\ExecuteQuery;
 use Main\Traits\Eloquent\HandleCompileWithBuilder;
 use Main\Traits\Eloquent\Pagination;
 
-class DB
+class QueryBuilder
 {
     use HandleCompileWithBuilder, ExecuteQuery, Pagination;
 

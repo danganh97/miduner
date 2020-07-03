@@ -3,9 +3,9 @@
 namespace App\Repositories\User;
 
 use App\Models\User;
-use App\Repositories\BaseRepository;
+use Repository;
 
-class UserRepository extends BaseRepository implements UserInterface
+class UserRepository extends Repository implements UserInterface
 {
     public function model()
     {
