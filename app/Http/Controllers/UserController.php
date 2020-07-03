@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Auth;
 use App\Models\User;
 use App\Http\Requests\Request;
 use App\Http\Requests\TestRequest;
@@ -22,7 +23,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
-            $users = User::select(['email'])->where(['user_id' => 3099])->first();
+            $users = User::paginate();
             return $this->respond($users);
             return view('users/index', compact('users'));
         } catch (AppException $e) {

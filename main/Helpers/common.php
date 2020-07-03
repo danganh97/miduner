@@ -252,3 +252,10 @@ if (!function_exists('included')) {
         }
     }
 }
+
+if(!function_exists('auth')) {
+    function auth()
+    {
+        return app()->make('auth');
+    }
+}

@@ -13,6 +13,12 @@ class EntityServiceProvider extends ServiceProvider
 
     public function register()
     {
+        $this->app->singleton('db', function () {
+            return new \Main\Database\QueryBuilder\QueryBuilder;
+        });
+        $this->app->singleton('route', function () {
+            return new \Main\Route;
+        });
         $this->app->singleton('request', function () {
             return new \App\Http\Requests\Request;
         });

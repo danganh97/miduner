@@ -142,7 +142,7 @@ class QueryBuilder
      * @param  ConnectionInterface  $this->table
      * @return void
      */
-    public function __construct($table, $calledClass = null)
+    public function __construct($table = null, $calledClass = null)
     {
         $this->calledFromModel = $calledClass;
         $this->table = $table;

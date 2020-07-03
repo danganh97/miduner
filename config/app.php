@@ -13,15 +13,15 @@ return [
     ],
 
     'aliases' => [
-        'App' => Main\Application::class,
+        'App' => Main\App::class,
         'Route' => Main\Route::class,
-        'DB' => Main\Database\QueryBuilder\QueryBuilder::class,
+        'DB' => Main\Supports\Facades\QueryBuilder::class,
         'AppException' => Main\Http\Exceptions\AppException::class,
-        'Session' => Main\Session::class,
-        'Request' => App\Http\Requests\Request::class,
-        'Repository' => Main\Supports\Patterns\Abstracts\AppRepository::class,
-        'Hash' => Main\Hashing\BcryptHasher::class,
-        'Auth' => Main\Auth\Authenticatable::class
+        'Session' => Main\Supports\Facades\Session::class,
+        'Request' => Main\Supports\Facades\Request::class,
+        'Repository' => Main\Supports\Facades\Repository::class,
+        'Hash' => Main\Supports\Facades\Hash::class,
+        'Auth' => Main\Supports\Facades\Auth::class,
     ],
     
     'providers' => [
