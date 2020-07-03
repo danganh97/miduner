@@ -3,6 +3,8 @@
 namespace Main\Database\QueryBuilder;
 
 use App\Http\Exceptions\Exception;
+use Main\Eloquent\Model;
+use Main\Http\Exceptions\AppException;
 
 class Compile
 {
@@ -76,20 +78,20 @@ class Compile
             }
             if ($key == 0) {
                 if ($where[0] !== 'start_where' && $where[0] !== 'end_where') {
-                    $sql .= " {$where[0]} {$where[1]} '{$where[2]}'";
+                    $sql .= " {$where[0]} {$where[1]} ?";
                 }
             } else {
                 if ($wheres[$key - 1][0] !== 'start_where') {
                     if ($where[0] !== 'start_where' && $where[0] !== 'end_where' && $where[0] !== 'start_or' && $where[0] !== 'end_or') {
                         if ($wheres[$key - 1][0] !== 'start_or') {
-                            $sql .= " $where[3] $where[0] $where[1] '$where[2]'";
+                            $sql .= " $where[3] $where[0] $where[1] ?";
                         } else {
-                            $sql .= " $where[0] $where[1] '$where[2]'";
+                            $sql .= " $where[0] $where[1] ?";
                         }
                     }
                 } else {
                     if ($where[0] !== 'start_where' && $where[0] !== 'end_where' && $key != 0) {
-                        $sql .= "$where[0] $where[1] '$where[2]'";
+                        $sql .= "$where[0] $where[1] ?";
                     }
                 }
             }
@@ -164,22 +166,27 @@ class Compile
         return "INSERT INTO $table($columns) VALUES ($values)";
     }
 
-    public function compileCreate($table, array $fillable, array $hidden, array $data)
+    public function compileCreate(Model $model, array $fillable, array $data)
     {
         try {
-            foreach ($data as $key => $value) {
-                if (in_array($key, $fillable) || (!in_array($key, $fillable) && in_array($key, $hidden))) {
-                    $columns[] = $key;
-                    $values[] = "'$value'";
-                } else {
-                    throw new Exception("Value '{$key}' doesn't exists");
+            foreach ($fillable as $column) {
+                if (isset($data[$column])) {
+                    $ucFirst = ucfirst($column);
+                    $settingMethod = "set{$ucFirst}Attribute";
+                    if (method_exists($model, $settingMethod)) {
+                        $values[] = "'".call_user_func([$model, $settingMethod], $data[$column]) . "'";
+                    } else {
+                        $values[] = "'$data[$column]'";
+                    }
+                    $columns[] = $column;
                 }
             }
             $columns = implode(', ', $columns);
             $values = implode(', ', $values);
+            $table = $model->table();
             return "INSERT INTO $table($columns) VALUES ($values)";
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        } catch (AppException $e) {
+            throw new AppException($e->getMessage());
         }
     }
 

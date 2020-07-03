@@ -97,20 +97,30 @@ if (!function_exists('execWriteConfigCache')) {
                 fwrite($myfile, "<?php\n");
                 fwrite($myfile, "return array(\n");
                 foreach ($config as $key => $value) {
-                    fwrite($myfile, "    '{$key}' => ");
                     if (is_array($value)) {
-                        fwrite($myfile, "array(\n");
-                        foreach ($value as $k => $v) {
-                            fwrite($myfile, "        '{$k}' => '{$v}',\n");
-                        }
-                        fwrite($myfile, "    ),\n");
+                        _handleArrayConfig($key, $myfile, $value);
                     } else {
-                        fwrite($myfile, "'{$value}',\n");
+                        fwrite($myfile, "'$key' => '{$value}',\n");
                     }
                 }
                 fwrite($myfile, ");");
             }
         }
+    }
+}
+
+if (!function_exists('_handleArrayConfig')) {
+    function _handleArrayConfig($key, $myfile, array $values)
+    {
+        fwrite($myfile, "'{$key}' => array(\n");
+        foreach ($values as $k => $v) {
+            if (is_array($v)) {
+                _handleArrayConfig($k, $myfile, $v);
+            } else {
+                fwrite($myfile, "        '{$k}' => '{$v}',\n");
+            }
+        }
+        fwrite($myfile, "    ),\n");
     }
 }
 

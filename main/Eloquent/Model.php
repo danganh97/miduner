@@ -18,8 +18,6 @@ abstract class Model
     protected $hidden = [];
     protected $table;
     protected $primaryKey;
-    protected $username;
-    protected $password;
 
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
@@ -29,7 +27,6 @@ abstract class Model
         $this->callServiceAppends();
         $this->callServiceCasts();
         $this->callServiceGetAttributes();
-        $this->callServiceHidden();
         $this->callServiceWithes();
     }
 

@@ -9,6 +9,11 @@ trait GetAttribute
         return $this->table;
     }
 
+    public function password()
+    {
+        return $this->password;
+    }
+
     public function primaryKey()
     {
         return $this->primaryKey;

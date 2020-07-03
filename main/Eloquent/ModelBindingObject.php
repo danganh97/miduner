@@ -65,11 +65,11 @@ final class ModelBindingObject
      */
     private function checkEmpty()
     {
-        if (!is_array($this->resources) && count($this->resources) < 1) {
+        if (empty($this->resources)) {
             if ($this->oneOf && !$this->listOf && $this->isThrow) {
                 throw new AppException("Resource not found", 404);
             }
-            return [];
+            return null;
         }
         if ($this->oneOf && !$this->listOf) {
             $this->resources = array_shift($this->resources);
@@ -108,6 +108,7 @@ final class ModelBindingObject
                 }
             }
         }
+        $object->callServiceHidden();
         return $object;
     }
 
@@ -121,6 +122,7 @@ final class ModelBindingObject
     private function bindMultiple(array $resources)
     {
         foreach ($resources as $resource) {
+            $resource->callServiceHidden();
             if (!empty($this->args['with'])) {
                 foreach ($this->args['with'] as $with) {
                     if (method_exists($resource, $with)) {

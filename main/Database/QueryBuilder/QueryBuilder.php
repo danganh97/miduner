@@ -28,6 +28,11 @@ class QueryBuilder
     private $columns;
 
     /**
+     * The list of need bindings arguments
+     */
+    private $parameters;
+
+    /**
      * The table which the query is targeting.
      *
      * @var string
@@ -273,12 +278,21 @@ class QueryBuilder
      */
     public function where($column, $operator = '=', $value = null, $boolean = 'AND')
     {
-        if (!is_callable($column)) {
+        if (!is_callable($column) && !is_array($column)) {
             if (!in_array($operator, $this->operator)) {
                 $value = $operator;
                 $operator = '=';
             }
+            $this->parameters[] = $value;
             $this->wheres[] = [$column, $operator, $value, $boolean];
+            return $this;
+        }
+
+        if (is_array($column)) {
+            foreach($column as $key => $value) {
+                $this->parameters[] = $value;
+                $this->wheres[] = [$key, '=', $value, $boolean];
+            }
             return $this;
         }
 

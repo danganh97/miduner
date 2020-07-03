@@ -2,9 +2,7 @@
 
 namespace Main;
 
-use Main\Http\Exceptions\AppException;
 use Main\Route;
-use Main\Services\Providers\EntityServiceProvider;
 
 class Application
 {
@@ -41,8 +39,6 @@ class Application
      */
     private function registerGlobalConfig($config)
     {
-        $entity = new EntityServiceProvider;
-        $entity->handle();
         $this->singleton('config', $config);
         $this->singleton('route', $this->route);
     }
@@ -77,7 +73,7 @@ class Application
 
     public function singleton($entity, $singleton)
     {
-        if(is_callable($singleton)) {
+        if (is_callable($singleton)) {
             $singleton = call_user_func($singleton);
         }
         $this->__set($entity, $singleton);
@@ -87,7 +83,7 @@ class Application
      * Binding interface to classes
      * @param string $interface
      * @param string $concrete
-     * 
+     *
      * @return void
      */
     public function bind($interface, $concrete)
@@ -97,7 +93,7 @@ class Application
 
     /**
      * Get list of bindings
-     * 
+     *
      * @return array
      */
     public function getBindings()
@@ -107,7 +103,7 @@ class Application
 
     private function registerServiceProvider($providers = [])
     {
-        foreach($providers as $provider) {
+        foreach ($providers as $provider) {
             $provider = new $provider;
             $provider->handle();
         }

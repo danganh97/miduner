@@ -2,12 +2,12 @@
 
 namespace Main\Traits\Eloquent;
 
-use PDO;
-use PDOException;
-use PDOStatement;
 use Main\Database\Connection;
 use Main\Eloquent\ModelBindingObject;
 use Main\Http\Exceptions\AppException;
+use PDO;
+use PDOException;
+use PDOStatement;
 
 trait ExecuteQuery
 {
@@ -104,13 +104,14 @@ trait ExecuteQuery
     public function create(array $data)
     {
         if (!empty($this->calledFromModel)) {
-            $object = (new $this->calledFromModel);
+            $object = $this->calledFromModel::getInstance();
             $fillable = $object->fillable();
             $hidden = $object->hidden();
-            $sql = $this->compile->compileCreate($this->table, $fillable, $hidden, $data);
+            $columns = array_merge($fillable, $hidden);
+            $sql = $this->compile->compileCreate($object, $columns, $data);
             return $this->request($sql);
         } else {
-            throw new Exception("Method 'create' doesn't exists");
+            throw new AppException("Method 'create' doesn't exists");
         }
     }
 
@@ -232,33 +233,67 @@ trait ExecuteQuery
         try {
             $connection = app()->make('connection');
             $object = $connection->prepare($sql);
+            $this->bindingParams($object);
             $object->execute();
             $this->rowCount = $object->rowCount();
-            $type = explode(" ", $sql);
-            switch (array_shift($type)) {
-                case 'SELECT':
-                    return $this->inCaseSelect($object);
-                case 'INSERT':
-                    return $this->inCaseInsert($connection);
-                case 'UPDATE':
-                    return $this->find($this->wheres[0][0], $this->wheres[0][2]);
-                default:
-                    return $object;
-            }
+            return $this->buildResponse($sql, $object, $connection);
         } catch (PDOException $e) {
             throw new AppException($e->getMessage());
         }
     }
 
+    /**
+     * Building response
+     * @param string $sql
+     * @param PDOStatement $object
+     * @param Connection $connection
+     * 
+     * @return void
+     */
+    private function buildResponse($sql, $object, $connection)
+    {
+        $type = explode(" ", $sql);
+        switch (array_shift($type)) {
+            case 'SELECT':
+                return $this->inCaseSelect($object);
+            case 'INSERT':
+                return $this->inCaseInsert($connection);
+            case 'UPDATE':
+                return $this->find($this->wheres[0][0], $this->wheres[0][2]);
+            default:
+                return $object;
+        }
+    }
+    /**
+     * Binding parameters to sql statements
+     * 
+     * @param PDOStatement $object
+     * 
+     * @return void
+     */
+    private function bindingParams(PDOStatement $object)
+    {
+        if (!empty($this->parameters)) {
+            foreach ($this->parameters as $key => $param) {
+                $object->bindParam($key + 1, $param);
+            }
+        }
+    }
+
+    /**
+     * Get one row has model instance
+     * 
+     * @param Connection $connection
+     */
     private function getOneItemHasModel($connection)
     {
-        $primaryKey = self::getCalledModelInstance()->primaryKey();
+        $primaryKey = $this->getCalledModelInstance()->primaryKey();
         return $this->find($connection->lastInsertId(), $primaryKey);
     }
 
-    private static function calledModelInstance()
+    private function getCalledModelInstance()
     {
-        return self::getCalledModelInstance();
+        return $this->calledFromModel::getInstance();
     }
 
     /**

@@ -223,7 +223,7 @@ if (!function_exists('dd')) {
     function dd()
     {
         array_map(function($x) { 
-            print_r($x); 
+            print_r($x);
         }, func_get_args());
         die;
     }

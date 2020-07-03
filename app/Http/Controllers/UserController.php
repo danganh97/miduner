@@ -22,13 +22,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
-            $paginate = $request->paginate ?: config('settings.pagination');
-            $flag = $request->flag;
-            $users = $this->userRepository
-            ->take(8)
-            ->with('profile')
-                ->offset(1)
-                ->get();
+            $users = User::select(['email'])->where(['user_id' => 3099])->first();
             return $this->respond($users);
             return view('users/index', compact('users'));
         } catch (AppException $e) {

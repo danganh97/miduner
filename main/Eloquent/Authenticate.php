@@ -2,10 +2,13 @@
 
 namespace Main\Eloquent;
 
+use Hash;
 use DB;
 
 abstract class Authenticate extends Model
 {
-    protected $username;
-    protected $password;
+    public function setPasswordAttribute($password)
+    {
+        return Hash::make($password);
+    }
 }

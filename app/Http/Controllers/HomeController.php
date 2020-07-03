@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Request;
 use App\Http\Requests\TestRequestFile;
-use App\Models\User;
 use App\Repositories\User\UserInterface;
-use DB;
+use Request;
 
 class HomeController extends Controller
 {
@@ -16,7 +14,7 @@ class HomeController extends Controller
     {
         $this->userRepository = $userRepository;
     }
-    
+
     public function home(Request $request, $id)
     {
         return view('pages/home', compact('users'));
