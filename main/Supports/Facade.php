@@ -10,4 +10,9 @@ abstract class Facade
     {
         return app()->make(static::getFacadeAccessor())->$method(...$arguments);
     }
+
+    public function __call($method, $arguments)
+    {
+        return app()->make(static::getFacadeAccessor())->$method(...$arguments);
+    }
 }

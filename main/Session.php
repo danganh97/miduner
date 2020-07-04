@@ -6,7 +6,7 @@ class Session
 {
     public function __set($key, $value)
     {
-        !isset($_SESSION[$key]) ? $_SESSION[$key] = $value : die('SESSION '. $key . ' already exists !');
+        $_SESSION[$key] = $value;
         return;
     }
 
@@ -15,14 +15,28 @@ class Session
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
 
-    public static function unset_session($key)
+    public function unset($key)
     {
         unset($_SESSION[$key]);
         return true;
     }
 
-    public static function __callStatic($method, $params = null)
+    public function put($key, $value)
     {
-        return (new static)->$method;
+        return $this->__set($key, $value);
+    }
+
+    public function push($key, $value)
+    {
+        if(isset($_SESSION[$key])) {
+            array_push($_SESSION[$key], $value);
+            return true;
+        }
+        return false;
+    }
+
+    public function get($key)
+    {
+        return $this->__get($key);
     }
 }

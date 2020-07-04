@@ -22,3 +22,7 @@ Route::get('/remove-cart/{id}', 'CartController@removeCart');
 Route::get('/abc', function () {
     route('contact');
 });
+
+Route::post('/login', 'AuthController@login')->name('login');
+Route::post('/logout', 'AuthController@logout')->name('logout');
+Route::get('/get-current-user', 'AuthController@getCurrentUser')->name('getCurrentUser');

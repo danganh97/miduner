@@ -20,7 +20,7 @@ class EntityServiceProvider extends ServiceProvider
             return new \Main\Route;
         });
         $this->app->singleton('request', function () {
-            return new \App\Http\Requests\Request;
+            return new \Main\Http\Request;
         });
         $this->app->singleton('controller', function () {
             return new \Main\Eloquent\Controller;

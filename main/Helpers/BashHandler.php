@@ -65,11 +65,17 @@ class BashHandler
                 break;
             case 'make:model':
                 if (!isset($this->argv[2])) {
-                    throw new Main\Http\Exceptions\AppException($this->colors->printError("Missing param model's name.\nPlease using format >midun make:model {ModelName}<"));
+                    throw new Main\Http\Exceptions\AppException($this->colors->printError("Missing param model's name.\nPlease using format >midun make:model {ModelName}"));
                 }
                 $name = $this->argv[2];
                 execMakeModel($name);
                 break;
+            case 'make:request':
+                if(!isset($this->argv[2])) {
+                    throw new Main\Http\Exceptions\AppException($this->colors->printError("Missing param request's name.\nPlease using format >midun make:request {RequestName}"));
+                }
+                execMakeRequest($this->argv[2]);
+            break;
             default:
                 throw new Main\Http\Exceptions\AppException($this->colors->printError("Bash {$this->argv[1]} is not supported."));
         }

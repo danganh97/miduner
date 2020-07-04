@@ -2,13 +2,11 @@
 
 namespace Main\Http;
 
+use Auth;
 use Main\Services\File;
-use Main\Traits\Instance;
 
-abstract class Request
+class Request
 {
-    use Instance;
-
     public function __construct()
     {
         foreach(self::getRequest() as $key => $value){
@@ -24,7 +22,7 @@ abstract class Request
      *
      * @make array $request
      */
-    public static function getRequest()
+    public function getRequest()
     {
         return array_merge($_REQUEST, array_map(function ($file) {
             return new File($file);
@@ -36,7 +34,7 @@ abstract class Request
      *
      * @return array $request
      */
-    public static function all()
+    public function all()
     {
         return self::getRequest();
     }
@@ -55,7 +53,7 @@ abstract class Request
      * @param string $input
      * @return string input value
      */
-    public static function input($input)
+    public function input($input)
     {
         return isset(self::getRequest()[$input]) ? self::getRequest()[$input] : null;
     }
@@ -77,7 +75,7 @@ abstract class Request
      * @param array $input
      * @return array string input value
      */
-    public static function only($array_input)
+    public function only($array_input)
     {
         foreach (self::getRequest() as $name => $value) {
             if (in_array($name, $array_input)) {
@@ -93,7 +91,7 @@ abstract class Request
      * @param array $input
      * @return array string input value
      */
-    public static function except($array_input)
+    public function except($array_input)
     {
         foreach (self::getRequest() as $name => $value) {
             if (!in_array($name, $array_input)) {
@@ -109,6 +107,14 @@ abstract class Request
     public function headers()
     {
         return (object) getallheaders();
+    }
+
+    /**
+     * Get user from request
+     */
+    public function user()
+    {
+        return Auth::user();
     }
 
     public function __set($name, $value)

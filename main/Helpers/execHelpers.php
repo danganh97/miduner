@@ -229,7 +229,7 @@ if (!function_exists('execMakeController')) {
         $fullDir = 'app/Http/Controllers/';
         if (count($paseController) > 1) {
             $controller = array_pop($paseController);
-            $namespace = implode("\\", $paseController) . ';';
+            $namespace = '\\' . implode("\\", $paseController) . ';';
             foreach ($paseController as $dir) {
                 $fullDir .= "{$dir}";
                 if (is_dir($fullDir) !== 1) {
@@ -265,7 +265,7 @@ if (!function_exists('execMakeModel')) {
         $fullDir = 'app/Models/';
         if (count($paseModel) > 1) {
             $model = array_pop($paseModel);
-            $namespace = implode("\\", $paseModel) . ';';
+            $namespace = '\\' . implode("\\", $paseModel) . ';';
             foreach ($paseModel as $dir) {
                 $fullDir .= "{$dir}";
                 if (is_dir($fullDir) !== 1) {
@@ -311,6 +311,43 @@ if (!function_exists('execMakeMigration')) {
             (new Main\Colors)->printSuccess("Created Table {$table}");
         } else {
             (new Main\Colors)->printWarning("Table {$needleTable} already exists");
+        }
+        return true;
+    }
+}
+
+
+if (!function_exists('execMakeRequest')) {
+    function execMakeRequest($request)
+    {
+        $paseRequest = explode('/', $request);
+        $namespace = ';';
+        $fullDir = 'app/Http/Requests/';
+        if (count($paseRequest) > 1) {
+            $request = array_pop($paseRequest);
+            $namespace = '\\' . implode("\\", $paseRequest) . ';';
+            foreach ($paseRequest as $dir) {
+                $fullDir .= "{$dir}";
+                if (is_dir($fullDir) !== 1) {
+                    mkdir($fullDir, 0777, true);
+                    $fullDir .= '/';
+                }
+            }
+        }
+        $defaultRequestPath = dirname(__FILE__) . '/Init/request.txt';
+        $defaultRequest = file_get_contents($defaultRequestPath);
+        $defaultRequest = str_replace(':request', $request, $defaultRequest);
+        $defaultRequest = str_replace(':namespace', $namespace, $defaultRequest);
+        $defaultRequest = str_replace(':Request', ucfirst($request), $defaultRequest);
+        $name = "{$request}.php";
+        $needleRequest = "{$fullDir}$name";
+        if (!file_exists($needleRequest)) {
+            $myfile = fopen($needleRequest, "w") or die("Unable to open file!");
+            fwrite($myfile, $defaultRequest);
+            fclose($myfile);
+            (new Main\Colors)->printSuccess("Created Request {$request}");
+        } else {
+            (new Main\Colors)->printWarning("Request {$needleRequest} already exists");
         }
         return true;
     }
