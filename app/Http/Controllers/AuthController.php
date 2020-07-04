@@ -39,6 +39,8 @@ class AuthController extends Controller
 
     /**
      * Get current user
+     * 
+     * @return JsonResponse
      */
     public function getCurrentUser(Request $request)
     {
