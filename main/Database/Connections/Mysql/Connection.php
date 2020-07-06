@@ -1,6 +1,6 @@
 <?php
 
-namespace Main\Database;
+namespace Main\Database\Connections\Mysql;
 
 use App\Http\Exceptions\Exception;
 use \PDO;

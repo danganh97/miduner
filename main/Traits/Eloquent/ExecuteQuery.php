@@ -2,7 +2,7 @@
 
 namespace Main\Traits\Eloquent;
 
-use Main\Database\Connection;
+use Main\Database\Connections\Mysql\Connection;
 use Main\Eloquent\ModelBindingObject;
 use Main\Http\Exceptions\AppException;
 use PDO;
@@ -231,7 +231,7 @@ trait ExecuteQuery
     public function request($sql)
     {
         try {
-            $connection = app()->make('connection');
+            $connection = app()->make('mysqlConnection');
             $object = $connection->prepare($sql);
             $this->bindingParams($object);
             $object->execute();

@@ -25,9 +25,15 @@ return [
     ],
     
     'providers' => [
-        Main\Services\Providers\EntityServiceProvider::class,
         Main\Hashing\HashServiceProvider::class,
         Main\Auth\AuthenticationServiceProvider::class,
+        Main\Database\QueryBuilder\QueryBuilderServiceProvider::class,
+        Main\Routing\RouteServiceProvider::class,
+        Main\Http\RequestServiceProvider::class,
+        Main\Routing\Controller\ControllerServiceProvider::class,
+        Main\Supports\Response\DataResponseServiceProvider::class,
+        Main\Session\SessionServiceProvider::class,
+        Main\Database\Connections\ConnectionServiceProvider::class,
 
         App\Providers\AppServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,

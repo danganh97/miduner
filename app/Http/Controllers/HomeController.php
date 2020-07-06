@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\TestRequestFile;
 use App\Repositories\User\UserInterface;
 use Request;
+use DB;
 
 class HomeController extends Controller
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Main;
+namespace Main\Session;
 session_start();
 class Session
 {

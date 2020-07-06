@@ -2,7 +2,7 @@
 
 namespace Main\Routing;
 
-use Main\Eloquent\Controller;
+use Controller;
 
 class HandleRoute
 {
