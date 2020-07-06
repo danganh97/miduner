@@ -25,12 +25,13 @@ class AppException extends Exception
     {
         $this->exception = $exception;
         $header = getallheaders();
-        if ($header['Accept'] == 'application/json') {
+        if (isset($header['Accept']) && $header['Accept'] == 'application/json' || isset($header['Content-Type']) && $header['Content-Type'] == 'application/json') {
             return response()->json([
                 'status' => false,
                 'message' => $exception->getMessage()
             ], $this->code);
         }
+        header('Content-Type: text/html');
         $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');
         $title = $exception->getMessage();
         ob_start();

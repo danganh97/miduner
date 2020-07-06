@@ -8,6 +8,7 @@
  */
 
 define('MIDUNER_START', microtime(true));
+header('Content-Type: text/html');
 
 /*
 |--------------------------------------------------------------------------

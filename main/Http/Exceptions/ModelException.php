@@ -20,12 +20,13 @@ class ModelException extends Exception
     {
         $this->exception = $exception;
         $header = getallheaders();
-        if ($header['Accept'] == 'application/json') {
+        if ($header['Accept'] == 'application/json' || $header['Content-Type'] == 'application/json') {
             return response()->json([
                 'status' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], $exception->getCode());
         }
+        header('Content-Type: text/html');
         $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');
         $title = 'Model Exception';
         ob_start();

@@ -11,15 +11,14 @@ abstract class Middleware
     private $params;
     private $callback;
 
+    public abstract function handle(Closure $callback, $action, $params);
+
     public function __construct(Compile $callback, $action, $params = null)
     {
         $this->callback = $callback;
         $this->action = $action;
         $this->params = $params;
-        if (method_exists($this, 'handle')) {
-            return call_user_func_array([$this, 'handle'], [$callback, $action, $params]);
-        }
-        throw new Exception("Method handle not exists.");
+        return call_user_func_array([$this, 'handle'], [$callback, $action, $params]);
     }
 
     protected function next($callback = null, $action = null, $params = null)

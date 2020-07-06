@@ -17,7 +17,7 @@ class HomeController extends Controller
 
     public function home(Request $request, $id)
     {
-        return view('pages/home', compact('users'));
+        return view('pages/home');
     }
 
     public function testPostFile(TestRequestFile $request)

@@ -24,12 +24,13 @@ class ValidateException extends Exception
     {
         $this->exception = $exception;
         $header = getallheaders();
-        if ($header['Accept'] == 'application/json') {
+        if ($header['Accept'] == 'application/json' || $header['Content-Type'] == 'application/json') {
             return response()->json([
                 'status' => false,
                 'message' => app('fails')
             ], 422);
         }
+        header('Content-Type: text/html');
         $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');
         $title = $exception->getMessage();
         ob_start();
