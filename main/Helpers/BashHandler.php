@@ -98,7 +98,7 @@ class BashHandler
                  * @author   Dang Anh <danganh.dev@gmail.com>
                  */
                 $config = require_once './cache/app.php';
-                new Autoload($config);
+                new Main\Autoload($config);
 
             }
         }

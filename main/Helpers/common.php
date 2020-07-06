@@ -1,7 +1,7 @@
 <?php
 
 use Main\Http\Exceptions\AppException;
-use Main\Application;
+use Main\Container;
 
 if (!function_exists('redirect')) {
     function redirect($url)
@@ -201,9 +201,9 @@ if (!function_exists('app')) {
     function app($entity = null)
     {
         if(is_null($entity)) {
-            return Application::getInstance();
+            return Container::getInstance();
         }
-        return Application::getInstance()->make($entity);
+        return Container::getInstance()->make($entity);
     }
 }
 

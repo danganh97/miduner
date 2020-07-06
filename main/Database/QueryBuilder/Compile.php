@@ -2,7 +2,6 @@
 
 namespace Main\Database\QueryBuilder;
 
-use App\Http\Exceptions\Exception;
 use Main\Eloquent\Model;
 use Main\Http\Exceptions\AppException;
 
@@ -12,8 +11,8 @@ class Compile
     {
         try {
             return $distinct ? "SELECT DISTINCT " : "SELECT ";
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        } catch (AppException $e) {
+            throw new AppException($e->getMessage());
         }
     }
 
@@ -21,8 +20,8 @@ class Compile
     {
         try {
             return is_array($columns) ? implode(', ', $columns) : '*';
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+        } catch (AppException $e) {
+            throw new AppException($e->getMessage());
         }
     }
 

@@ -2,7 +2,7 @@
 
 namespace Main\Database\Connections\Mysql;
 
-use App\Http\Exceptions\Exception;
+use Main\Http\Exceptions\AppException;
 use \PDO;
 use \PDOException;
 
@@ -22,7 +22,7 @@ class Connection
             $password = $this->config['password'];
             $this->pdo = new PDO("$connection:host=$host;port=$port;dbname=$database_name", $username, $password, null);
         } catch (\PDOException $e) {
-            throw new Exception($e->getMessage());
+            throw new AppException($e->getMessage());
         }
     }
 
@@ -42,7 +42,7 @@ class Connection
             return $this->pdo;
         } catch (PDOException $e) {
             $this->pdo->rollBack();
-            throw new Exception($e->getMessage());
+            throw new AppException($e->getMessage());
         }
     }
 }

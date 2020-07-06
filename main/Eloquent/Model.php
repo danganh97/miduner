@@ -4,8 +4,8 @@ namespace Main\Eloquent;
 
 use Main\Traits\Instance;
 use Main\Traits\Eloquent\With;
-use App\Http\Exceptions\Exception;
 use DB;
+use Main\Http\Exceptions\AppException;
 use Main\Traits\Eloquent\GetAttribute;
 
 abstract class Model
@@ -84,7 +84,7 @@ abstract class Model
     {
         foreach ($this->casts as $key => $value) {
             if (!in_array($key, $this->fillable)) {
-                throw new Exception("The attribute $key not exists in fillable.");
+                throw new AppException("The attribute $key not exists in fillable.");
             }
             switch ($value) {
                 case 'int':

@@ -63,10 +63,11 @@ $config = require __DIR__ . '/../cache/app.php';
 |
 */
 
-new Autoload($config);
+
+new Main\Autoload($config);
 
 $app = new Main\Application($config);
 
 $app->run();
 
-$app->terminate();
+// $app->terminate();

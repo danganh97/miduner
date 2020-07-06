@@ -7,14 +7,13 @@ return [
     'key' => env('APP_KEY', ''),
     'layout' => env('MAIN_LAYOUT', 'master'),
     'autoload' => [
-        'main/Route.php',
         'helpers/helpers.php',
         'routes/routes.php',
     ],
 
     'aliases' => [
-        'App' => Main\App::class,
-        'Route' => Main\Route::class,
+        'App' => Main\Supports\Facades\App::class,
+        'Route' => Main\Supports\Facades\Route::class,
         'DB' => Main\Supports\Facades\QueryBuilder::class,
         'AppException' => Main\Http\Exceptions\AppException::class,
         'Session' => Main\Supports\Facades\Session::class,
@@ -34,6 +33,7 @@ return [
         Main\Supports\Response\DataResponseServiceProvider::class,
         Main\Session\SessionServiceProvider::class,
         Main\Database\Connections\ConnectionServiceProvider::class,
+        Main\Routing\RouteServiceProvider::class,
 
         App\Providers\AppServiceProvider::class,
         App\Providers\RepositoryServiceProvider::class,

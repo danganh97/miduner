@@ -4,7 +4,7 @@ namespace Main\Routing;
 
 use Main\HandleRoute;
 
-class Compare
+class HandleMatched
 {
     public function __construct($routeParams, $requestParams, $action, $middleware)
     {
@@ -18,7 +18,7 @@ class Compare
         }
         if ($pazeREQUEST === $pazeROUTE) {
             app()->singleton('routeFlag', true);
-            return new Handle($routeParams, $requestParams, $action, $middleware);
+            return new NextPasses($routeParams, $requestParams, $action, $middleware);
         }
     }
 }

@@ -1,21 +1,62 @@
 <?php
 
+namespace Main;
+
 use Main\Services\Providers\EntityServiceProvider;
 
 class Autoload
 {
+    /**
+     * Root of application
+     * @var string $root
+     */
     private $root;
-    private $autoload;
+
+    /**
+     * List of autoload files
+     * @var array $autoload
+     */
+    public $autoload;
+
+    /**
+     * Type of running server
+     * @var string $server
+     */
     private $server;
+
+    /**
+     * List of aliases
+     * @var array $aliases
+     */
     private $aliases;
 
+    /**
+     * Instance application autoload
+     * @var $instance
+     */
+    private static $instance;
+
+    /**
+     * Initial constructor autoload
+     */
     public function __construct($config)
     {
+        self::$instance = $this;
         $this->registerAutoload();
         $this->catchExceptionFatal();
         $this->setConfig($config);
-        $this->autoloadFile();
         $this->checkAppKey($config['key']);
+    }
+
+    /**
+     * Get instance of autoload
+     */
+    public static function getInstance()
+    {
+        if(!self::$instance) {
+            die('App not loaded');
+        }
+        return self::$instance;
     }
 
     /**
@@ -92,7 +133,7 @@ class Autoload
      *
      * @return void
      */
-    private function autoloadFile()
+    public function autoloadFile()
     {
         try {
             foreach ($this->defaultFile() as $file) {

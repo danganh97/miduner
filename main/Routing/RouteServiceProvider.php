@@ -14,7 +14,7 @@ class RouteServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->singleton('route', function () {
-            return new \Main\Route;
+            return new \Main\Routing\Route;
         });
     }
 }

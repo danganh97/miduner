@@ -2,9 +2,9 @@
 
 namespace Main\Routing;
 
-use Http\Exceptions\Exception;
+use Main\Http\Exceptions\AppException;
 
-class Handle
+class NextPasses
 {
     public function __construct($routeParams, $requestParams, $action, $middleware)
     {
@@ -23,7 +23,7 @@ class Handle
         } else {
             $action = isset($action[1]) ? $action[1] : $action;
             $action = is_array($action) && count($action) == 1 ? $action[0] : $action;
-            throw new Exception("The $action doesn't exists !");
+            throw new AppException("The $action doesn't exists !");
         }
     }
 }

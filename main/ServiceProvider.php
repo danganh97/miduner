@@ -2,7 +2,7 @@
 
 namespace Main;
 
-use Main\Application;
+use Main\Container;
 
 abstract class ServiceProvider
 {
@@ -10,7 +10,7 @@ abstract class ServiceProvider
 
     public function __construct()
     {
-        $this->app = Application::getInstance();
+        $this->app = Container::getInstance();
     }
 
     abstract public function boot();
