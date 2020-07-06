@@ -2,6 +2,8 @@
 
 namespace Main;
 
+use Main\Http\Exceptions\AppException;
+
 class Autoload
 {
     /**
@@ -163,7 +165,7 @@ class Autoload
         if (file_exists($fullUrl)) {
             require_once $fullUrl;
         } else {
-            throw new \Exception("File {$fullUrl} doesn't exists.");
+            throw new AppException("File {$fullUrl} doesn't exists.");
         }
     }
 
