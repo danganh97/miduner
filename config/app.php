@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'server' => env('APP_SERVER', 'windows'),
     'base' => env('APP_BASE',  dirname(dirname(__FILE__))),
     'url' => env('APP_URL', '127.0.0.1:8000'),
     'key' => env('APP_KEY', ''),

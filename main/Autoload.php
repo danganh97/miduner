@@ -2,8 +2,6 @@
 
 namespace Main;
 
-use Main\Services\Providers\EntityServiceProvider;
-
 class Autoload
 {
     /**
@@ -17,12 +15,6 @@ class Autoload
      * @var array $autoload
      */
     public $autoload;
-
-    /**
-     * Type of running server
-     * @var string $server
-     */
-    private $server;
 
     /**
      * List of aliases
@@ -53,7 +45,7 @@ class Autoload
      */
     public static function getInstance()
     {
-        if(!self::$instance) {
+        if (!self::$instance) {
             die('App not loaded');
         }
         return self::$instance;
@@ -69,7 +61,6 @@ class Autoload
     {
         $this->root = $config['base'];
         $this->autoload = $config['autoload'];
-        $this->server = $config['server'];
         $this->aliases = $config['aliases'];
     }
 
@@ -94,7 +85,7 @@ class Autoload
         if (isset($this->aliases[$class])) {
             return $this->loadWithAlias($class);
         }
-        switch ($this->server) {
+        switch ($this->getOS()) {
             case 'linux':
             case 'macosx':
                 $file = $this->getUnixPath($class);
@@ -102,8 +93,23 @@ class Autoload
             case 'windows':
                 $file = $this->getWindowsPath($class);
                 break;
+            default:
+                die('Unsupported OS');
         }
         $this->requireAfterCheckExists($file);
+    }
+
+    /**
+     * Get OS specific
+     */
+    public function getOS()
+    {
+        switch (true) {
+            case stristr(PHP_OS, 'DAR'): return 'macosx';
+            case stristr(PHP_OS, 'WIN'): return 'windows';
+            case stristr(PHP_OS, 'LINUX'): return 'linux';
+            default:return 'unknown';
+        }
     }
 
     /**
@@ -164,7 +170,7 @@ class Autoload
     /**
      * Load with aliases
      * @param string $class
-     * 
+     *
      * @return void
      */
     private function loadWithAlias($class)
