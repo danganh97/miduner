@@ -91,6 +91,7 @@ class BashHandler
                 && strtolower($this->argv[1]) != 'key:'
             ) {
                 require_once './main/Autoload.php';
+                require_once './main/Application.php';
                 /**
                  * Miduner - A PHP Framework For Amateur
                  *
@@ -99,7 +100,7 @@ class BashHandler
                  */
                 $config = require_once './cache/app.php';
                 new Main\Autoload($config);
-
+                new Main\Application($config);
             }
         }
     }

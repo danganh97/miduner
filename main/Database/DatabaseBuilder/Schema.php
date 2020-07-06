@@ -2,7 +2,6 @@
 
 namespace Main\Database\DatabaseBuilder;
 
-use Main\Database\Connection;
 use Main\Http\Exceptions\AppException;
 use Main\Supports\Traits\MigrateBuilder;
 

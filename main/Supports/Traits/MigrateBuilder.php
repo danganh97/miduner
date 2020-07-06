@@ -3,7 +3,6 @@
 namespace Main\Supports\Traits;
 
 use Main\Colors;
-use Main\Database\Connection;
 use Main\Database\DatabaseBuilder\Compile;
 use Main\Database\DatabaseBuilder\ColumnBuilder;
 
@@ -24,7 +23,7 @@ trait MigrateBuilder
                 }
             }
             $createTableSql .= ');';
-            (new Connection)->getConnection()->query($createTableSql);
+            app()->make('mysqlConnection')->query($createTableSql);
         } catch (\PDOException $e) {
             (new Colors)->printError($e->getMessage());
         }
@@ -45,7 +44,7 @@ trait MigrateBuilder
                 }
             }
             $createTableSql .= ');';
-            (new Connection)->getConnection()->query($createTableSql);
+            app()->make('mysqlConnection')->query($createTableSql);
         } catch (\PDOException $e) {
             (new Colors)->printError($e->getMessage());
         }
@@ -55,7 +54,7 @@ trait MigrateBuilder
     {
         try {
             $dropTableSql = "DROP TABLE $table";
-            (new Connection)->getConnection()->query($dropTableSql);
+            app()->make('mysqlConnection')->query($dropTableSql);
         } catch (\PDOException $e) {
             (new Colors)->printError($e->getMessage());
         }
@@ -65,7 +64,7 @@ trait MigrateBuilder
     {
         try {
             $dropTableSql = "DROP TABLE IF EXISTS $table";
-            (new Connection)->getConnection()->query($dropTableSql);
+            app()->make('mysqlConnection')->query($dropTableSql);
         } catch (\PDOException $e) {
             (new Colors)->printError($e->getMessage());
         }
@@ -75,7 +74,7 @@ trait MigrateBuilder
     {
         try {
             $dropTableSql = "TRUNCATE $table";
-            (new Connection)->getConnection()->query($dropTableSql);
+            app()->make('mysqlConnection')->query($dropTableSql);
         } catch (\PDOException $e) {
             (new Colors)->printError($e->getMessage());
         }
