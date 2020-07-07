@@ -25,8 +25,11 @@ abstract class Model
     public function __construct()
     {
         $this->callServiceAppends();
+        
         $this->callServiceCasts();
+        
         $this->callServiceGetAttributes();
+        
         $this->callServiceWithes();
     }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use DB;
+use Main\Database\QueryBuilder\QueryBuilder;
 use Main\Eloquent\Authenticate;
 
 class User extends Authenticate
@@ -45,6 +46,16 @@ class User extends Authenticate
             'facebook' => 'facebook.com' . '/' . $this->user_id,
             'instagram' => 'instagram.com'
         ];
+    }
+
+    public function scopeMe(QueryBuilder $query)
+    {
+        return $query->where('user_id', '<>', 3099);
+    }
+
+    public function scopeActive(QueryBuilder $query)
+    {
+        return $query->where('user_id', '<>', 1);
     }
 
     public function company()

@@ -23,8 +23,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         try {
-            $users = User::paginate();
-            return $this->respond($users);
+            $users = $this->userRepository->me()->active()->take(10)->get();
             return view('users/index', compact('users'));
         } catch (AppException $e) {
             throw new AppException($e->getMessage());
