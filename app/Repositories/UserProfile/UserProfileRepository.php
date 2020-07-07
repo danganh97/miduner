@@ -12,9 +12,4 @@ class UserProfileRepository extends Repository implements UserProfileInterface
         return UserProfile::class;
     }
 
-    public function ss()
-    {
-        return $this->model->get();
-    }
-
 }

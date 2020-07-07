@@ -3,9 +3,9 @@
 namespace Main\Routing;
 
 use App\Http\Kernel;
-use Main\Http\Exceptions\AppException;
-use Main\Http\FormRequest;
 use Main\Http\Middleware;
+use Main\Http\FormRequest;
+use Main\Http\Exceptions\AppException;
 
 class Compile
 {
@@ -54,9 +54,7 @@ class Compile
         }
         if (class_exists($controller)) {
             $params = $this->execRequest($controller, $methodName, $params);
-            $initParams = $this->execRequest($controller, '__construct', []);
-            $reflector = new \ReflectionClass($controller);
-            $object = $reflector->newInstanceArgs($initParams);
+            $object = $this->_injectDependency($controller);
             if (method_exists($controller, $methodName)) {
                 return call_user_func_array([$object, $methodName], $params);
             }
@@ -126,15 +124,35 @@ class Compile
      */
     private function _executeValidation($object)
     {
-        $bindings = app()->getBindings();
-        if(isset($bindings[$object])) {
-            $object = $bindings[$object];
+        try {
+            $bindings = app()->getBindings();
+            if (isset($bindings[$object])) {
+                $object = $bindings[$object];
+            }
+
+            $object = $this->_injectDependency($object);
+            if ($object instanceof FormRequest) {
+                $object->executeValidate();
+            }
+            return $object;
+        } catch (\ArgumentCountError $e) {
+            throw new AppException($e->getMessage());
         }
-        
-        $object = new $object;
-        if ($object instanceof FormRequest) {
-            $object->executeValidate();
+    }
+
+    /**
+     * Get object after injection dependencies
+     * @param string $object
+     * 
+     * @return Closure
+     */
+    private function _injectDependency(string $object)
+    {
+        $reflector = new \ReflectionClass($object);
+        if (!$reflector->hasMethod('__construct')) {
+            return new $object;
         }
-        return $object;
+        $initParams = $this->execRequest($object, '__construct', []);
+        return $reflector->newInstanceArgs($initParams);
     }
 }
