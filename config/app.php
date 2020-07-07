@@ -17,7 +17,6 @@ return [
         'AppException' => Main\Http\Exceptions\AppException::class,
         'Session' => Main\Supports\Facades\Session::class,
         'Request' => Main\Supports\Facades\Request::class,
-        'Repository' => Main\Supports\Facades\Repository::class,
         'Hash' => Main\Supports\Facades\Hash::class,
         'Auth' => Main\Supports\Facades\Auth::class,
     ],

@@ -31,14 +31,13 @@ abstract class AppRepository implements RepositoryInterface
      */
     public function makeModel()
     {
-        if (!app()->make($this->model())) {
-            app()->singleton($this->model(), function () {
-                return $this->model()::getInstance();
+        $model = (string) $this->model();
+        if (!app()->make($model)) {
+            app()->singleton($model, function () use ($model) {
+                return new $model;
             });
         }
-        $this->model = app()->make(
-            $this->model()
-        );
+        $this->model = app()->make($model);
     }
 
     /**

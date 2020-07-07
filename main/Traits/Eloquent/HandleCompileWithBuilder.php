@@ -27,9 +27,13 @@ trait HandleCompileWithBuilder
                 $object->with = $args && is_array($args[0]) ? $args[0] : $args;
                 return $object;
             default:
+                if(method_exists($object, $method)) {
+                    return $object->$method(...$args);
+                }
                 $buildScope = $this->_getScopeMethod($method);
-                if (method_exists($modelMeta['calledClass'], $buildScope)) {
-                    return $modelMeta['calledClass']::getInstance()->$buildScope($object);
+                $objectModel = new $modelMeta['calledClass'];
+                if (method_exists($objectModel, $buildScope)) {
+                    return $objectModel->$buildScope($object);
                 }
                 throw new AppException("Method {$method} does not exist");
         }
@@ -39,7 +43,7 @@ trait HandleCompileWithBuilder
     {
         $buildScope = $this->_getScopeMethod($method);
         array_unshift($args, $this);
-        return $this->calledFromModel::getInstance()->$buildScope(...$args);
+        return (new $this->calledFromModel)->$buildScope(...$args);
     }
 
     private function _getScopeMethod($method)

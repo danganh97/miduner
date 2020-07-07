@@ -47,7 +47,7 @@ abstract class Model
 
     public static function __callStatic($method, $args)
     {
-        $static = static::getInstance();
+        $static = new static;
         $table = $static->table();
         $modelMeta = [
             'primaryKey' => $static->primaryKey(),
@@ -60,7 +60,7 @@ abstract class Model
 
     public function __call($method, $args)
     {
-        $static = static::getInstance();
+        $static = new static;
         $table = $static->table();
         $modelMeta = [
             'primaryKey' => $static->primaryKey(),

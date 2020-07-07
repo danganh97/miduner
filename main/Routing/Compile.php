@@ -127,12 +127,10 @@ class Compile
     private function _executeValidation($object)
     {
         $bindings = app()->getBindings();
-        foreach ($bindings as $interface => $class) {
-            if ($object === $interface) {
-                $object = $class;
-                break;
-            }
+        if(isset($bindings[$object])) {
+            $object = $bindings[$object];
         }
+        
         $object = new $object;
         if ($object instanceof FormRequest) {
             $object->executeValidate();

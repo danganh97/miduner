@@ -50,12 +50,12 @@ class User extends Authenticate
 
     public function scopeMe(QueryBuilder $query)
     {
-        return $query->where('user_id', '<>', 3099);
+        return $query->where('user_id', '=', 3099);
     }
 
     public function scopeActive(QueryBuilder $query)
     {
-        return $query->where('user_id', '<>', 1);
+        return $query->where('email', '=', 'admin@gmail.com');
     }
 
     public function company()

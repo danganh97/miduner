@@ -2,21 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use Request;
 use App\Http\Requests\TestRequestFile;
 use App\Repositories\User\UserInterface;
-use Request;
-use DB;
+use App\Repositories\UserProfile\UserProfileInterface;
 
 class HomeController extends Controller
 {
     public $userRepository;
+    public $profileRepository;
 
-    public function __construct(UserInterface $userRepository)
-    {
+    public function __construct(
+        UserInterface $userRepository,
+        UserProfileInterface $profileRepository
+    ) {
         $this->userRepository = $userRepository;
+        $this->profileRepository = $profileRepository;
     }
 
-    public function home(Request $request, $id)
+    public function home(Request $request)
     {
         return view('pages/home');
     }

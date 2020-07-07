@@ -104,7 +104,7 @@ trait ExecuteQuery
     public function create(array $data)
     {
         if (!empty($this->calledFromModel)) {
-            $object = $this->calledFromModel::getInstance();
+            $object = new $this->calledFromModel;
             $fillable = $object->fillable();
             $hidden = $object->hidden();
             $columns = array_merge($fillable, $hidden);
@@ -293,7 +293,7 @@ trait ExecuteQuery
 
     private function getCalledModelInstance()
     {
-        return $this->calledFromModel::getInstance();
+        return new $this->calledFromModel;
     }
 
     /**

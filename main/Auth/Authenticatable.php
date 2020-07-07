@@ -43,8 +43,9 @@ class Authenticatable implements Authentication
      */
     public function attempt($options = [])
     {
-        $columnPassword = $this->model::getInstance()->password();
-        $table = $this->model::getInstance()->table();
+        $model = new $this->model;
+        $columnPassword = $model->password();
+        $table = $model->table();
         $paramPassword = $options[$columnPassword];
         unset($options[$columnPassword]);
         $object = QueryBuilder::table($table)->where($options)->first();
