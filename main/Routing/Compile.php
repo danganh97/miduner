@@ -53,8 +53,8 @@ class Compile
             $controller = 'App\\Http\\Controllers\\' . $className;
         }
         if (class_exists($controller)) {
-            $params = $this->execRequest($controller, $methodName, $params);
-            $object = $this->_injectDependency($controller);
+            $params = $this->buildNeedleInjections($controller, $methodName, $params);
+            $object = $this->initialInstance($controller);
             if (method_exists($controller, $methodName)) {
                 return call_user_func_array([$object, $methodName], $params);
             }
@@ -94,7 +94,7 @@ class Compile
      *
      * @return array
      */
-    private function execRequest($controller, $methodName, $params)
+    private function buildNeedleInjections($controller, $methodName, $params)
     {
         try {
             $ref = new \ReflectionMethod($controller, $methodName);
@@ -104,7 +104,7 @@ class Compile
                 $refParam = new \ReflectionParameter([$controller, $methodName], $key);
                 if (is_object($refParam->getClass())) {
                     $object = $refParam->getClass()->getName();
-                    $array[$param->getName()] = $this->_executeValidation($object);
+                    $array[$param->getName()] = $this->buildInjectInstance($object);
                 } else {
                     array_push($array, array_shift($params));
                 }
@@ -122,7 +122,7 @@ class Compile
      *
      * @return Closure
      */
-    private function _executeValidation($object)
+    private function buildInjectInstance($object)
     {
         try {
             $bindings = app()->getBindings();
@@ -130,7 +130,7 @@ class Compile
                 $object = $bindings[$object];
             }
 
-            $object = $this->_injectDependency($object);
+            $object = $this->initialInstance($object);
             if ($object instanceof FormRequest) {
                 $object->executeValidate();
             }
@@ -146,13 +146,13 @@ class Compile
      * 
      * @return Closure
      */
-    private function _injectDependency(string $object)
+    private function initialInstance(string $object)
     {
         $reflector = new \ReflectionClass($object);
         if (!$reflector->hasMethod('__construct')) {
             return new $object;
         }
-        $initParams = $this->execRequest($object, '__construct', []);
+        $initParams = $this->buildNeedleInjections($object, '__construct', []);
         return $reflector->newInstanceArgs($initParams);
     }
 }
