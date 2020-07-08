@@ -1,5 +1,2 @@
-- Tìm hiểu về Dependency Injection, Inversion of Control (IoC) và bindings dựa trên PHP Reflection (deeply nested class dependencies)
-- QueryBuilder trong Laravel hoạt động như thế nào ?
 - Routing, middleware và FormRequest injection trong Laravel
 - Artisan command trong Laravel hoạt động như thế nào ? Thử viết lại artisan của Laravel
-- Accessors & Mutators trong Laravel
