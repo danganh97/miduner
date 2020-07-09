@@ -3,12 +3,17 @@
 namespace Main\Routing;
 
 use App\Http\Kernel;
-use Main\Http\Middleware;
+use ReflectionClass;
+use ReflectionMethod;
+use ArgumentCountError;
+use ReflectionException;
+use ReflectionParameter;
 use Main\Http\FormRequest;
 use Main\Http\Exceptions\AppException;
 
 class Compile
 {
+    const DEFAULT_SPECIFIC = '@';
     /**
      * Initial constructor
      * @param string/array $action
@@ -33,7 +38,7 @@ class Compile
     public function handle($action, $params)
     {
         if (!is_array($action)) {
-            $action = explode('@', $action);
+            $action = explode(self::DEFAULT_SPECIFIC, $action);
         }
         switch (count($action)) {
             case 2:
@@ -53,8 +58,8 @@ class Compile
             $controller = 'App\\Http\\Controllers\\' . $className;
         }
         if (class_exists($controller)) {
-            $params = $this->buildNeedleInjections($controller, $methodName, $params);
             $object = $this->initialInstance($controller);
+            $params = $this->resolveDependencies($controller, $methodName, $params);
             if (method_exists($controller, $methodName)) {
                 return call_user_func_array([$object, $methodName], $params);
             }
@@ -77,10 +82,9 @@ class Compile
         if (count(explode('\\', $middleware)) > 1) {
             new $middleware($this, $action, $params);
         } else {
-            foreach ((new Kernel)->routeMiddlewares as $key => $value) {
-                if ($middleware == $key) {
-                    return new $value($this, $action, $params);
-                }
+            $kernelMiddlewares = (new Kernel)->routeMiddlewares;
+            if (isset($kernelMiddlewares[$middleware])) {
+                return new $$kernelMiddlewares[$middleware]($this, $action, $params);
             }
             throw new AppException("Middleware {$middleware} doesn't exists");
         }
@@ -94,23 +98,23 @@ class Compile
      *
      * @return array
      */
-    private function buildNeedleInjections($controller, $methodName, $params)
+    private function resolveDependencies($controller, $methodName, $params)
     {
         try {
-            $ref = new \ReflectionMethod($controller, $methodName);
+            $ref = new ReflectionMethod($controller, $methodName);
             $listParameters = $ref->getParameters();
             $array = [];
             foreach ($listParameters as $key => $param) {
-                $refParam = new \ReflectionParameter([$controller, $methodName], $key);
+                $refParam = new ReflectionParameter([$controller, $methodName], $key);
                 if (is_object($refParam->getClass())) {
                     $object = $refParam->getClass()->getName();
-                    $array[$param->getName()] = $this->buildInjectInstance($object);
+                    $array[$param->getName()] = $this->buildStacks($object);
                 } else {
                     array_push($array, array_shift($params));
                 }
             }
             return $array;
-        } catch (\ReflectionException $e) {
+        } catch (ReflectionException $e) {
             throw new AppException($e->getMessage());
         }
     }
@@ -120,9 +124,9 @@ class Compile
      * Handle validation for request
      * @param string $object
      *
-     * @return Closure
+     * @return Object
      */
-    private function buildInjectInstance($object)
+    private function buildStacks($object)
     {
         try {
             $bindings = app()->getBindings();
@@ -135,24 +139,31 @@ class Compile
                 $object->executeValidate();
             }
             return $object;
-        } catch (\ArgumentCountError $e) {
+        } catch (ArgumentCountError $e) {
             throw new AppException($e->getMessage());
         }
     }
 
     /**
      * Get object after injection dependencies
-     * @param string $object
-     * 
-     * @return Closure
+     * @param string $concrete
+     *
+     * @return mixed
      */
-    private function initialInstance(string $object)
+    private function initialInstance(string $concrete)
     {
-        $reflector = new \ReflectionClass($object);
-        if (!$reflector->hasMethod('__construct')) {
-            return new $object;
+        if ($concrete instanceof Closure) {
+            return $concrete(app());
         }
-        $initParams = $this->buildNeedleInjections($object, '__construct', []);
+        $reflector = new ReflectionClass($concrete);
+        if (!$reflector->isInstantiable()) {
+            throw new AppException("Class {$concrete} is not an instantiable !");
+        }
+        $constructor = $reflector->getConstructor();
+        if (is_null($constructor)) {
+            return new $concrete;
+        }
+        $initParams = $this->resolveDependencies($concrete, '__construct', []);
         return $reflector->newInstanceArgs($initParams);
     }
 }
