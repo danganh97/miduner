@@ -4,7 +4,7 @@ namespace Main\Traits;
 
 trait Instance
 {
-    public static $instance;
+    private static $instance;
 
     public static function getInstance()
     {

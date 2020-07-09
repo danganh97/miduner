@@ -13,7 +13,10 @@ class Routing
             $routeParams = explode('/', $route['uri']);
             if (strpos(strtolower($route['method']), strtolower($requestMethod)) !== false) {
                 if (count($requestParams) === count($routeParams)) {
-                    new HandleMatched($route['uri'], $requestUrl, $route['action'], $route['middleware']);
+                    $checking = new HandleMatched($route['uri'], $requestUrl);
+                    if ($checking->isMatched === true) {
+                        return new NextPasses($routeParams, $requestParams, $route['action'], $route['middleware']);
+                    }
                 }
             }
         }
@@ -25,7 +28,7 @@ class Routing
      */
     private function handleNotFound()
     {
-        return app('routeFlag') != true ? app()->make('controller')->render('404') : true;
+        return app()->make('controller')->render('404');
     }
 
     /**

@@ -12,7 +12,6 @@ class Application
     public function __construct($config)
     {
         $this->setRouter();
-        $this->registerGlobalConfig($config);
         $this->registerServiceProvider($config['providers']);
         $this->collectAutoload();
     }
@@ -25,17 +24,6 @@ class Application
     private function setRouter()
     {
         $this->route = new Route();
-    }
-
-    /**
-     * Register global config
-     *
-     * @return void
-     */
-    private function registerGlobalConfig($config)
-    {
-        app()->singleton('config', $config);
-        app()->singleton('route', $this->route);
     }
 
     private function registerServiceProvider($providers = [])

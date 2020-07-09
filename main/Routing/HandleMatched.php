@@ -6,7 +6,9 @@ use Main\HandleRoute;
 
 class HandleMatched
 {
-    public function __construct($routeParams, $requestParams, $action, $middleware)
+    var $isMatched = false;
+
+    public function __construct($routeParams, $requestParams)
     {
         $changeROUTE = preg_replace('/\{\w+\}/', '*', $routeParams);
         $pazeREQUEST = explode('/', $requestParams);
@@ -17,8 +19,7 @@ class HandleMatched
             }
         }
         if ($pazeREQUEST === $pazeROUTE) {
-            app()->singleton('routeFlag', true);
-            return new NextPasses($routeParams, $requestParams, $action, $middleware);
+            $this->isMatched = true;
         }
     }
 }
