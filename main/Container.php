@@ -31,6 +31,11 @@ class Container
     private $resolved = [];
 
     /**
+     * Flag check should skip middleware
+     */
+    private $shouldSkipMiddleware = false;
+
+    /**
      *
      * Make a entity
      * @param string $entity
@@ -118,7 +123,7 @@ class Container
         if (isset($this->bindings[$concrete])) {
             return $this->build($this->bindings[$concrete]);
         }
-        
+
         $reflector = new ReflectionClass($concrete);
         if (!$reflector->isInstantiable()) {
             throw new AppException("Class {$concrete} is not an instantiable !");
@@ -221,5 +226,21 @@ class Container
     public function getBindings()
     {
         return $this->bindings;
+    }
+
+    /**
+     * 
+     */
+    public function isDownForMaintenance()
+    {
+        return false;
+    }
+
+    /**
+     * Should skip global middlewares
+     */
+    public function shouldSkipMiddleware()
+    {
+        return $this->shouldSkipMiddleware;
     }
 }

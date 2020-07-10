@@ -3,7 +3,9 @@
 namespace Main\Routing;
 
 use App\Http\Kernel;
+use Main\Container;
 use Main\Http\Exceptions\AppException;
+use Main\Pipeline\Pipeline;
 
 class Compile
 {
@@ -13,14 +15,18 @@ class Compile
      * Initial constructor
      * @param string/array $action
      * @param array $params
-     * @param string $middleware
+     * @param string $middlewares
      */
-    public function __construct($action = null, array $params = null, $middleware = null)
+    public function __construct($action = null, array $params = null, $middlewares = null)
     {
-        if ($middleware != null) {
-            return $this->middlewaresHandler($middleware, $action, $params);
+        if ($middlewares != null) {
+            return (new Pipeline(Container::getInstance()))
+                ->send(app('request'))
+                ->through($middlewares)
+                ->then(function () use ($action, $params) {
+                    return $this->handle($action, $params);
+                });
         }
-        return $this->handle($action, $params);
     }
 
     /**
@@ -59,27 +65,5 @@ class Compile
             throw new AppException("Method {$controller}@{$methodName} doesn't exists !");
         }
         throw new AppException("Class {$controller} doesn't exists !");
-    }
-
-    /**
-     * Handle middleware callback
-     * @param string $middleware
-     * @param array/string $action
-     * @param array $param
-     * @return Main\Http\Middleware
-     *
-     * @throws AppException
-     */
-    public function middlewaresHandler($middleware, $action, $params)
-    {
-        if (count(explode('\\', $middleware)) > 1) {
-            new $middleware($this, $action, $params);
-        } else {
-            $kernelMiddlewares = (new Kernel)->routeMiddlewares;
-            if (isset($kernelMiddlewares[$middleware])) {
-                return new $$kernelMiddlewares[$middleware]($this, $action, $params);
-            }
-            throw new AppException("Middleware {$middleware} doesn't exists");
-        }
     }
 }

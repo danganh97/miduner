@@ -28,16 +28,15 @@ class AppException extends Exception
         if (isset($header['Accept']) && $header['Accept'] == 'application/json' || isset($header['Content-Type']) && $header['Content-Type'] == 'application/json') {
             return response()->json([
                 'status' => false,
-                'message' => $exception->getMessage()
+                'message' => $exception->getMessage(),
             ], $this->code);
         }
-        header('Content-Type: text/html');
         $layoutsException = file_get_contents($this->root . '/resources/views/Exception.php');
         $title = $exception->getMessage();
         ob_start();
         echo '<hr>';
         echo "<h1 style='color:#b0413e;font-weight:bold'>{$exception->getMessage()}</h1>";
-        echo "<h2>Error from file {$exception->getFile()} <br> in line {$exception->getLine()}</h2>";
+        echo "<h3>From {$exception->getFile()} <br> in line {$exception->getLine()}</h3>";
         echo "<hr>";
         foreach ($exception->getTrace() as $trace) {
             $file = isset($trace['file']) ? $trace['file'] : '';

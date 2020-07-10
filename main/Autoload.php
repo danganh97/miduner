@@ -33,13 +33,13 @@ class Autoload
     /**
      * Initial constructor autoload
      */
-    public function __construct($config)
+    public function __construct()
     {
         self::$instance = $this;
         $this->registerAutoload();
         $this->catchExceptionFatal();
-        $this->setConfig($config);
-        $this->checkAppKey($config['key']);
+        $this->setConfig(config('app'));
+        $this->checkAppKey(config('app.key'));
     }
 
     /**

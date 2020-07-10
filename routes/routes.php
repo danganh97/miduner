@@ -1,6 +1,6 @@
 <?php
 
-Route::get('/', [App\Http\Controllers\HomeController::class, 'home'])->name('home')->middleware(App\Http\Middlewares\Auth::class);
+Route::get('/', [App\Http\Controllers\HomeController::class, 'home'])->name('home')->middleware(['web:auth', 'checkPermission']);
 
 Route::get('/about', [App\Http\Controllers\HomeController::class, 'about'])->name('about');
 

@@ -1,7 +1,7 @@
 <?php
 
-use Main\Http\Exceptions\AppException;
 use Main\Container;
+use Main\Http\Exceptions\AppException;
 
 if (!function_exists('redirect')) {
     function redirect($url)
@@ -111,15 +111,19 @@ if (!function_exists('config')) {
             system("echo " . "file $pase[0] not found in cache.");
             exit;
         }
+        if (count($pase) === 1) {
+            $configs = include $path;
+            return $configs;
+        }
         array_shift($pase);
         $configs = include $path;
         $initValue = isset($configs[$pase[0]]) ? $configs[$pase[0]] : null;
         array_shift($pase);
-        if(empty($pase)) {
+        if (empty($pase)) {
             return $initValue;
         }
-        foreach($pase as $p) {
-            if(!$initValue[$p]) {
+        foreach ($pase as $p) {
+            if (!$initValue[$p]) {
                 die("Variable $variable not found.");
             }
             $value = $initValue = $initValue[$p];
@@ -128,7 +132,7 @@ if (!function_exists('config')) {
     }
 }
 
-if(!function_exists('trans')) {
+if (!function_exists('trans')) {
     function trans($variable, $params = [], $lang = 'en')
     {
         $variable = explode('.', $variable);
@@ -138,24 +142,24 @@ if(!function_exists('trans')) {
         $initValue = $configs[$variable[0]];
         $needValue = '';
         array_shift($variable);
-        if(empty($variable)) {
+        if (empty($variable)) {
             $needValue = $initValue;
         } else {
-            foreach($variable as $p) {
-                if(!$initValue[$p]) {
+            foreach ($variable as $p) {
+                if (!$initValue[$p]) {
                     die("Variable $variable not found.");
                 }
                 $needValue = $initValue = $initValue[$p];
             }
         }
-        foreach($params as $key => $param) {
+        foreach ($params as $key => $param) {
             $needValue = str_replace(":$key", $param, $needValue);
         }
         return $needValue;
     }
 }
 
-if(!function_exists('__')) {
+if (!function_exists('__')) {
     function __($variable, $lang = 'en')
     {
         return trans($variable, [], $lang);
@@ -200,7 +204,7 @@ if (!function_exists('toPre')) {
 if (!function_exists('app')) {
     function app($entity = null)
     {
-        if(is_null($entity)) {
+        if (is_null($entity)) {
             return Container::getInstance();
         }
         return Container::getInstance()->make($entity);
@@ -210,19 +214,19 @@ if (!function_exists('app')) {
 if (!function_exists('is_json')) {
     function is_json($argument)
     {
-        return (json_decode(json_encode($argument)) != NULL) ? true : false;
+        return (json_decode(json_encode($argument)) != null) ? true : false;
     }
 }
 
 if (!function_exists('dd')) {
     /**
      * @param mixed $x
-     * 
+     *
      * @return die
      */
     function dd()
     {
-        array_map(function($x) { 
+        array_map(function ($x) {
             print_r($x);
         }, func_get_args());
         die;
@@ -246,14 +250,14 @@ if (!function_exists('included')) {
     {
         $path = config('app.base') . '/resources/views/' . str_replace('.', '/', $path) . '.php';
         if (file_exists($path)) {
-            include($path);
+            include $path;
         } else {
             throw new AppException("File $path not found.");
         }
     }
 }
 
-if(!function_exists('auth')) {
+if (!function_exists('auth')) {
     function auth()
     {
         return app()->make('auth');

@@ -9,10 +9,10 @@ class Application
 {
     private $route;
 
-    public function __construct($config)
+    public function __construct()
     {
         $this->setRouter();
-        $this->registerServiceProvider($config['providers']);
+        $this->registerServiceProvider(config('app.providers'));
         $this->collectAutoload();
     }
 
@@ -32,16 +32,6 @@ class Application
             $provider = new $provider;
             $provider->handle();
         }
-    }
-
-    /**
-     * Run the Application
-     *
-     * @return mixed
-     */
-    public function run()
-    {
-        return $this->route->run();
     }
 
     /**

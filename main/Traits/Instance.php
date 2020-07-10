@@ -6,6 +6,11 @@ trait Instance
 {
     private static $instance;
 
+    public function __construct()
+    {
+        self::$instance = $this;
+    }
+
     public static function getInstance()
     {
         if(!static::$instance) {

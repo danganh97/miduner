@@ -3,9 +3,8 @@
 namespace App\Http\Middlewares;
 
 use Closure;
-use Main\Http\Exceptions\AppException;
 
-class Auth
+class CheckPermission
 {
     /**
      * Handle an incoming request.
@@ -18,7 +17,6 @@ class Auth
      */
     public function handle($request, Closure $next)
     {
-        throw new AppException("Not pass");
         return $next($request);
     }
 }
