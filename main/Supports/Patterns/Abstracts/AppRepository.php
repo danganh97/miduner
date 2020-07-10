@@ -27,11 +27,22 @@ abstract class AppRepository implements RepositoryInterface
     abstract public function model();
 
     /**
+     * Checking connection to database
+     */
+    final private function isConnected()
+    {
+        return app('connection')->isConnected();
+    }
+
+    /**
      * Set model
      */
     public function makeModel()
     {
-        $model = (string) $this->model();
+        if(!$this->isConnected()) {
+            app('connection')->setDriver('backup');
+        }
+        $model = $this->model();
         if (!app()->make($model)) {
             app()->singleton($model, function () use ($model) {
                 return new $model;

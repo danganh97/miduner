@@ -231,7 +231,7 @@ trait ExecuteQuery
     public function request($sql)
     {
         try {
-            $connection = app()->make('mysqlConnection');
+            $connection = app()->make('connection')->getConnection();
             $object = $connection->prepare($sql);
             $this->bindingParams($object);
             $object->execute();

@@ -67,7 +67,7 @@ trait Pagination
      */
     private function getTotalParentResources(string $sql)
     {
-        $connection = app()->make('mysqlConnection');
+        $connection = app()->make('connection')->getConnection();
         $object = $connection->prepare($sql);
         $object->execute();
         return $object->rowCount();
