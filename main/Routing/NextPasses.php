@@ -8,12 +8,10 @@ class NextPasses
 {
     public function __construct($routeParams, $requestParams, $action, $middleware)
     {
-        $pazeROUTE = explode('/', $routeParams);
-        $pazeREQUEST = explode('/', $requestParams);
         $params = [];
-        foreach ($pazeROUTE as $key => $value) {
+        foreach ($routeParams as $key => $value) {
             if (preg_match('/^{\w+}$/', $value)) {
-                $params[] = $pazeREQUEST[$key];
+                $params[] = $requestParams[$key];
             }
         }
         if (is_callable($action) && is_array($action) || is_string($action)) {
