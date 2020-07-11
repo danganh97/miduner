@@ -37,7 +37,12 @@ class ValidatePostSize
     {
         $max = $this->getPostMaxSize();
 
-        if ($max > 0 && $_SERVER['CONTENT_LENGTH'] > $max) {
+        if (
+            $max > 0
+            && $request->server() !== null
+            && isset($request->server()['CONTENT_LENGTH'])
+            && $request->server()['CONTENT_LENGTH'] > $max
+        ) {
             throw new AppException("Post Body too large, body is {$_SERVER['CONTENT_LENGTH']}");
         }
 

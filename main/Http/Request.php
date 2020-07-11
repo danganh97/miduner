@@ -117,6 +117,14 @@ class Request
         return Auth::user();
     }
 
+    /**
+     * Get request server
+     */
+    public function server()
+    {
+        return $_SERVER;
+    }
+
     public function __set($name, $value)
     {
         $this->$name = $value;

@@ -18,7 +18,7 @@ class Auth
      */
     public function handle($request, Closure $next)
     {
-        throw new AppException("Not pass");
+        // throw new AppException("Not pass");
         return $next($request);
     }
 }

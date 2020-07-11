@@ -91,7 +91,7 @@ class Connection
             $pdo->commit();
             $this->instance = $pdo;
         } catch (PDOException $e) {
-            if(!is_null($pdo)) {
+            if(isset($pdo) && !is_null($pdo)) {
                 $pdo->rollBack();
             }
             throw new AppException($e->getMessage());
