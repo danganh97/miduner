@@ -1,11 +1,10 @@
 <?php
 
-require_once './main/Colors.php';
-
 if (!function_exists('readDataViews')) {
     function readDataViews($folder)
     {
-        $dataViews = array_filter(scandir("$folder"), function ($view) {
+        $appPath = dirname(dirname(dirname(__FILE__)));
+        $dataViews = array_filter(scandir("$appPath$folder"), function ($view) {
             return $view !== '.' && $view !== '..';
         });
         foreach ($dataViews as $item) {
@@ -23,7 +22,7 @@ if (!function_exists('compileWatchingViews')) {
     {
         $folder = explode('/', $view);
         $file = array_pop($folder);
-        $folder = implode('/', $folder);
+        $folder =  implode('/', $folder);
         writeCache($folder, $file);
     }
 }
@@ -31,21 +30,24 @@ if (!function_exists('compileWatchingViews')) {
 if (!function_exists('writeCache')) {
     function writeCache($folder, $file)
     {
-        $data = file_get_contents("$folder/$file");
+        $appPath = dirname(dirname(dirname(__FILE__)));
+        $data = file_get_contents("$appPath/$folder/$file");
         $data = str_replace('{{', '<?php', $data);
         $data = str_replace('}}', '?>', $data);
-        $fullDir = 'cache/';
+        $fullDir = config('app.base') .  '/cache';
         foreach (explode('/', $folder) as $f) {
-            $fullDir .= $f;
+            if($f != '') {
+                $fullDir .= $f;
+            }
             if (is_dir($fullDir) !== 1) {
                 @mkdir($fullDir, 0777, true);
                 $fullDir .= '/';
             }
         }
-        if (!is_dir("cache/$folder")) {
-            mkdir("cache/$folder", 0777);
+        if (!is_dir($fullDir)) {
+            mkdir($fullDir, 0777);
         }
-        $myfile = fopen("cache/$folder/$file", "w") or die("Unable to open file!");
+        $myfile = fopen("$fullDir/$file", "w") or die("Unable to open file!");
         fwrite($myfile, $data);
         fclose($myfile);
     }
@@ -54,9 +56,10 @@ if (!function_exists('writeCache')) {
 if (!function_exists('execClearCache')) {
     function execClearCache()
     {
-        foreach (scandir('cache') as $file) {
+        $cachePath = __DIR__ . '/../../cache';
+        foreach (scandir($cachePath) as $file) {
             if ($file != '.' && $file != '..' && $file != '.gitignore') {
-                exec("rm -rf cache/$file");
+                exec("rm -rf $cachePath/$file");
                 // unlink("cache/$file");
             }
         }
@@ -68,7 +71,8 @@ if (!function_exists('execWriteCache')) {
     function execWriteCache()
     {
         $env = readDotENV();
-        $myfile = fopen("cache/environments.php", "w") or die("Unable to open file!");
+        $cachePath = __DIR__ . '/../../cache';
+        $myfile = fopen("$cachePath/environments.php", "w") or die("Unable to open file!");
         fwrite($myfile, "<?php\n");
         fwrite($myfile, "return array(\n");
         foreach ($env as $key => $value) {
@@ -83,17 +87,19 @@ if (!function_exists('execWriteCache')) {
 if (!function_exists('execWriteDataViews')) {
     function execWriteDataViews()
     {
-        readDataViews('resources/views');
+        $resourcePath = '/resources';
+        readDataViews("$resourcePath/views");
         (new Main\Colors)->printSuccess("Configuration cached successfully!");
     }
 }
 if (!function_exists('execWriteConfigCache')) {
     function execWriteConfigCache()
     {
+        $cachePath = dirname(dirname(dirname(__FILE__))) . '/cache';
         foreach (scandir('config') as $file) {
             if (strlen($file) > 5) {
                 $config = include './config/' . $file;
-                $myfile = fopen("cache/$file", "w") or die("Unable to open file!");
+                $myfile = fopen("$cachePath/$file", "w") or die("Unable to open file!");
                 fwrite($myfile, "<?php\n");
                 fwrite($myfile, "return array(\n");
                 foreach ($config as $key => $value) {

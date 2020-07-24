@@ -84,8 +84,8 @@ class Autoload
      */
     public function load($class)
     {
-        if (isset($this->aliases[$class])) {
-            return $this->loadWithAlias($class);
+        if (isset($this->aliases[ucfirst($class)])) {
+            return $this->loadWithAlias(ucfirst($class));
         }
         switch ($this->getOS()) {
             case 'linux':

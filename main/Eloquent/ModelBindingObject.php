@@ -93,11 +93,11 @@ final class ModelBindingObject
     /**
      * Binding one resource object
      *
-     * @param object $object
+     * @param Model $object
      *
-     * @return object
+     * @return Model
      */
-    private function bindOne(Object $object)
+    private function bindOne(Model $object)
     {
         if (isset($this->args['with']) && !empty($this->args['with'])) {
             foreach ($this->args['with'] as $with) {

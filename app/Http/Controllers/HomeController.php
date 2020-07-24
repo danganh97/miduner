@@ -18,7 +18,6 @@ class HomeController extends Controller
 
     public function home(Request $request)
     {
-        dd($this->userRepository->find(3099));
         return view('pages/home');
     }
 

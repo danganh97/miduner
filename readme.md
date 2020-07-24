@@ -26,5 +26,5 @@ The Miduner Framework is open-sourced software licensed under the [MIT license](
     cp .env.example .env
     php midun key:
     php midun config:cache
-    php midun ser
+    php midun ser or docker-compose build && docker-compose up -d
  ```

@@ -15,6 +15,7 @@ class NextPasses
             }
         }
         if (is_callable($action) && is_array($action) || is_string($action)) {
+            $middleware = is_array($middleware) ? $middleware : [$middleware];
             return new Compile($action, $params, $middleware);
         } elseif (is_callable($action)) {
             return call_user_func_array($action, $params);
