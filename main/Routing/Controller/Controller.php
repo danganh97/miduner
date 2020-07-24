@@ -30,14 +30,13 @@ class Controller
 
     public function render($view, $data = null)
     {
-        // header('Content-Type: text/html');
-        $view = 'resources/views/' . $view . '.php';
+        $view = '/resources/views/' . $view . '.php';
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
         }
         $content = $this->getViewContent($view, $data);
         if($this->master) {
-            $layoutPath = "resources/views/" . str_replace('.', '/', $this->master) . ".php";
+            $layoutPath = "/resources/views/" . str_replace('.', '/', $this->master) . ".php";
             compileWatchingViews($layoutPath);
             $fullPath = $this->app_base . '/cache/' . $layoutPath;
             if (!file_exists($fullPath)) {
@@ -58,9 +57,8 @@ class Controller
 
     public function getViewContent($view, $data = null)
     {
-        $root = $this->app_base;
         compileWatchingViews($view);
-        $path = $root . '/cache/' . $view;
+        $path = $this->app_base . '/cache/' . $view;
         if (is_array($data)) {
             extract($data, EXTR_PREFIX_SAME, "data");
         }
@@ -68,18 +66,6 @@ class Controller
             ob_start();
             require $path;
             return ob_get_clean();
-        }
-    }
-
-    public function partialRender($view, $data = null)
-    {
-        $root = $this->app_base;
-        $path = $root . '/resources/views/' . $view . '.php';
-        if (is_array($data)) {
-            extract($data, EXTR_PREFIX_SAME, "data");
-        }
-        if (file_exists($path)) {
-            require $path;
         }
     }
 }

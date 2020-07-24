@@ -1,1 +1,4 @@
 .env
+docker/mysql/*
+docker/nginx_log/*
+docker/php-fpm/*

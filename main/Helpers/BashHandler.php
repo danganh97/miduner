@@ -17,7 +17,7 @@ class BashHandler
         $this->colors = new \Main\Colors;
     }
 
-    public function exec(): void
+    public function exec()
     {
         $this->_checkRequireAutoload();
 
@@ -81,7 +81,7 @@ class BashHandler
         }
     }
 
-    private function _checkRequireAutoload(): void
+    private function _checkRequireAutoload()
     {
         if (isset($this->argv[1])) {
             if (

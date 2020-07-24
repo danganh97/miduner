@@ -4,8 +4,8 @@ namespace Main\Routing;
 
 use App\Http\Kernel;
 use Main\Container;
-use Main\Http\Exceptions\AppException;
 use Main\Pipeline\Pipeline;
+use Main\Http\Exceptions\AppException;
 
 class Compile
 {
@@ -15,11 +15,17 @@ class Compile
      * Initial constructor
      * @param string/array $action
      * @param array $params
-     * @param string $middlewares
+     * @param array $middlewares
      */
-    public function __construct($action = null, array $params = null, $middlewares = null)
+    public function __construct($action = null, array $params = null, array $middlewares = [])
     {
-        if ($middlewares != null) {
+        if (!is_null($middlewares)) {
+            $httpKernel = new Kernel(app());
+            foreach ($middlewares as $middleware) {
+                if (!isset($httpKernel->routeMiddlewares[$middleware])) {
+                    throw new AppException("Middleware '{$middleware}' not found.");
+                }
+            }
             return (new Pipeline(Container::getInstance()))
                 ->send(app('request'))
                 ->through($middlewares)
