@@ -123,7 +123,7 @@ if (!function_exists('config')) {
             return $initValue;
         }
         foreach ($pase as $p) {
-            if (!$initValue[$p]) {
+            if (!isset($initValue[$p])) {
                 die("Variable $variable not found.");
             }
             $value = $initValue = $initValue[$p];
