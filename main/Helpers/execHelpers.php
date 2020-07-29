@@ -3,8 +3,7 @@
 if (!function_exists('readDataViews')) {
     function readDataViews($folder)
     {
-        $appPath = dirname(dirname(dirname(__FILE__)));
-        $dataViews = array_filter(scandir("$appPath$folder"), function ($view) {
+        $dataViews = array_filter(scandir(BASE . "$folder"), function ($view) {
             return $view !== '.' && $view !== '..';
         });
         foreach ($dataViews as $item) {
@@ -30,13 +29,12 @@ if (!function_exists('compileWatchingViews')) {
 if (!function_exists('writeCache')) {
     function writeCache($folder, $file)
     {
-        $appPath = dirname(dirname(dirname(__FILE__)));
-        $data = file_get_contents("$appPath/$folder/$file");
+        $data = file_get_contents(BASE . "/$folder/$file");
         $data = str_replace('{{', '<?php', $data);
         $data = str_replace('}}', '?>', $data);
         $fullDir = config('app.base') .  '/cache';
         foreach (explode('/', $folder) as $f) {
-            if($f != '') {
+            if ($f != '') {
                 $fullDir .= $f;
             }
             if (is_dir($fullDir) !== 1) {
@@ -56,7 +54,7 @@ if (!function_exists('writeCache')) {
 if (!function_exists('execClearCache')) {
     function execClearCache()
     {
-        $cachePath = __DIR__ . '/../../cache';
+        $cachePath = BASE . '/cache';
         foreach (scandir($cachePath) as $file) {
             if ($file != '.' && $file != '..' && $file != '.gitignore') {
                 exec("rm -rf $cachePath/$file");
@@ -71,7 +69,7 @@ if (!function_exists('execWriteCache')) {
     function execWriteCache()
     {
         $env = readDotENV();
-        $cachePath = __DIR__ . '/../../cache';
+        $cachePath = BASE . '/cache';
         $myfile = fopen("$cachePath/environments.php", "w") or die("Unable to open file!");
         fwrite($myfile, "<?php\n");
         fwrite($myfile, "return array(\n");
@@ -87,18 +85,17 @@ if (!function_exists('execWriteCache')) {
 if (!function_exists('execWriteDataViews')) {
     function execWriteDataViews()
     {
-        $resourcePath = '/resources';
-        readDataViews("$resourcePath/views");
+        readDataViews("/resources/views");
         (new Main\Colors)->printSuccess("Configuration cached successfully!");
     }
 }
 if (!function_exists('execWriteConfigCache')) {
     function execWriteConfigCache()
     {
-        $cachePath = dirname(dirname(dirname(__FILE__))) . '/cache';
-        foreach (scandir('config') as $file) {
+        $cachePath = BASE . '/cache';
+        foreach (scandir(BASE . '/config') as $file) {
             if (strlen($file) > 5) {
-                $config = include './config/' . $file;
+                $config = include BASE . '/config/' . $file;
                 $myfile = fopen("$cachePath/$file", "w") or die("Unable to open file!");
                 fwrite($myfile, "<?php\n");
                 fwrite($myfile, "return array(\n");
@@ -133,9 +130,9 @@ if (!function_exists('_handleArrayConfig')) {
 if (!function_exists('execMigrate')) {
     function execMigrate()
     {
-        foreach (scandir('database/migration', 1) as $file) {
+        foreach (scandir(BASE . '/database/migration', 1) as $file) {
             if (strlen($file) > 5) {
-                include './database/migration/' . $file;
+                include BASE . '/database/migration/' . $file;
                 $classes = get_declared_classes();
                 $class = end($classes);
                 $object = new $class;
@@ -152,11 +149,11 @@ if (!function_exists('execMigrate')) {
 if (!function_exists('execMigrateRollback')) {
     function execMigrateRollback()
     {
-        $files = scandir('database/migration', 1);
+        $files = scandir(BASE . '/database/migration', 1);
         arsort($files);
         foreach ($files as $file) {
             if (strlen($file) > 5) {
-                include './database/migration/' . $file;
+                include BASE . '/database/migration/' . $file;
                 $classes = get_declared_classes();
                 $class = end($classes);
                 $object = new $class;
@@ -186,7 +183,6 @@ if (!function_exists('execCreateServerCli')) {
             if (strpos($param, '-o') !== false || strpos($param, '--open') !== false) {
                 $open = true;
             }
-
         }
         (new Main\Colors)->printSuccess("Starting development at: http://{$host}:{$port} \nUsing argument --open to open server on browser.");
         if ($open) {
@@ -199,7 +195,7 @@ if (!function_exists('execCreateServerCli')) {
 if (!function_exists('execGenerateKey')) {
     function execGenerateKey()
     {
-        $env = '.env';
+        $env = BASE . '/.env';
         $file_contents = file_get_contents($env);
         $each = explode("\n", $file_contents);
         $file = fopen($env, 'w');
@@ -232,7 +228,7 @@ if (!function_exists('execMakeController')) {
     {
         $paseController = explode('/', $name);
         $namespace = ';';
-        $fullDir = 'app/Http/Controllers/';
+        $fullDir = BASE . '/app/Http/Controllers/';
         if (count($paseController) > 1) {
             $controller = array_pop($paseController);
             $namespace = '\\' . implode("\\", $paseController) . ';';
@@ -246,7 +242,7 @@ if (!function_exists('execMakeController')) {
         } else {
             $controller = $name;
         }
-        $defaultControllerPath = dirname(__FILE__) . '/Init/controller.txt';
+        $defaultControllerPath = BASE. '/main/Helpers/Init/controller.txt';
         $defaultController = file_get_contents($defaultControllerPath);
         $defaultController = str_replace(':namespace', $namespace, $defaultController);
         $defaultController = str_replace(':controller', $controller, $defaultController);
@@ -268,7 +264,7 @@ if (!function_exists('execMakeModel')) {
     {
         $paseModel = explode('/', $name);
         $namespace = ';';
-        $fullDir = 'app/Models/';
+        $fullDir = BASE . '/app/Models/';
         if (count($paseModel) > 1) {
             $model = array_pop($paseModel);
             $namespace = '\\' . implode("\\", $paseModel) . ';';
@@ -282,7 +278,7 @@ if (!function_exists('execMakeModel')) {
         } else {
             $model = $name;
         }
-        $defaultModelPath = dirname(__FILE__) . '/Init/model.txt';
+        $defaultModelPath = BASE. '/main/Helpers/Init/model.txt';
         $defaultModel = file_get_contents($defaultModelPath);
         $defaultModel = str_replace(':namespace', $namespace, $defaultModel);
         $defaultModel = str_replace(':model', $model, $defaultModel);
@@ -302,11 +298,11 @@ if (!function_exists('execMakeModel')) {
 if (!function_exists('execMakeMigration')) {
     function execMakeMigration($table)
     {
-        $defaultMigratePath = dirname(__FILE__) . '/Init/migrate.txt';
+        $defaultMigratePath = BASE. '/main/Helpers/Init/migrate.txt';
         $defaultMigrate = file_get_contents($defaultMigratePath);
         $defaultMigrate = str_replace(':table', $table, $defaultMigrate);
         $defaultMigrate = str_replace(':Table', ucfirst($table), $defaultMigrate);
-        $fullDir = 'database/migration/';
+        $fullDir = BASE . '/database/migration/';
         $date = date('Ymd_His');
         $name = "{$date}_{$table}_migration.php";
         $needleTable = "{$fullDir}$name";
@@ -328,7 +324,7 @@ if (!function_exists('execMakeRequest')) {
     {
         $paseRequest = explode('/', $request);
         $namespace = ';';
-        $fullDir = 'app/Http/Requests/';
+        $fullDir = BASE . '/app/Http/Requests/';
         if (count($paseRequest) > 1) {
             $request = array_pop($paseRequest);
             $namespace = '\\' . implode("\\", $paseRequest) . ';';
@@ -340,7 +336,7 @@ if (!function_exists('execMakeRequest')) {
                 }
             }
         }
-        $defaultRequestPath = dirname(__FILE__) . '/Init/request.txt';
+        $defaultRequestPath = BASE. '/main/Helpers/Init/request.txt';
         $defaultRequest = file_get_contents($defaultRequestPath);
         $defaultRequest = str_replace(':request', $request, $defaultRequest);
         $defaultRequest = str_replace(':namespace', $namespace, $defaultRequest);

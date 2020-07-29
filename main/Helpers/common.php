@@ -1,7 +1,9 @@
 <?php
 
-use Main\Container;
-use Main\Http\Exceptions\AppException;
+/**
+ * Define base path
+ */
+define('BASE', defined('BASE') ? BASE : dirname(dirname(dirname(__FILE__))));
 
 if (!function_exists('redirect')) {
     function redirect($url)
@@ -205,9 +207,9 @@ if (!function_exists('app')) {
     function app($entity = null)
     {
         if (is_null($entity)) {
-            return Container::getInstance();
+            return \Main\Container::getInstance();
         }
-        return Container::getInstance()->make($entity);
+        return \Main\Container::getInstance()->make($entity);
     }
 }
 
@@ -252,7 +254,7 @@ if (!function_exists('included')) {
         if (file_exists($path)) {
             include $path;
         } else {
-            throw new AppException("File $path not found.");
+            throw new \Main\Http\Exceptions\AppException("File $path not found.");
         }
     }
 }

@@ -40,10 +40,10 @@ class BashHandler
                 execMigrateRollback();
                 break;
             case 'make:migration':
-                if (!isset($this->argv[2]) || strpos($this->argv[2], 'table=') === false) {
-                    throw new Main\Http\Exceptions\AppException($this->colors->printError("Missing param table's name.\nPlease using format >midun make:migration table={table}"));
+                if (!isset($this->argv[2]) || strpos($this->argv[2], '--table=') === false) {
+                    throw new Main\Http\Exceptions\AppException($this->colors->printError("Missing param table's name.\nPlease using format >midun make:migration --table={table}"));
                 }
-                $table = str_replace('table=', '', $this->argv[2]);
+                $table = str_replace('--table=', '', $this->argv[2]);
                 execMakeMigration($table);
                 break;
             case 'ser':
