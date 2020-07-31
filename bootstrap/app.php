@@ -29,6 +29,11 @@ $app->singleton(
     App\Http\Kernel::class
 );
 
+$app->singleton(
+    Main\Contracts\Console\Kernel::class,
+    App\Console\Kernel::class
+);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

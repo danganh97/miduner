@@ -72,7 +72,10 @@ class Kernel
     protected function dispatchToRouter()
     {
         return function () {
-            new Application();
+            $application = new Application();
+
+            $application->run();
+            
             return $this->route->run();
         };
     }

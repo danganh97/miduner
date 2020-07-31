@@ -71,7 +71,7 @@ if (!function_exists('request')) {
 if (!function_exists('readDotENV')) {
     function readDotENV()
     {
-        $app_base = dirname(dirname(dirname(__FILE__)));
+        $app_base = BASE;
         $path = $app_base . '/.env';
         if (!file_exists($path)) {
             system("echo " . 'Missing .env file.');
@@ -83,7 +83,7 @@ if (!function_exists('readDotENV')) {
 if (!function_exists('env')) {
     function env($variable, $ndvalue = null)
     {
-        $base_path = dirname(dirname(dirname(__FILE__)));
+        $base_path = BASE;
         $path = $base_path . '/cache/environments.php';
         if (!file_exists($path)) {
             system("echo " . 'Missing environment file.');
@@ -107,7 +107,7 @@ if (!function_exists('config')) {
     function config($variable)
     {
         $pase = explode('.', $variable);
-        $base_path = dirname(dirname(dirname(__FILE__)));
+        $base_path = BASE;
         $path = $base_path . '/cache/' . $pase[0] . '.php';
         if (!file_exists($path)) {
             system("echo " . "file $pase[0] not found in cache.");
@@ -139,7 +139,7 @@ if (!function_exists('trans')) {
     {
         $variable = explode('.', $variable);
         $file = array_shift($variable);
-        $root = dirname(dirname(dirname(__FILE__)));
+        $root = BASE;
         $configs = require "$root/resources/lang/$file/$lang.php";
         $initValue = $configs[$variable[0]];
         $needValue = '';

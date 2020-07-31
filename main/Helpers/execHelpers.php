@@ -1,21 +1,5 @@
 <?php
 
-if (!function_exists('readDataViews')) {
-    function readDataViews($folder)
-    {
-        $dataViews = array_filter(scandir(BASE . "$folder"), function ($view) {
-            return $view !== '.' && $view !== '..';
-        });
-        foreach ($dataViews as $item) {
-            if (strpos($item, '.php') !== false) {
-                writeCache($folder, $item);
-            } else {
-                readDataViews("$folder/$item");
-            }
-        }
-    }
-}
-
 if (!function_exists('compileWatchingViews')) {
     function compileWatchingViews($view)
     {
@@ -27,12 +11,20 @@ if (!function_exists('compileWatchingViews')) {
 }
 
 if (!function_exists('writeCache')) {
-    function writeCache($folder, $file)
+    /**
+     * Write caching
+     * 
+     * @param string $folder
+     * @param string $file
+     * 
+     * @return void
+     */
+    function writeCache(string $folder, string $file)
     {
         $data = file_get_contents(BASE . "/$folder/$file");
         $data = str_replace('{{', '<?php', $data);
         $data = str_replace('}}', '?>', $data);
-        $fullDir = config('app.base') .  '/cache';
+        $fullDir = BASE .  '/cache';
         foreach (explode('/', $folder) as $f) {
             if ($f != '') {
                 $fullDir .= $f;
@@ -48,82 +40,6 @@ if (!function_exists('writeCache')) {
         $myfile = fopen("$fullDir/$file", "w") or die("Unable to open file!");
         fwrite($myfile, $data);
         fclose($myfile);
-    }
-}
-
-if (!function_exists('execClearCache')) {
-    function execClearCache()
-    {
-        $cachePath = BASE . '/cache';
-        foreach (scandir($cachePath) as $file) {
-            if ($file != '.' && $file != '..' && $file != '.gitignore') {
-                exec("rm -rf $cachePath/$file");
-                // unlink("cache/$file");
-            }
-        }
-        (new Main\Colors)->printSuccess("Configuration cache cleared!");
-    }
-}
-
-if (!function_exists('execWriteCache')) {
-    function execWriteCache()
-    {
-        $env = readDotENV();
-        $cachePath = BASE . '/cache';
-        $myfile = fopen("$cachePath/environments.php", "w") or die("Unable to open file!");
-        fwrite($myfile, "<?php\n");
-        fwrite($myfile, "return array(\n");
-        foreach ($env as $key => $value) {
-            $key = trim($key);
-            $value = trim($value);
-            fwrite($myfile, "    '{$key}' => '{$value}',\n");
-        }
-        fwrite($myfile, ");");
-    }
-}
-
-if (!function_exists('execWriteDataViews')) {
-    function execWriteDataViews()
-    {
-        readDataViews("/resources/views");
-        (new Main\Colors)->printSuccess("Configuration cached successfully!");
-    }
-}
-if (!function_exists('execWriteConfigCache')) {
-    function execWriteConfigCache()
-    {
-        $cachePath = BASE . '/cache';
-        foreach (scandir(BASE . '/config') as $file) {
-            if (strlen($file) > 5) {
-                $config = include BASE . '/config/' . $file;
-                $myfile = fopen("$cachePath/$file", "w") or die("Unable to open file!");
-                fwrite($myfile, "<?php\n");
-                fwrite($myfile, "return array(\n");
-                foreach ($config as $key => $value) {
-                    if (is_array($value)) {
-                        _handleArrayConfig($key, $myfile, $value);
-                    } else {
-                        fwrite($myfile, "'$key' => '{$value}',\n");
-                    }
-                }
-                fwrite($myfile, ");");
-            }
-        }
-    }
-}
-
-if (!function_exists('_handleArrayConfig')) {
-    function _handleArrayConfig($key, $myfile, array $values)
-    {
-        fwrite($myfile, "'{$key}' => array(\n");
-        foreach ($values as $k => $v) {
-            if (is_array($v)) {
-                _handleArrayConfig($k, $myfile, $v);
-            } else {
-                fwrite($myfile, "        '{$k}' => '{$v}',\n");
-            }
-        }
-        fwrite($myfile, "    ),\n");
     }
 }
 
@@ -167,55 +83,6 @@ if (!function_exists('execMigrateRollback')) {
     }
 }
 
-if (!function_exists('execCreateServerCli')) {
-    function execCreateServerCli($argv)
-    {
-        $host = '127.0.0.1';
-        $port = '8000';
-        $open = false;
-        foreach ($argv as $param) {
-            if (strpos($param, '-h=') !== false || strpos($param, '--host=') !== false) {
-                $host = str_replace('--host=', '', $param);
-            }
-            if (strpos($param, '-p=') !== false || strpos($param, '--port=') !== false) {
-                $port = str_replace('--port=', '', $param);
-            }
-            if (strpos($param, '-o') !== false || strpos($param, '--open') !== false) {
-                $open = true;
-            }
-        }
-        (new Main\Colors)->printSuccess("Starting development at: http://{$host}:{$port} \nUsing argument --open to open server on browser.");
-        if ($open) {
-            exec("open " . "http://{$host}:{$port}");
-        }
-        system("php -S {$host}:{$port} server.php");
-    }
-}
-
-if (!function_exists('execGenerateKey')) {
-    function execGenerateKey()
-    {
-        $env = BASE . '/.env';
-        $file_contents = file_get_contents($env);
-        $each = explode("\n", $file_contents);
-        $file = fopen($env, 'w');
-        for ($i = 0; $i <= count($each) - 1; $i++) {
-            if ($i == count($each) - 1) {
-                if (strlen($each[$i]) <= 0) {
-                    continue;
-                }
-            }
-            $value = $each[$i];
-            if (strpos($value, 'APP_KEY') !== false) {
-                $value = 'APP_KEY=' . str_replace('=', '', base64_encode(microtime(true)));
-            }
-            fwrite($file, $value . "\n");
-        }
-        fclose($file);
-        (new Main\Colors)->printSuccess("Generate key successfully.");
-    }
-}
-
 if (!function_exists('execRunSeed')) {
     function execRunSeed()
     {
@@ -224,75 +91,11 @@ if (!function_exists('execRunSeed')) {
 }
 
 if (!function_exists('execMakeController')) {
-    function execMakeController($name)
-    {
-        $paseController = explode('/', $name);
-        $namespace = ';';
-        $fullDir = BASE . '/app/Http/Controllers/';
-        if (count($paseController) > 1) {
-            $controller = array_pop($paseController);
-            $namespace = '\\' . implode("\\", $paseController) . ';';
-            foreach ($paseController as $dir) {
-                $fullDir .= "{$dir}";
-                if (is_dir($fullDir) !== 1) {
-                    @mkdir($fullDir, 0777, true);
-                    $fullDir .= '/';
-                }
-            }
-        } else {
-            $controller = $name;
-        }
-        $defaultControllerPath = BASE. '/main/Helpers/Init/controller.txt';
-        $defaultController = file_get_contents($defaultControllerPath);
-        $defaultController = str_replace(':namespace', $namespace, $defaultController);
-        $defaultController = str_replace(':controller', $controller, $defaultController);
-        $needleController = "{$fullDir}$controller.php";
-        if (!file_exists($needleController)) {
-            $myfile = fopen($needleController, "w") or die("Unable to open file!");
-            fwrite($myfile, $defaultController);
-            fclose($myfile);
-            (new Main\Colors)->printSuccess("Created controller {$controller}");
-        } else {
-            (new Main\Colors)->printWarning("Controller {$needleController} already exists");
-        }
-        return true;
-    }
+    
 }
 
 if (!function_exists('execMakeModel')) {
-    function execMakeModel($name)
-    {
-        $paseModel = explode('/', $name);
-        $namespace = ';';
-        $fullDir = BASE . '/app/Models/';
-        if (count($paseModel) > 1) {
-            $model = array_pop($paseModel);
-            $namespace = '\\' . implode("\\", $paseModel) . ';';
-            foreach ($paseModel as $dir) {
-                $fullDir .= "{$dir}";
-                if (is_dir($fullDir) !== 1) {
-                    @mkdir($fullDir, 0777, true);
-                    $fullDir .= '/';
-                }
-            }
-        } else {
-            $model = $name;
-        }
-        $defaultModelPath = BASE. '/main/Helpers/Init/model.txt';
-        $defaultModel = file_get_contents($defaultModelPath);
-        $defaultModel = str_replace(':namespace', $namespace, $defaultModel);
-        $defaultModel = str_replace(':model', $model, $defaultModel);
-        $needleModel = "{$fullDir}$model.php";
-        if (!file_exists($needleModel)) {
-            $myfile = fopen($needleModel, "w") or die("Unable to open file!");
-            fwrite($myfile, $defaultModel);
-            fclose($myfile);
-            (new Main\Colors)->printSuccess("Created model {$model}");
-        } else {
-            (new Main\Colors)->printWarning("Model {$needleModel} already exists");
-        }
-        return true;
-    }
+    
 }
 
 if (!function_exists('execMakeMigration')) {
@@ -320,37 +123,5 @@ if (!function_exists('execMakeMigration')) {
 
 
 if (!function_exists('execMakeRequest')) {
-    function execMakeRequest($request)
-    {
-        $paseRequest = explode('/', $request);
-        $namespace = ';';
-        $fullDir = BASE . '/app/Http/Requests/';
-        if (count($paseRequest) > 1) {
-            $request = array_pop($paseRequest);
-            $namespace = '\\' . implode("\\", $paseRequest) . ';';
-            foreach ($paseRequest as $dir) {
-                $fullDir .= "{$dir}";
-                if (is_dir($fullDir) !== 1) {
-                    mkdir($fullDir, 0777, true);
-                    $fullDir .= '/';
-                }
-            }
-        }
-        $defaultRequestPath = BASE. '/main/Helpers/Init/request.txt';
-        $defaultRequest = file_get_contents($defaultRequestPath);
-        $defaultRequest = str_replace(':request', $request, $defaultRequest);
-        $defaultRequest = str_replace(':namespace', $namespace, $defaultRequest);
-        $defaultRequest = str_replace(':Request', ucfirst($request), $defaultRequest);
-        $name = "{$request}.php";
-        $needleRequest = "{$fullDir}$name";
-        if (!file_exists($needleRequest)) {
-            $myfile = fopen($needleRequest, "w") or die("Unable to open file!");
-            fwrite($myfile, $defaultRequest);
-            fclose($myfile);
-            (new Main\Colors)->printSuccess("Created Request {$request}");
-        } else {
-            (new Main\Colors)->printWarning("Request {$needleRequest} already exists");
-        }
-        return true;
-    }
+    
 }

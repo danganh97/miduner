@@ -7,13 +7,18 @@ use Main\Routing\Route;
 
 class Application
 {
+    /**
+     * Instance of application routing
+     * @var Route
+     */
     private $route;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         $this->setRouter();
-        $this->registerServiceProvider(config('app.providers'));
-        $this->collectAutoload();
     }
 
     /**
@@ -26,24 +31,46 @@ class Application
         $this->route = new Route();
     }
 
-    private function registerServiceProvider($providers = [])
+    /**
+     * Register service providers
+     * 
+     * @return void
+     */
+    public function registerServiceProvider()
     {
-        foreach ($providers as $provider) {
-            $provider = new $provider;
-            $provider->handle();
+        $providers = config('app.providers');
+
+        if (!empty($providers)) {
+            foreach ($providers as $provider) {
+                $provider = new $provider;
+                $provider->handle();
+            }
         }
     }
 
     /**
      * Collect autoload file
+     * 
+     * @return void
      */
-    private function collectAutoload()
+    private function prepareForRunning()
     {
         Autoload::getInstance()->autoloadFile();
-    }
-    
-    public function terminate()
-    {
+        Autoload::getInstance()->checkAppKey(config('app.key'));
     }
 
+    /**
+     * Run the application
+     */
+    public function run()
+    {
+        $this->registerServiceProvider();
+        $this->prepareForRunning();
+    }
+
+    /**
+     * Terminate the application
+     */
+    public function terminate()
+    { }
 }

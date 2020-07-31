@@ -19,12 +19,6 @@ class Autoload
     public $autoload;
 
     /**
-     * List of aliases
-     * @var array $aliases
-     */
-    private $aliases;
-
-    /**
      * Instance application autoload
      * @var $instance
      */
@@ -38,12 +32,13 @@ class Autoload
         self::$instance = $this;
         $this->registerAutoload();
         $this->catchExceptionFatal();
-        $this->setConfig(config('app'));
-        $this->checkAppKey(config('app.key'));
+        $this->setConfig();
     }
 
     /**
      * Get instance of autoload
+     * 
+     * @return self
      */
     public static function getInstance()
     {
@@ -59,11 +54,9 @@ class Autoload
      *
      * @return void
      */
-    private function setConfig($config)
+    private function setConfig()
     {
-        $this->root = $config['base'];
-        $this->autoload = $config['autoload'];
-        $this->aliases = $config['aliases'];
+        $this->root = BASE;
     }
 
     /**
@@ -82,35 +75,65 @@ class Autoload
      *
      * @return void
      */
-    public function load($class)
+    public function load(string $class)
     {
-        if (isset($this->aliases[ucfirst($class)])) {
-            return $this->loadWithAlias(ucfirst($class));
+        $isAliases = $this->isAliases($class);
+
+        if (!$isAliases) {
+            switch ($this->getOS()) {
+                case 'linux':
+                case 'macosx':
+                    $file = $this->getUnixPath($class);
+                    break;
+                case 'windows':
+                    $file = $this->getWindowsPath($class);
+                    break;
+                default:
+                    die('Unsupported OS');
+            }
+            $this->requireAfterCheckExists($file);
         }
-        switch ($this->getOS()) {
-            case 'linux':
-            case 'macosx':
-                $file = $this->getUnixPath($class);
-                break;
-            case 'windows':
-                $file = $this->getWindowsPath($class);
-                break;
-            default:
-                die('Unsupported OS');
+        
+    }
+
+    /**
+     * Check class loading is aliases
+     * 
+     * @param string $class
+     * 
+     * @return boolean
+     */
+    public function isAliases(string $class)
+    {
+        $cacheApp = BASE . '/cache/app.php';
+        
+        if(file_exists($cacheApp)) {
+            $configs = include $cacheApp;
+            if (isset($configs['aliases'][ucfirst($class)])) {
+                return $this->loadWithAlias($configs['aliases'], ucfirst($class));
+            }
+    
         }
-        $this->requireAfterCheckExists($file);
+        
+        return false;
     }
 
     /**
      * Get OS specific
+     * 
+     * @return string
      */
     public function getOS()
     {
         switch (true) {
-            case stristr(PHP_OS, 'DAR'): return 'macosx';
-            case stristr(PHP_OS, 'WIN'): return 'windows';
-            case stristr(PHP_OS, 'LINUX'): return 'linux';
-            default:return 'unknown';
+            case stristr(PHP_OS, 'DAR'):
+                return 'macosx';
+            case stristr(PHP_OS, 'WIN'):
+                return 'windows';
+            case stristr(PHP_OS, 'LINUX'):
+                return 'linux';
+            default:
+                return 'unknown';
         }
     }
 
@@ -122,7 +145,7 @@ class Autoload
      */
     private function getUnixPath(string $class)
     {
-        return "$this->root/" . str_replace('\\', '/', lcfirst($class) . '.php');
+        return "{$this->root}/" . str_replace('\\', '/', lcfirst($class) . '.php');
     }
 
     /**
@@ -175,9 +198,9 @@ class Autoload
      *
      * @return void
      */
-    private function loadWithAlias($class)
+    private function loadWithAlias($aliases, $class)
     {
-        return class_alias($this->aliases[$class], $class);
+        return class_alias($aliases[$class], $class);
     }
 
     /**
@@ -188,7 +211,7 @@ class Autoload
      */
     private function getPathFromFile(string $file)
     {
-        return $this->root . '/' . $file;
+        return "{$this->root}/$file";
     }
 
     /**
@@ -196,7 +219,7 @@ class Autoload
      *
      * @return void
      */
-    private function checkAppKey(string $appkey)
+    public function checkAppKey(string $appkey)
     {
         if (empty($appkey) || $appkey == '' || $appkey == null) {
             die("Please generate app key.");
@@ -213,7 +236,7 @@ class Autoload
         register_shutdown_function(function () {
             $error = error_get_last();
             if ($error['type'] === E_ERROR) {
-                echo $error['message'];
+                throw new AppException($error['message']);
             }
         });
     }
@@ -225,6 +248,6 @@ class Autoload
      */
     private function defaultFile()
     {
-        return $this->autoload;
+        return config('app.autoload');
     }
 }
