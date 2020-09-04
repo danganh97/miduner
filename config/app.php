@@ -40,6 +40,7 @@ return [
         Midun\Storage\StorageServiceProvider::class,
         Midun\View\ViewServiceProvider::class,
         Midun\Translator\TranslatorServiceProvider::class,
+        Midun\FileSystem\FileSystemServiceProvider::class,
 
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
