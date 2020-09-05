@@ -21,8 +21,7 @@ class AuthController extends Controller
         $email = $request->get('email');
         $password = $request->get('password');
         if (Auth::attempt(['email' => $email, 'password' => $password])) {
-
-            $user = Auth::guard('api')->user();
+            $user = Auth::user();
             $token = $user->createToken([
                 'exp' => 60 * 24 * 30 // 60 min x 24 hours x 30 days
             ]);
