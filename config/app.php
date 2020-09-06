@@ -11,19 +11,21 @@ return [
 
     'aliases' => [
         'App' => Midun\Supports\Facades\App::class,
-        'Route' => Midun\Supports\Facades\Route::class,
-        'DB' => Midun\Supports\Facades\QueryBuilder::class,
-        'AppException' => Midun\Http\Exceptions\AppException::class,
-        'Session' => Midun\Supports\Facades\Session::class,
-        'Request' => Midun\Supports\Facades\Request::class,
-        'Hash' => Midun\Supports\Facades\Hash::class,
-        'Hustle' => Midun\Supports\Facades\Hustle::class,
         'Auth' => Midun\Supports\Facades\Auth::class,
-        'Log' => Midun\Supports\Facades\Logger::class,
-        'Storage' => Midun\Supports\Facades\Storage::class,
-        'Config' => Midun\Supports\Facades\Config::class,
-        'Validator' => Midun\Supports\Facades\Validator::class,
+        'Hash' => Midun\Supports\Facades\Hash::class,
         'View' => Midun\Supports\Facades\View::class,
+        'Log' => Midun\Supports\Facades\Logger::class,
+        'Route' => Midun\Supports\Facades\Route::class,
+        'Config' => Midun\Supports\Facades\Config::class,
+        'Hustle' => Midun\Supports\Facades\Hustle::class,
+        'Session' => Midun\Supports\Facades\Session::class,
+        'DB' => Midun\Supports\Facades\QueryBuilder::class,
+        'Request' => Midun\Supports\Facades\Request::class,
+        'Storage' => Midun\Supports\Facades\Storage::class,
+        'Validator' => Midun\Supports\Facades\Validator::class,
+        'Translator' => Midun\Supports\Facades\Translator::class,
+        'FileSystem' => Midun\Supports\Facades\FileSystem::class,
+        'AppException' => Midun\Http\Exceptions\AppException::class
     ],
 
     'providers' => [
