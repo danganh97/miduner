@@ -9,7 +9,6 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "firebase/php-jwt": "@dev",
         "miduner/miduner": "dev-master"
     },
     "autoload": {
