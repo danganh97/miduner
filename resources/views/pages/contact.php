@@ -17,7 +17,7 @@
 
 {{ @section('content') }}
 <!-- Page Header -->
-<header class="masthead" style="background-image: url('<?php assets('assets/template/img/home-bg.jpg') ?>')">
+<header class="masthead" style="background-image: url({{ assets('assets/template/img/home-bg.jpg') }})">
   <div class="overlay"></div>
   <div class="container">
     <div class="row">
