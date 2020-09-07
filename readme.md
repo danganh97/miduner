@@ -1,5 +1,11 @@
 # Please read me mom-facker !!!
 
+## Installation
+
+```bash
+   composer create-project danganh97/miduner:dev-master your-project-folder
+```
+
 ## About Miduner Framework
 
 Miduner Framework is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Miduner Framework attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
