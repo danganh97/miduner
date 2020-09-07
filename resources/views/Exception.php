@@ -225,9 +225,9 @@
                                     $explode = explode("\\", get_class($exception));
                                 @endphp
                                 <span class="exception_title"><abbr
-                                        title="{{ echo get_class($exception) }}">{{ echo array_pop($explode) }}</abbr></span>
+                                        title="{{ get_class($exception) }}">{{ array_pop($explode) }}</abbr></span>
                             </h3>
-                            <p class="break-long-words trace-message">{{ echo $exception->getMessage() }}</p>
+                            <p class="break-long-words trace-message">{{ $exception->getMessage() }}</p>
                         </th>
                     </tr>
                 </thead>
@@ -237,8 +237,8 @@
                             $explode = explode("/", $exception->getFile());
                         @endphp
                         <td><span class="block trace-file-path">in <span
-                                    title="{{ echo $exception->getFile() }} line 647"><strong>{{ echo array_pop($explode) }}</strong>
-                                    line {{ echo $exception->getLine() }}</span></td></span></td>
+                                    title="{{ $exception->getFile() }} line 647"><strong>{{ array_pop($explode) }}</strong>
+                                    line {{ $exception->getLine() }}</span></td></span></td>
                     </tr>
 
                     @foreach($exception->getTrace() as $trace)
@@ -254,12 +254,12 @@
                     @if(!empty($file))
                     <tr>
                         <td>at <span class="trace-class">
-                                <abbr title="{{ echo $file }}">{{ echo $endFile }}</abbr>
+                                <abbr title="{{ $file }}">{{ $endFile }}</abbr>
                             </span>
                             <span class="trace-type">-&gt;</span>
-                            <span class="trace-method">{{ echo $function }}</span>()<span class="block trace-file-path">in <span
-                                    title="{{ echo $file }} line {{ echo $line}}"><strong>{{ echo $file }}</strong>
-                                    line {{ echo $line }}</span></span>
+                            <span class="trace-method">{{ $function }}</span>()<span class="block trace-file-path">in <span
+                                    title="{{ $file }} line {{ $line}}"><strong>{{ $file }}</strong>
+                                    line {{ $line }}</span></span>
                         </td>
                     </tr>
                     @endif

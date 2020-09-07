@@ -13,7 +13,7 @@
 
 {{ @section('content') }}
 <!-- Page Header -->
-<header class="masthead" style="background-image: url({{ echo assets('assets/template/img/home-bg.jpg') }})">
+<header class="masthead" style="background-image: url({{ assets('assets/template/img/home-bg.jpg') }})">
   <div class="overlay"></div>
   <div class="container">
     <div class="row">
@@ -77,7 +77,7 @@
         man.</p>
 
       <a href="#">
-        <img class="img-fluid" src="{{ echo assets('assets/template/img/post-sample-image.jpg') }}" alt="">
+        <img class="img-fluid" src="{{ assets('assets/template/img/post-sample-image.jpg') }}" alt="">
       </a>
       <span class="caption text-muted">To go places and do things that have never been done before – that’s what
         living is all about.</span>

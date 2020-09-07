@@ -6,7 +6,7 @@
 
 {{ @section('content') }}
 
-<header class="masthead" style="background-image: url({{ echo assets('assets/template/img/home-bg.jpg') }})">
+<header class="masthead" style="background-image: url({{ assets('assets/template/img/home-bg.jpg') }})">
     <div class="overlay"></div>
     <div class="container">
         <div class="row">
@@ -34,9 +34,9 @@
                 <tbody>
                     @foreach($users['data'] as $user)
                     <tr>
-                        <td scope="row">{{ echo $user['user_id'] }}</td>
-                        <td><?php echo $user['full_name'] ?></td>
-                        <td><a href="/users/<?php echo $user['user_id'] ?>/edit">edit</a></td>
+                        <td scope="row">{{ $user['user_id'] }}</td>
+                        <td>{{ $user['full_name'] }}</td>
+                        <td><a href="/users/{{ $user['user_id'] }}/edit">edit</a></td>
                     </tr>
                     @endforeach
                 </tbody>
