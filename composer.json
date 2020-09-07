@@ -29,6 +29,7 @@
         ],
         "post-create-project-cmd": [
             "php hustle key:generate",
+            "php hustle jwt:install",
             "php hustle config:cache"
         ]
     },
