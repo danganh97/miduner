@@ -202,3 +202,9 @@ The Miduner Framework is open-sourced software licensed under the [MIT license](
 *(Just a kidding)*
 
 So, this is the fake framework, please use or not and don't facking leave a blame
+
+If you wanna become contributor, let's run:
+
+```bash
+   php hustle development:enable
+```
