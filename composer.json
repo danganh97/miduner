@@ -1,5 +1,6 @@
 {
     "name": "danganh97/miduner",
+    "license": "MIT",
     "type": "project",
     "description": "Miduner framework",
     "authors": [
@@ -10,7 +11,11 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "miduner/miduner": "dev-master"
+        "php": ">=7.0.1",
+        "miduner/miduner": "dev-master",
+        "ext-pdo": "*",
+        "ext-readline": "*",
+        "ext-json": "*"
     },
     "autoload": {
         "classmap": [
