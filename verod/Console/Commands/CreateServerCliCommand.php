@@ -60,9 +60,17 @@ class CreateServerCliCommand extends Command
                 $open = true;
             }
         }
-        $this->output->printSuccess("Starting development at: http://{$host}:{$port} \nUsing argument --open to open server on browser.");
+        $this->output->printSuccess("Starting development at: http://{$host}:{$port}");
         if ($open) {
-            exec("open " . "http://{$host}:{$port}");
+            switch (true) {
+                case app()->isWindows():
+                    exec("explorer http://{$host}:{$port}");
+                    break;
+                default:
+                    exec("open http://{$host}:{$port}");
+            }
+        } else {
+            $this->output->printSuccess("Using argument --open to open server on browser.");
         }
         system("php -S {$host}:{$port} server.php");
     }
