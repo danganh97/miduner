@@ -1,0 +1,25 @@
+<?php
+
+namespace App\Http\Requests:namespace
+
+use Midun\Http\FormRequest;
+
+class :Request extends FormRequest
+{
+    public function authorize()
+    {
+        return true;
+    }
+
+    public function rules()
+    {
+        return [
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+        ];
+    }
+}

@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Models:namespace
+
+use Midun\Eloquent\Model;
+
+class :model extends Model
+{
+    protected $table = '';
+    protected $primaryKey = '';
+
+    protected $fillable = [];
+
+    protected $hidden = [
+      'password'
+    ];
+
+    protected $appends = ['appended'];
+
+    protected $casts = [];
+
+    public function getAppendedAttribute()
+    {
+        return 'value added';
+    }
+}

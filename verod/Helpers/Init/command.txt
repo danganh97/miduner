@@ -1,0 +1,64 @@
+<?php
+
+namespace App\Console\Commands:namespace
+
+use Midun\Console\Command;
+
+class :command extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'hello:world';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Example command';
+
+    /**
+     * Get true format for command
+     * 
+     * @var string
+     */
+    protected $format = 'midun hello:world --abc=123 --xyz=456';
+
+    /**
+     * User guide helper
+     */
+    protected $helper = "Step 1: Making some abc\nStep 2: Setting crontab abc\nStep 3: Run xyz";
+
+    /**
+     * Require options
+     */
+    protected $required = [
+        'abc', 'xyz'
+    ];
+
+    /**
+     * Other called signatures
+     */
+    protected $otherSignatures = [
+        'he:wo',
+        'world:hello'
+    ];
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    public function handle()
+    {
+        dd($this->getOptions());
+    }
+}
