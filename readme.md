@@ -1,5 +1,7 @@
 # Please read me mom-facker !!!
 
+This shit is implemented `static typing` with type-hint and arrow function from `PHP 7.4` 
+
 ## Installation
 
 ```bash
@@ -26,7 +28,7 @@ If you discover a security vulnerability within Miduner, please send an e-mail t
 
 ## Some features from Miduner Framework
 
-*Require PHP Version >= `7.0`*
+*Require PHP Version >= `7.4.10`*
 
 Let's run `php hustle list` to see all available supported commands. Here is some available feature.
 
