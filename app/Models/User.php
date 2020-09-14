@@ -30,17 +30,32 @@ class User extends Authenticate
         'email' => 'string',
     ];
 
-    public function getFullNameAttribute()
+    /**
+     * Get full name attribute mutator
+     * 
+     * @return string
+     */
+    public function getFullNameAttribute(): string
     {
         return 'anh dep trai ' . $this->user_id;
     }
 
-    public function getEmailAttribute()
+    /**
+     * Get email attribute mutator
+     * 
+     * @return string
+     */
+    public function getEmailAttribute(): ?string
     {
         return $this->email;
     }
 
-    public function getUrlSocialAttribute()
+    /**
+     * Get url social media attribute mutator
+     * 
+     * @return array
+     */
+    public function getUrlSocialAttribute(): array
     {
         return [
             'facebook' => 'facebook.com' . '/' . $this->user_id,
@@ -48,17 +63,36 @@ class User extends Authenticate
         ];
     }
 
-    public function scopeMe(QueryBuilder $query)
+    /**
+     * Query scope me
+     * 
+     * @param QueryBuilder $query
+     * 
+     * @return QueryBuilder
+     */
+    public function scopeMe(QueryBuilder $query): QueryBuilder
     {
         return $query->where('user_id', '=', 3099);
     }
 
-    public function scopeActive(QueryBuilder $query)
+    /**
+     * Query scope active
+     * 
+     * @param QueryBuilder $query
+     * 
+     * @return QueryBuilder
+     */
+    public function scopeActive(QueryBuilder $query): QueryBuilder
     {
         return $query->where('email', '=', 'admin@gmail.com');
     }
 
-    public function company()
+    /**
+     * Option company
+     * 
+     * @return array
+     */
+    public function company(): array
     {
         return [
             'asdasd'=> 'asdasd',
@@ -66,7 +100,12 @@ class User extends Authenticate
         ];
     }
 
-    public function profile()
+    /**
+     * Relationship profile of user
+     * 
+     * @return object
+     */
+    public function profile(): object
     {
         return DB::table('user_profiles')->where('user_id', '=', $this->user_id)->first();
     }
