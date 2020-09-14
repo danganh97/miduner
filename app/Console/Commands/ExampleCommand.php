@@ -11,14 +11,14 @@ class ExampleCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'command:example';
+    protected string $signature = 'command:example';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Example command';
+    protected string $description = 'Example command';
 
     /**
      * Create a new command instance.
@@ -30,7 +30,7 @@ class ExampleCommand extends Command
         parent::__construct();
     }
 
-    public function handle()
+    public function handle(): void
     {
         \Log::info(__CLASS__);
     }

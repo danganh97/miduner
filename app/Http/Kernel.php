@@ -6,7 +6,7 @@ use Midun\Http\Kernel as MidunerKernel;
 
 class Kernel extends MidunerKernel
 {
-    public $routeMiddlewares = [
+    public array $routeMiddlewares = [
         'web:api' => \App\Http\Middlewares\ApiAuth::class,
         'web:auth' => \App\Http\Middlewares\Auth::class,
         'checkPermission' => \App\Http\Middlewares\CheckPermission::class,
@@ -19,7 +19,7 @@ class Kernel extends MidunerKernel
      *
      * @var array
      */
-    protected $middlewares = [
+    protected array $middlewares = [
         \Midun\Http\Middlewares\CheckIsMaintenanceMode::class,
         \Midun\Http\Middlewares\ValidatePostSize::class,
         \Midun\Http\Middlewares\LimitRequest::class

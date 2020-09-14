@@ -18,7 +18,7 @@ class UserRepository extends Repository implements UserInterface
         $this->profileRepository = $profileRepository;
     }
     
-    public function model()
+    public function model(): string
     {
         return User::class;
     }

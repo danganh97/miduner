@@ -20,7 +20,7 @@ class ExampleJob extends Queue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         \Log::info(__CLASS__);
     }

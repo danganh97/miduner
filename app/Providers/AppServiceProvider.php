@@ -6,12 +6,12 @@ use Midun\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
 
     }
 
-    public function register()
+    public function register(): void
     {
         $this->app->singleton('hello', function () {
             return '???';

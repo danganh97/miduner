@@ -4,7 +4,7 @@ use Midun\Database\Migrations\Migration;
 use Midun\Database\DatabaseBuilder\Schema;
 use Midun\Database\DatabaseBuilder\ColumnBuilder;
 
-class CreateJobsTable extends Migration
+class CreateJobsTable
 {
     /** 
     * Run the migration.

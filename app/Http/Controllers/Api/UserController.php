@@ -10,7 +10,7 @@ use Midun\Routing\Controller\Controller;
 
 class UserController extends Controller
 {
-    public $userRepository;
+    public UserInterface $userRepository;
 
     public function __construct(UserInterface $userRepository)
     {
@@ -22,7 +22,6 @@ class UserController extends Controller
         $paginate = $request->paginate ?: config('settings.pagination');
         $users = $this->userRepository->paginate($paginate);
         return $this->respond($users);
-        // return view('users.index', compact('users'));
     }
 
     public function store(CreateUserRequest $request)

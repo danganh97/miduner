@@ -11,7 +11,7 @@
     ],
     "minimum-stability": "dev",
     "require": {
-        "php": ">=7.0.1",
+        "php": ">=7.4.10",
         "miduner/miduner": "dev-master",
         "ext-pdo": "*",
         "ext-readline": "*",

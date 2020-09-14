@@ -6,7 +6,7 @@ use Midun\Eloquent\Model;
 
 class UserProfile extends Model
 {
-    protected $table = 'user_profiles';
-    protected $primaryKey = 'user_id';
+    protected string $table = 'user_profiles';
+    protected string $primaryKey = 'user_id';
 
 }

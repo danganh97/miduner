@@ -39,7 +39,7 @@ class AuthController extends Controller
      *
      * @return boolean
      */
-    public function logout()
+    public function logout(): bool
     {
         return Auth::logout();
     }

@@ -11,12 +11,7 @@ use Midun\ServiceProvider;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
-    public function boot()
-    {
-
-    }
-
-    public function register()
+    public function register(): void
     {
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(UserProfileInterface::class, UserProfileRepository::class);

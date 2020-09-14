@@ -8,24 +8,24 @@ use Midun\Eloquent\Authenticate;
 
 class User extends Authenticate
 {
-    protected $table = 'users';
-    protected $primaryKey = 'user_id';
-    protected $username = 'email';
-    protected $password = 'password';
+    protected string $table = 'users';
+    protected string $primaryKey = 'user_id';
+    protected string $username = 'email';
+    protected string $password = 'password';
 
-    protected $fillable = [
+    protected array $fillable = [
         'user_id', 'email', 'noti_push', 'role_id', 'is_verified', 'logged_at', 'email_token', 'remember_token',
     ];
 
-    protected $hidden = [
+    protected array $hidden = [
         'password',
     ];
 
-    protected $appends = [
+    protected array $appends = [
         'full_name', 'url_social'
     ];
 
-    protected $casts = [
+    protected array $casts = [
         'user_id' => 'int',
         'email' => 'string',
     ];

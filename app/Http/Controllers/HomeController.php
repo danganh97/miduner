@@ -10,7 +10,7 @@ use App\Repositories\User\UserInterface;
 
 class HomeController extends Controller
 {
-    public $userRepository;
+    public UserInterface $userRepository;
 
     public function __construct(
         UserInterface $userRepository

@@ -11,7 +11,7 @@ class UserProfileRepository extends Repository implements UserProfileInterface
     {
         parent::__construct();
     }
-    public function model()
+    public function model(): string
     {
         return UserProfile::class;
     }
