@@ -6,12 +6,12 @@ use Midun\Http\FormRequest;
 
 class TestRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'id' => 'required|number|min:2|max:5',
@@ -19,7 +19,7 @@ class TestRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'id.required' => trans('validation.required', ['attribute' => 'id']),

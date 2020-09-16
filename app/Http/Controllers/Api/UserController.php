@@ -3,28 +3,56 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\Request;
-use App\Http\Requests\User\CreateUserRequest;
-use App\Http\Requests\User\UpdateUserRequest;
+use Midun\Supports\Response\Response;
 use App\Repositories\User\UserInterface;
 use Midun\Routing\Controller\Controller;
+use App\Http\Requests\User\CreateUserRequest;
+use App\Http\Requests\User\UpdateUserRequest;
+use App\Models\User;
 
 class UserController extends Controller
 {
+    /**
+     * User repository
+     * 
+     * @var UserInterface
+     */
     public UserInterface $userRepository;
 
+    /**
+     * Initial constructor UserController
+     * 
+     * @param UserInterface $userRepository
+     * 
+     * @return void
+     */
     public function __construct(UserInterface $userRepository)
     {
         $this->userRepository = $userRepository;
     }
 
-    public function index(Request $request)
+    /**
+     * Index get list users
+     * 
+     * @param Request $request
+     * 
+     * @return \Midun\Supports\Response\Response
+     */
+    public function index(Request $request, User $user): Response
     {
         $paginate = $request->paginate ?: config('settings.pagination');
         $users = $this->userRepository->paginate($paginate);
         return $this->respond($users);
     }
 
-    public function store(CreateUserRequest $request)
+    /**
+     * Create user
+     * 
+     * @param CreateUserRequest $request
+     * 
+     * @return \Midun\Response\Response
+     */
+    public function store(CreateUserRequest $request): Response
     {
         $data = $request->all();
         $user = $this->userRepository->create($data);
@@ -32,13 +60,27 @@ class UserController extends Controller
         return $this->respondCreated($user);
     }
 
-    public function show($id)
+    /**
+     * Get one user
+     * 
+     * @param int $id
+     * 
+     * @return \Midun\Response\Response
+     */
+    public function show(User $user, User $u): Response
     {
-        $user = $this->userRepository->findOrFail($id);
-        return response()->json($user);
+        return $this->respond($user);
     }
 
-    public function update(UpdateUserRequest $request, $id)
+    /**
+     * Update user
+     * 
+     * @param UpdateUserRequest $request
+     * @param int $id
+     * 
+     * @return \Midun\Response\Response
+     */
+    public function update(UpdateUserRequest $request, int $id): Response
     {
         try {
             $data = $request->all();
@@ -54,7 +96,7 @@ class UserController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function destroy(int $id): Response
     {
         $user = $this->userRepository->findOrFail($id);
 

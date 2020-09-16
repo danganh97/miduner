@@ -6,12 +6,12 @@ use Midun\Http\FormRequest;
 
 class TestRequestFile extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'email' => 'required|email|unique:users,email;danganh.dev@gmail.com',
@@ -19,7 +19,7 @@ class TestRequestFile extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'file.required' => trans('validation.required', ['attribute' => 'file']),

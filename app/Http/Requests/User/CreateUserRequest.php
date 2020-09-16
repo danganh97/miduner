@@ -6,12 +6,12 @@ use Midun\Http\FormRequest;
 
 class CreateUserRequest extends FormRequest
 {
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
 
-    public function rules()
+    public function rules(): array
     {
         return [
             'name' => 'required',
@@ -20,7 +20,7 @@ class CreateUserRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
         ];
