@@ -136,11 +136,11 @@ class Kernel extends ConsoleKernel
      * List of commands
      * @var array $commands
      */
-    protected $commands = [
+    protected array $commands = [
         ExampleCommand::class
     ];
 
-    public function schedule(Schedule $schedule)
+    public function schedule(Schedule $schedule): void
     {
         // Normal using
         $schedule->command(ExampleCommand::class)->daily();
