@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\User;
 use App\Http\Requests\Request;
 use Midun\Supports\Response\Response;
 use App\Repositories\User\UserInterface;
 use Midun\Routing\Controller\Controller;
 use App\Http\Requests\User\CreateUserRequest;
 use App\Http\Requests\User\UpdateUserRequest;
-use App\Models\User;
 
 class UserController extends Controller
 {
@@ -38,10 +38,9 @@ class UserController extends Controller
      * 
      * @return \Midun\Supports\Response\Response
      */
-    public function index(Request $request, User $user): Response
+    public function index(Request $request): Response
     {
-        $paginate = $request->paginate ?: config('settings.pagination');
-        $users = $this->userRepository->paginate($paginate);
+        $users = $this->userRepository->getList($request);
         return $this->respond($users);
     }
 
@@ -54,8 +53,11 @@ class UserController extends Controller
      */
     public function store(CreateUserRequest $request): Response
     {
-        $data = $request->all();
-        $user = $this->userRepository->create($data);
+        $user = $this->userRepository->create(
+            $request->only(
+                $this->userRepository->fillable()
+            )
+        );
 
         return $this->respondCreated($user);
     }
@@ -63,11 +65,11 @@ class UserController extends Controller
     /**
      * Get one user
      * 
-     * @param int $id
+     * @param User $user
      * 
      * @return \Midun\Response\Response
      */
-    public function show(User $user, User $u): Response
+    public function show(User $user): Response
     {
         return $this->respond($user);
     }
@@ -76,31 +78,33 @@ class UserController extends Controller
      * Update user
      * 
      * @param UpdateUserRequest $request
-     * @param int $id
+     * @param User $user
      * 
      * @return \Midun\Response\Response
      */
-    public function update(UpdateUserRequest $request, int $id): Response
+    public function update(UpdateUserRequest $request, User $user): Response
     {
         try {
             $data = $request->all();
+            $id = $user->user_id;
+            $user->update($data);
             $user = $this->userRepository->findOrFail($id);
-
-            if ($user->update($data)) {
-                $user = $this->userRepository->findOrFail($id);
-            }
-
             return $this->respondSuccess($user);
         } catch (\AppException $e) {
             return $this->respondError($e->getMessage());
         }
     }
 
-    public function destroy(int $id): Response
+    /**
+     * Delete an user
+     * 
+     * @param User $user
+     * 
+     * @return \Midun\Response\Response
+     */
+    public function destroy(User $user): Response
     {
-        $user = $this->userRepository->findOrFail($id);
-
-        if (!$user->delete($id)) {
+        if (!$user->delete($user->user_id)) {
             throw new \Exception("Unable to delete");
         }
 

@@ -3,6 +3,7 @@
 namespace App\Repositories\User;
 
 use App\Models\User;
+use App\Http\Requests\Request;
 use App\Repositories\UserProfile\UserProfileInterface;
 use Midun\Supports\Patterns\Abstracts\AppRepository as Repository;
 
@@ -21,6 +22,12 @@ class UserRepository extends Repository implements UserInterface
     public function model(): string
     {
         return User::class;
+    }
+
+    public function getList(Request $request): array
+    {
+        $paginate = $request->paginate ?: config('settings.pagination');
+        return $this->model->paginate($paginate);
     }
 
 }
