@@ -9,7 +9,7 @@ use Midun\Supports\Patterns\Abstracts\AppRepository as Repository;
 
 class UserRepository extends Repository implements UserInterface
 {
-    public $profileRepository;
+    public UserProfileInterface $profileRepository;
 
     public function __construct(
         UserProfileInterface $profileRepository
@@ -27,7 +27,11 @@ class UserRepository extends Repository implements UserInterface
     public function getList(Request $request): array
     {
         $paginate = $request->paginate ?: config('settings.pagination');
-        return $this->model->paginate($paginate);
+        return $this->model
+            ->with(['profile' => function ($query) {
+                $query->select('first_name', 'last_name');
+            }])
+            ->paginate($paginate);
     }
 
 }
