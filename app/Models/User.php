@@ -108,7 +108,7 @@ class User extends Authenticate
      */
     public function profile(): Relation
     {
-        return $this->hasOne(UserProfile::class);
+        return $this->hasOne(UserProfile::class)->where('country_id' , 2);
     }
 
     const CREATED_AT = 'created_at';
