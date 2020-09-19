@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use DB;
-use Midun\Database\QueryBuilder\QueryBuilder;
 use Midun\Eloquent\Authenticate;
+use Midun\Eloquent\Relationship\Relation;
+use Midun\Database\QueryBuilder\QueryBuilder;
 
 class User extends Authenticate
 {
@@ -103,11 +104,11 @@ class User extends Authenticate
     /**
      * Relationship profile of user
      * 
-     * @return object
+     * @return Relation
      */
-    public function profile(): object
+    public function profile(): Relation
     {
-        return DB::table('user_profiles')->where('user_id', '=', $this->user_id)->first();
+        return $this->hasOne(UserProfile::class);
     }
 
     const CREATED_AT = 'created_at';
