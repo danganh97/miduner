@@ -13,9 +13,9 @@ class HomeController extends Controller
 {
     /**
      * Routing home
-     * 
+     *
      * @param Request $request
-     * 
+     *
      * @return \Midun\View\View
      */
     public function home(Request $request): View
@@ -23,12 +23,50 @@ class HomeController extends Controller
         return view('pages/home');
     }
 
+    /**
+     * About page
+     * 
+     * @return View
+     */
+    public function about(): View
+    {
+        return view('pages/about');
+    }
+
+    /**
+     * Post page
+     * 
+     * @return View
+     */
+    public function post(): View
+    {
+        return view('pages/post');
+    }
+
+    /**
+     * Contact page
+     * 
+     * @return View
+     */
+    public function contact(): view
+    {
+        dispatch(new ExampleJob('danganh.dev@gmail.com', 'dang anh'));
+        return view('pages/contact');
+    }
+
+    /**
+     * Test post file
+     * 
+     * @param TestRequestFile $request
+     * 
+     * @return Response
+     */
     public function testPostFile(TestRequestFile $request): Response
     {
         $validator = Validator::makeValidate($request, [
-            'email' => 'required|email|unique:users,email;danganh.dev@gmail.co'
+            'email' => 'required|email|unique:users,email;danganh.dev@gmail.co',
         ], [
-            'email.unique' => 'already taken'
+            'email.unique' => 'already taken',
         ]);
 
         if ($validator->isFailed()) {
@@ -36,21 +74,5 @@ class HomeController extends Controller
         }
 
         return $this->respondSuccess(true);
-    }
-
-    public function about(): View
-    {
-        return view('pages/about');
-    }
-
-    public function post(): View
-    {
-        return view('pages/post');
-    }
-
-    public function contact(): view
-    {
-        dispatch(new ExampleJob('danganh.dev@gmail.com', 'dang anh'));
-        return view('pages/contact');
     }
 }

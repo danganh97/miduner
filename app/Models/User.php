@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use DB;
 use Midun\Eloquent\Authenticate;
 use Midun\Eloquent\Relationship\Relation;
 use Midun\Database\QueryBuilder\QueryBuilder;
@@ -96,8 +95,8 @@ class User extends Authenticate
     public function company(): array
     {
         return [
-            'asdasd'=> 'asdasd',
-            'xcvxcvvcx'=> 'asdasd'
+            'asdasd' => 'asdasd',
+            'xcvxcvvcx' => 'asdasd'
         ];
     }
 
@@ -108,7 +107,7 @@ class User extends Authenticate
      */
     public function profile(): Relation
     {
-        return $this->hasOne(UserProfile::class)->where('country_id' , 2);
+        return $this->hasOne(UserProfile::class)->where('country_id', 2);
     }
 
     const CREATED_AT = 'created_at';
