@@ -26,7 +26,7 @@ class UserRepository extends Repository implements UserInterface
 
     public function getList(Request $request): array
     {
-        $paginate = $request->paginate ?: config('settings.pagination');
+        $paginate = $request->paginate ?: config('settings.paginate');
         return $this->model
             ->with(['profile' => function ($query) {
                 $query->select('first_name', 'last_name');

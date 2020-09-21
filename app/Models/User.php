@@ -8,7 +8,6 @@ use Midun\Database\QueryBuilder\QueryBuilder;
 
 class User extends Authenticate
 {
-    protected string $table = 'users';
     protected string $primaryKey = 'user_id';
     protected string $username = 'email';
     protected string $password = 'password';

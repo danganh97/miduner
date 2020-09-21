@@ -10,6 +10,7 @@ return [
     ],
 
     'aliases' => [
+        'Str' => Midun\Supports\Facades\Str::class,
         'App' => Midun\Supports\Facades\App::class,
         'Auth' => Midun\Supports\Facades\Auth::class,
         'Hash' => Midun\Supports\Facades\Hash::class,
