@@ -85,11 +85,9 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user): Response
     {
         try {
-            $data = $request->all();
-            $id = $user->user_id;
-            $user->update($data);
-            $user = $this->userRepository->findOrFail($id);
-            return $this->respondSuccess($user);
+            $user->update($request->all());
+            
+            return $this->respondSuccess(true);
         } catch (\AppException $e) {
             return $this->respondError($e->getMessage());
         }
