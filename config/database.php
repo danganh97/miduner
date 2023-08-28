@@ -2,6 +2,7 @@
 
 return [
     'default' => env('DB_CONNECTION', 'mysql'),
+    'log_query' => env('LOG_QUERY'),
 
     'connections' => [
         'mysql' => [

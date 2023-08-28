@@ -55,7 +55,10 @@ class UserController extends Controller
     {
         $user = $this->userRepository->create(
             $request->only(
-                $this->userRepository->fillable()
+                array_merge(
+                    $this->userRepository->fillable(),
+                    $this->userRepository->hidden()
+                )
             )
         );
 
