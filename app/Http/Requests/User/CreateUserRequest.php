@@ -23,6 +23,9 @@ class CreateUserRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'name.required' => "vui long nhap ten",
+            'email.required' => 'vui long nhap email',
+            'password.required' => 'vui long nhap password'
         ];
     }
 }

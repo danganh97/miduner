@@ -13,6 +13,7 @@ return [
         'file' => ':attribute k the lon hon :min MB'
     ],
     'number' => 'The :attribute must be a number',
+    'string' => 'The :attribute must be a string',
     'file' => 'The :attribute must be a file',
     'image' => 'The :attribute must be an image',
     'video' => 'The :attribute must be a video',

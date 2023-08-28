@@ -28,8 +28,9 @@ class UserRepository extends Repository implements UserInterface
     {
         $paginate = $request->paginate ?: config('settings.paginate');
         return $this->model
+            ->active()
             ->with(['profile' => function ($query) {
-                $query->select('first_name', 'last_name');
+                $query->select('id', 'is_active');
             }])
             ->paginate($paginate);
     }
