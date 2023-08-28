@@ -8,12 +8,12 @@ use Midun\Database\QueryBuilder\QueryBuilder;
 
 class User extends Authenticate
 {
-    protected string $primaryKey = 'user_id';
+    protected string $primaryKey = 'id';
     protected string $username = 'email';
     protected string $password = 'password';
 
     protected array $fillable = [
-        'user_id', 'email', 'noti_push', 'role_id', 'is_verified', 'logged_at', 'email_token', 'remember_token',
+        'id', 'email', 'name', 'dob', 'is_active'
     ];
 
     protected array $hidden = [
@@ -25,7 +25,7 @@ class User extends Authenticate
     ];
 
     protected array $casts = [
-        'user_id' => 'int',
+        'id' => 'int',
         'email' => 'string',
     ];
 
@@ -36,7 +36,7 @@ class User extends Authenticate
      */
     public function getFullNameAttribute(): string
     {
-        return 'anh dep trai ' . $this->user_id;
+        return 'You are so handsome: ' . $this->id;
     }
 
     /**
@@ -57,7 +57,7 @@ class User extends Authenticate
     public function getUrlSocialAttribute(): array
     {
         return [
-            'facebook' => 'facebook.com' . '/' . $this->user_id,
+            'facebook' => 'facebook.com' . '/' . $this->id,
             'instagram' => 'instagram.com'
         ];
     }
@@ -71,7 +71,7 @@ class User extends Authenticate
      */
     public function scopeMe(QueryBuilder $query): QueryBuilder
     {
-        return $query->where('user_id', '=', 3099);
+        return $query->where('id', '=', $this->id);
     }
 
     /**
@@ -83,20 +83,7 @@ class User extends Authenticate
      */
     public function scopeActive(QueryBuilder $query): QueryBuilder
     {
-        return $query->where('email', '=', 'admin@gmail.com');
-    }
-
-    /**
-     * Option company
-     * 
-     * @return array
-     */
-    public function company(): array
-    {
-        return [
-            'asdasd' => 'asdasd',
-            'xcvxcvvcx' => 'asdasd'
-        ];
+        return $query->where('is_active', '=', 1);
     }
 
     /**
@@ -106,7 +93,7 @@ class User extends Authenticate
      */
     public function profile(): Relation
     {
-        return $this->hasOne(UserProfile::class)->where('country_id', 2);
+        return $this->hasOne(UserProfile::class, "id", "user_id")->where('is_active', 1);
     }
 
     const CREATED_AT = 'created_at';

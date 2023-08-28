@@ -3,7 +3,7 @@
 use Midun\Database\DatabaseBuilder\Schema;
 use Midun\Database\DatabaseBuilder\ColumnBuilder;
 
-class CreateUsersTable
+class CreateUserProfilesTable
 {
     /** 
     * Run the migration.
@@ -11,12 +11,9 @@ class CreateUsersTable
     */
     public function up()
     {
-        Schema::create('users', function (ColumnBuilder $table) {
+        Schema::create('user_profiles', function (ColumnBuilder $table) {
             $table->increments('id')->comment('this is comment');
-            $table->string('name');
-            $table->string('email');
-            $table->date('dob');
-            $table->string('password');
+            $table->integer('user_id');
             $table->integer('is_active')->comment('0 is hidden, 1 is active');
             $table->timestamps();
         });
@@ -28,6 +25,6 @@ class CreateUsersTable
     */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_profiles');
     }
 }

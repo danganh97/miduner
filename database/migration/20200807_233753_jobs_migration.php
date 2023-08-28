@@ -1,6 +1,5 @@
 <?php
 
-use Midun\Database\Migrations\Migration;
 use Midun\Database\DatabaseBuilder\Schema;
 use Midun\Database\DatabaseBuilder\ColumnBuilder;
 
