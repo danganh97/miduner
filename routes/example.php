@@ -25,20 +25,12 @@ Route::get('/example', function () {
 
 /*
 |---------------------------------------------------------------------------
-| This Route for only the simple view non extends master layout
-|---------------------------------------------------------------------------
- */
-Route::get('/example', function () {
-    return simpleView('example');
-});
-
-/*
-|---------------------------------------------------------------------------
 | This Route return data format json for the API Application
 |---------------------------------------------------------------------------
  */
 Route::get('/example', function () {
     $users = DB::table('users')->get();
+
     return response()->json($users);
 });
 
@@ -49,6 +41,7 @@ Route::get('/example', function () {
  */
 Route::get('/example', function () {
     $users = DB::table('users')->get();
+
     return view('users/index', compact('users'));
 });
 
@@ -59,12 +52,14 @@ Route::get('/example', function () {
  */
 Route::get('/example', function () {
     $users = DB::table('users')->get();
-    return action([UserController::class, 'index'], ['users' => $users]);
+
+    return action([App\Http\Controllers\Api\UserController::class, 'index'], ['users' => $users]);
 });
 
 Route::get('/example', function () {
     $users = DB::table('users')->get();
-    return action('UserController@index', compact('users'));
+
+    return action([App\Http\Controllers\Api\UserController::class, 'index'], compact('users'));
 });
 
 /*
@@ -84,7 +79,7 @@ Route::get('/example/{variable}', function ($variable) {
  */
 
 Route::get('/example', 'ExampleController@ExampleFunction');
-Route::get('/example', [App\Controllers\ExampleController::class, 'ExampleFunction']);
+Route::get('/example', [App\Http\Controllers\ExampleController::class, 'ExampleFunction']);
 
 /*
 |---------------------------------------------------------------------------
