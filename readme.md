@@ -1,128 +1,115 @@
-# Please read me!!!
+# Miduner Project Skeleton
 
-The source core framework is published on composer under package [miduner/miduner](https://packagist.org/packages/miduner/miduner).
-The source core framework is open at github [Miduner Framework](https://github.com/miduner/framework)
+This repository provides the official project skeleton for building applications with the **Miduner Framework**.
 
-This project is implemented `static typing` with type-hint and arrow function from `PHP 7.4`
+- Core framework package: [miduner/miduner](https://packagist.org/packages/miduner/miduner)
+- Core framework repository: [github.com/miduner/framework](https://github.com/miduner/framework)
+
+The project is designed for PHP 7.4+ and uses static typing features such as type hints and arrow functions.
+
+## Requirements
+
+- PHP `>= 7.4.10`
+- PHP extensions:
+  - `ext-pdo`
+  - `ext-readline`
+  - `ext-json`
+- Composer
 
 ## Installation
 
-```bash
-   composer create-project danganh97/miduner:dev-master your-project-folder
-```
-
-## About Miduner Framework
-
-Miduner Framework is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Miduner Framework attempts to take the pain out of development by easing common tasks used in the majority of web projects.
-
-Miduner Framework is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
-
-## Learning Miduner Framework
-
-Miduner Framework has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Miduner Framework documentation](https://miduner.com/docs) is building.
-
-## Contributing
-
-Thank you for considering contributing to the Miduner Framework!
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Miduner, please send an e-mail to [Dang Anh Vo](https://facebook.com/underspected) from danganh.dev@gmail.com. All security vulnerabilities will be promptly addressed.
-
-## Some features from Miduner Framework
-
-*Require PHP Version >= `7.4.10`*
-
-Let's run `php hustle list` to see all available supported commands. Here is some available feature.
-
-**You're wanna making some things?**
+Create a new Miduner project:
 
 ```bash
-php hustle make:command {Command name}
-php hustle make:controller {Controller name}
-php hustle make:model {Model name}
-php hustle make:request {Request name}
-php hustle make:migration --table={Table name}
+composer create-project danganh97/miduner:dev-master your-project-folder
 ```
 
-**Or just wanna refresh caching?**
+## Quick Start
+
+From the project root:
+
+```bash
+cp .env.example .env
+php hustle key:generate
+php hustle config:cache
+php hustle serve
+```
+
+Run with a custom host and port:
+
+```bash
+php hustle serve --host=192.168.1.1 --port=1997
+```
+
+Use `--open` to open the application in your browser automatically.
+
+## CLI Overview
+
+Run the following command to view all available commands:
+
+```bash
+php hustle list
+```
+
+### Code Generation
+
+```bash
+php hustle make:command {CommandName}
+php hustle make:controller {ControllerName}
+php hustle make:model {ModelName}
+php hustle make:request {RequestName}
+php hustle make:migration --table={TableName}
+```
+
+### Configuration and Security
 
 ```bash
 php hustle config:cache
-```
-
-**Generate application key!**
-
-```bash
 php hustle key:generate
-```
-
-or install `Json Web Tokens` for the application?
-
-```bash
 php hustle jwt:install
 ```
 
->Then remember refresh caching to register new application key !
+> After generating a new key or installing JWT, refresh configuration cache.
 
-**Run migration?** 
-so easy
+### Database Operations
 
 ```bash
 php hustle migrate
-```
-or just rollback all of them.
-
-```bash
 php hustle migrate:rollback
-```
-
-**Let's run the seeder.**
-
-```bash
 php hustle db:seed
 ```
 
-**Live run query, why not?**
+### Query and Routing Utilities
 
 ```bash
 php hustle exec:query --query="select * from users"
-```
-You just wanna make a test ? Ok please give --test=true, like:
-
-```bash
 php hustle exec:query --query="select * from users" --test=true
-```
-
-**You don't know list of your defined route?**
-```bash
 php hustle route:list
-```
-Or view under ```json``` or ```array```
-```bash
-php hustle route:list --format=json/array
+php hustle route:list --format=json
+php hustle route:list --format=array
 ```
 
-**And of course, you can begin run live code with Miduner**
-*Code with terminal like with a file*
+### Interactive Mode
 
 ```bash
 php hustle live:code
 ```
 
-Aw shiet! I can't remember all that things!
+For help on any command:
 
-*Don't be worry, we're know that, please choose your command and give argument **--help** to get a cup of coffee*
-
->Here is example: ```php hustle serve --help```
+```bash
+php hustle <command> --help
+```
 
 ## Task Scheduling
 
-Just add to your crontab
+Add the following entry to your crontab:
 
-`* * * * * cd miduner && php hustle schedule:run >> /dev/null 2>&1`
+```bash
+* * * * * cd miduner && php hustle schedule:run >> /dev/null 2>&1
+```
 
-Example using in `App\Console\Kernel`
+Example scheduler setup in `App\Console\Kernel`:
 
 ```php
 <?php
@@ -135,17 +122,12 @@ use Midun\Console\Scheduling\Schedule;
 
 class Kernel extends ConsoleKernel
 {
-    /**
-     * List of commands
-     * @var array $commands
-     */
     protected array $commands = [
         ExampleCommand::class
     ];
 
     public function schedule(Schedule $schedule): void
     {
-        // Normal using
         $schedule->command(ExampleCommand::class)->daily();
         $schedule->command(ExampleCommand::class)->weekly();
         $schedule->command(ExampleCommand::class)->monthly();
@@ -153,64 +135,50 @@ class Kernel extends ConsoleKernel
         $schedule->command(ExampleCommand::class)->dailyAt('13:30');
         $schedule->command(ExampleCommand::class)->cron('* * * * *');
 
-        // Run with custom output log and cli
         $schedule->command(ExampleCommand::class)
-               ->everyMinute()
-               ->output(storage_path('logs/schedule.log'))
-               ->cli('/usr/bin/php'); 
+            ->everyMinute()
+            ->output(storage_path('logs/schedule.log'))
+            ->cli('/usr/bin/php');
     }
 }
 ```
 
-## How to start ?
+## Docker (Optional)
 
-```bash
-cp .env.example .env
-php hustle key:generate
-php hustle config:cache
-php hustle serve
-```
-or run with ip and port custom
+If PHP is not available locally, you can use Docker:
 
-```bash
-php hustle serve --host=192.168.1.1 --port=1997
-```
-*Note: you can using argument --open to open it up on browser*
-
->Now your app is running at [127.0.0.1:8000](127.0.0.1:8000)
-
-**If you don't install php on your local**
-
-Okay, got it.
-
-```bash
-docker build ./docker
-docker-compose up -d
-```
-or only this shit if you're a lazy guy
 ```bash
 docker-compose up --build -d
 ```
 
->Remember to add **127.0.0.1 &emsp; miduner.local** to your **/etc/hosts**
+Then add the following entry to your hosts file:
 
-If you have no idea for this step, please google search for setup virtual host.
+```text
+127.0.0.1 miduner.local
+```
 
-And still many things can't be write down here. Please leave a message if you want to take this
+## Documentation
 
+Official documentation is available at: [miduner.com/docs](https://miduner.com/docs)
 
-## License
+## Contributing
 
-The Miduner Framework is open-sourced, there is have no license.
-So, this is the fake framework, please use it or not and don't ever leave a blame
-
-If you wanna become contributor, let's run:
+Contributions are welcome. To enable development mode:
 
 ```bash
 php hustle development:enable
 ```
-or
+
+Or:
+
 ```bash
 php hustle dev:mode
 ```
-Thanks for your reading and attention!
+
+## Security
+
+If you discover a security vulnerability, please email **danganh.dev@gmail.com**.
+
+## License
+
+This project is open-sourced under the [MIT license](https://opensource.org/licenses/MIT).
